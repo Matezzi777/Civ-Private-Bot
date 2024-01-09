@@ -1,5 +1,6 @@
 # Civ-Private-Bot
-Civ Private Bot is a discord bot created to help on Civ Private Club
+Civ Private Bot is a discord bot created to help on Civ Private Club.
+This bot is hosted by Adkynet.
 
 Prefix : '$'
 
