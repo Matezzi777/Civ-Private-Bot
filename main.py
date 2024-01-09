@@ -139,4 +139,4 @@ async def birthdays(ctx : commands.Context):
 
 
 #Run le bot
-bot.run("MTExMjcwNTA5Mzk2ODYwMTE5Mg.G7s6DQ.qlx24wcUvHIAbB3u3V1SwVufiYkZaeLVzRHKHo")
+bot.run(TOKEN)
