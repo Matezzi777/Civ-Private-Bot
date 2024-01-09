@@ -1,8 +1,16 @@
 # Civ-Private-Bot
 Civ Private Bot is a discord bot created to help on Civ Private Club.
-This bot is hosted by Adkynet.
+This bot is hosted by Adkynet SAS.
 
 Prefix : '$'
+
+Files summary :
+  - README.md : your are actualy reading this file
+  - main.py : core of the bot. Where commands are defined
+  - birthdays.py : contains all the needed functions managing birthdays
+  - db.sqlite : database (contains 2 tables : Anniversaires (for birthdays), Ranked (for future ranking system))
+  - pyenv.cfg : config
+  - requirements.txt : names of the needed libraries (file not needed to run localy)
 
 List of the supported commands :
   - $hello(ctx) : introduce itself
