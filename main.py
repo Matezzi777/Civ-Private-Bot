@@ -257,4 +257,4 @@ async def update_w(ctx : commands.Context):
 #=============================================     LAUNCH      ==============================================
 
 #Run le bot
-bot.run("MTExMjcwNTA5Mzk2ODYwMTE5Mg.G5FsiG.kUPa1kBf_K43f9ty9F5PTp4DMc7PPgZ6rc8jUI")
+bot.run(TOKEN)
