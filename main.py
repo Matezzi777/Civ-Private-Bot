@@ -324,4 +324,4 @@ def is_in_list(user : discord.User, liste : list):
 #=============================================     LAUNCH      ==============================================
 
 #Run le bot
-bot.run("MTExMjcwNTA5Mzk2ODYwMTE5Mg.G_6PQV.nWOC7yJ3IvW2v4ZPbupCb5-QJJm4-_EYCa7mK4")
+bot.run(TOKEN)
