@@ -254,7 +254,7 @@ async def stats(ctx : commands.Context) -> None:
     return await ctx.send(embed=embed)
 #$scoreboard
 @bot.command()
-async def scoreboard(ctx : commands.Context) -> None:
+async def leaderboard(ctx : commands.Context) -> None:
     await display_scoreboard(ctx)
     return
 
