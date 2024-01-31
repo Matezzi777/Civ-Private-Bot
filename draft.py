@@ -2,7 +2,6 @@
 #Import des modules
 import discord
 from discord.ext import commands
-from discord.ui import Button
 from random import *
 import sqlite3
 from classes import CivPrivateBotEmbed
