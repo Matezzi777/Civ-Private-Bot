@@ -1,6 +1,5 @@
 #============================================= INITIALISATION ===============================================
-
-#Import des librairies
+#Import des modules
 import discord
 from discord.ext import commands
 from discord.ui import Button, View
@@ -12,18 +11,19 @@ from tokens import TOKEN
 
 #Définition du bot
 bot = Bot()
-
 #Définition de boutons utiles
 button_yes = Button(label="Yes", style=discord.ButtonStyle.green)
 button_no = Button(label="No", style=discord.ButtonStyle.red)
 button_change = Button(label="Yes", style=discord.ButtonStyle.green)
 
+#============================================= CLASSES REPORT ===============================================
+#View $report
 class ReportView(discord.ui.View):
     def __init__(self, liste_players) -> None:
         super().__init__()
         self.liste_players = liste_players
         self.add_item(ReportButton(liste_players))
-
+#Bouton validation $report
 class ReportButton(discord.ui.Button):
     def __init__(self, liste_players : list) -> None:
         super().__init__(
@@ -69,8 +69,8 @@ class ReportButton(discord.ui.Button):
             self.label=f"{needed_confirm-self.count} more ✅ needed"
             await interaction.response.edit_message(view=self.view)
 
-#============================================ COMMANDES Serveur 2.0 =============================================
-#$hello 2.0
+#============================================ COMMANDES INFOS ===============================================
+#$hello
 @bot.command()
 async def hello(ctx : commands.Context) -> None:
     server = ctx.guild
@@ -96,7 +96,7 @@ async def clear(ctx : commands.Context, nombre : int) -> None:
 async def datenow(ctx : commands.Context) -> None:
     await display_date(ctx)
 
-#============================================   COMMANDES Civ   =============================================
+#========================================== COMMANDES PRE - GAME ============================================
 #$draft X Y
 @bot.command()
 async def draft(ctx : commands.Context, players : int, nb_civs : int) -> None:
@@ -160,7 +160,7 @@ async def mapvote(ctx : commands.Context) -> None:
     await barbs.add_reaction("👔")
     await barbs.add_reaction("❌")
 
-#=========================================== COMMANDES Birthdays ============================================
+#========================================== COMMANDES BIRTHDAYS =============================================
 #$set_birthday DDMM
 @bot.command()
 async def set_birthday(ctx : commands.Context, date : str) -> None:
@@ -228,12 +228,7 @@ async def rm_birthday(ctx : commands.Context) -> None:
 async def birthdays(ctx : commands.Context) -> None:
     await display_birthdays(ctx)
 
-
-
-#=========================================== COMMANDES DE Ranked ============================================
-
-
-
+#=========================================== COMMANDES RANKED ===============================================
 #$report @First @Second @Third ...
 @bot.command()
 async def report(ctx : commands.Context, *args : discord.User) -> None:
@@ -271,70 +266,6 @@ async def leaderboard(ctx : commands.Context) -> None:
     await display_scoreboard(ctx)
     return
 
-#OK
-def is_in_list(user : discord.User, liste : list):
-    i : int = 0
-    while (i < len(liste)):
-        if (user == liste[i]):
-            return (1)
-        i = i + 1
-    return (0)
-
-
-#############################################################################################################
-
-# @bot.command()
-# async def add_u(ctx : commands.Context):
-#     user = ctx.message.author
-#     embed=CivPrivateBotEmbed(colour=discord.Colour.green(), title="User added", description="New user added to the database.")
-#     add_user(user)
-#     return await ctx.send(embed=embed)
-
-# @bot.command()
-# async def upd_top1(ctx : commands.Context):
-#     user : discord.User = ctx.message.author
-#     update_top1(user)
-#     embed=CivPrivateBotEmbed(colour=discord.Colour.green(), title="Top 1 updated", description=f"{user.name}'s Top 1 successfuly updated in the database.")
-#     return await ctx.send(embed=embed)
-
-# @bot.command()
-# async def upd_wins(ctx : commands.Context):
-#     user : discord.User = ctx.message.author
-#     update_wins(user)
-#     embed=CivPrivateBotEmbed(colour=discord.Colour.green(), title="Wins updated", description=f"{user.name}'s Wins successfuly updated in the database.")
-#     return await ctx.send(embed=embed)
-
-# @bot.command()
-# async def upd_lost(ctx : commands.Context):
-#     user : discord.User = ctx.message.author
-#     update_lost(user)
-#     embed=CivPrivateBotEmbed(colour=discord.Colour.green(), title="Lost updated", description=f"{user.name}'s Lost successfuly updated in the database.")
-#     return await ctx.send(embed=embed)
-
-# # @bot.command()
-# # async def upd_date(ctx : commands.Context):
-# #     user = ctx.message.author
-# #     update_date(user)
-# #     embed=CivPrivateBotEmbed(colour=discord.Colour.green(), title="Date updated", description=f"{user.name}'s Date successfuly updated in the database.")
-# #     return await ctx.send(embed=embed)
-
-# @bot.command()
-# async def get_gp(ctx : commands.Context):
-#     user = ctx.message.author
-#     games_played : int = get_games_played(user)
-#     embed=CivPrivateBotEmbed(colour=discord.Colour.green(), title="Games Played", description=f"{games_played} games played by {user.name}.")
-#     return await ctx.send(embed=embed)
-
-# @bot.command()
-# async def upd_elo(ctx : commands.Context, new_elo : int):
-#     user = ctx.message.author
-#     update_elo(user, new_elo)
-#     embed=CivPrivateBotEmbed(colour=discord.Colour.green(), title="Elo updated", description=f"{user.name}'s elo updated to {new_elo}.")
-#     return await ctx.send(embed=embed)
-
-
-
-#=============================================     LAUNCH      ==============================================
-
+#================================================== RUN =====================================================
 #Run le bot
 bot.run(TOKEN)

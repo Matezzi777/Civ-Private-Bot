@@ -1,7 +1,9 @@
+#============================================= INITIALISATION ===============================================
+#Import des modules
 import discord
 from discord.ext import commands
 
-##################################################     BOT     ################################################
+#================================================== BOT =====================================================
 class Bot(commands.Bot):
     def __init__(self):
         super().__init__(command_prefix="$", intents=discord.Intents.all(), description="This bot is being actively developped by @Matezzi.")
@@ -12,7 +14,7 @@ class Bot(commands.Bot):
     async def on_ready(self):
         print(f"{self.user.id} successfully logged in as {self.user.name}.\nRock n'Roll !")
 
-##################################################   EMBEDS    ###############################################
+#================================================= EMBEDS ===================================================
 class CivPrivateBotEmbed(discord.Embed):
     def __init__(self, *, colour=discord.Colour.purple(), color=discord.Colour.purple(), title=None, type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
@@ -25,14 +27,3 @@ class CivPrivateBotEmbed(discord.Embed):
             timestamp=timestamp
             )
         self.set_footer(text="Civ Private Bot 2.0")
-
-##################################################   BUTTONS   ################################################
-
-
-##################################################    VIEWS    ###############################################
-# class TestButtonView(discord.ui.View):
-#     def __init__(self):
-#         super().__init__()
-#         self.add_item(ButtonTest())
-
-

@@ -1,23 +1,20 @@
-##################################################     INITIALISATION    ##################################################
-
+#============================================= INITIALISATION ===============================================
+#Import des modules
 import discord
 import sqlite3
 import datetime
 from discord.ext import commands
 from classes import CivPrivateBotEmbed
 
+#============================================= CALIBRAGE ELO ================================================
+#Elo initial attribué aux nouveaux utilisateurs
 elo_new_player = 1200
+#Différence d'elo nécessaire pour avoir 90% de chances de victoire estimées
 theta = 400
 
-###########################################################################################################################
-
-#Report
-    #1v1
-    #FFA
-    #Teamer
-
+#========================================= COMMANDES PRINCIPALES ============================================
 #$report @X @Y @Z
-async def valid_report(liste_players : list):
+async def valid_report(liste_players : list) -> None:
 
     nb_players : int = len(liste_players)
     actual_elos : list= []
@@ -85,9 +82,9 @@ async def valid_report(liste_players : list):
         update_elo(user, new_elo)
         i = i + 1
     print("")
-    return print(f"===== Result validated =====")
-
-
+    print(f"===== Result validated =====")
+    return
+#Affiche le tableau des scores
 async def display_scoreboard(ctx : commands.Context) -> None:
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
@@ -108,10 +105,30 @@ async def display_scoreboard(ctx : commands.Context) -> None:
     await ctx.send(embed=embed)
     return 
 
-###########################################################################################################################
-
-#Stats
-
+#======================================= BASE DE DONNÉE (LECTURE) ===========================================
+#Récupère le nombre de parties jouées par l'utilisateur
+def get_games_played(user : discord.User) -> int:
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request_get_win : str = f"SELECT Wins FROM Ranked WHERE User_ID='{user.id}'"
+    cursor.execute(request_get_win)
+    wins : int = cursor.fetchone()[0]
+    request_get_lost : str = f"SELECT Lost FROM Ranked WHERE User_ID='{user.id}'"
+    cursor.execute(request_get_lost)
+    lost : int = cursor.fetchone()[0]
+    games_played : int = wins + lost
+    return (games_played)
+#Récupère l'elo de l'utilisateur
+def get_elo(user : discord.User) -> int:
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request : str = f"SELECT Elo FROM Ranked WHERE User_ID='{user.id}'"
+    cursor.execute(request)
+    connexion.commit()
+    result : int = cursor.fetchone()[0]
+    connexion.close()
+    return (result)
+#Récupère le nombre de top 1 de l'utilisateur
 def get_top1(user : discord.User) -> int:
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
@@ -121,7 +138,7 @@ def get_top1(user : discord.User) -> int:
     result : int = cursor.fetchone()[0]
     connexion.close()
     return (result)
-
+#Récupère le nombre de wins de l'utilisateur
 def get_wins(user : discord.User) -> int:
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
@@ -131,7 +148,7 @@ def get_wins(user : discord.User) -> int:
     result : int = cursor.fetchone()[0]
     connexion.close()
     return (result)
-
+#Récupère le nombre de défaites de l'utilisateur
 def get_lost(user : discord.User) -> int:
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
@@ -141,7 +158,7 @@ def get_lost(user : discord.User) -> int:
     result : int = cursor.fetchone()[0]
     connexion.close()
     return (result)
-
+#Récupère la date de la dernière partie jouée par l'utilisateur
 def get_date(user : discord.User) -> str:
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
@@ -152,29 +169,8 @@ def get_date(user : discord.User) -> str:
     date : str = str(result//1000)+str((result%1000)//100)+"/"+str((result%100)//10)+str(result%10)
     return (date)
 
-###########################################################################################################################
-def get_elo(user : discord.User) -> int:
-    connexion = sqlite3.connect('db.sqlite')
-    cursor = connexion.cursor()
-    request : str = f"SELECT Elo FROM Ranked WHERE User_ID='{user.id}'"
-    cursor.execute(request)
-    connexion.commit()
-    result : int = cursor.fetchone()[0]
-    connexion.close()
-    return (result)
-
-def is_player_in_database(user : discord.User) -> bool:
-    connexion = sqlite3.connect('db.sqlite')
-    cursor = connexion.cursor()
-    request : str = f"SELECT * FROM Ranked WHERE User_ID='{user.id}'"
-    cursor.execute(request)
-    result : int = cursor.fetchone()
-    connexion.close()
-    if result:
-        return True
-    else:
-        return False
-    
+#====================================== BASE DE DONNÉE (ÉCRITURE) ===========================================
+#Ajoute l'utilisateur à la base de donnée
 def add_user(user : discord.User) -> None:
     if (is_player_in_database(user)):
         print(f"{user.name} already stored in the database.")
@@ -189,6 +185,17 @@ def add_user(user : discord.User) -> None:
         print(f"{user.name} added to the database.")
         return
 
+#Met à jour l'elo de l'utilisateur
+def update_elo(user : discord.User, new_elo : int) -> None:
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request_write : str = f"UPDATE Ranked SET Elo={new_elo} WHERE User_ID='{user.id}'"
+    cursor.execute(request_write)
+    connexion.commit()
+    connexion.close()
+    print(f"{user.name}'s Elo updated.")
+    return
+#Incrémente les top 1 de l'utilisateur
 def update_top1(user : discord.User) -> None:
     connexion = sqlite3.connect("db.sqlite")
     cursor = connexion.cursor()
@@ -202,7 +209,7 @@ def update_top1(user : discord.User) -> None:
     connexion.close()
     print(f"{user.name}'s Top1 updated.")
     return
-
+#Incrémente les wins de l'utilisateur
 def update_wins(user : discord.User) -> None:
     connexion = sqlite3.connect("db.sqlite")
     cursor = connexion.cursor()
@@ -216,7 +223,7 @@ def update_wins(user : discord.User) -> None:
     connexion.close()
     print(f"{user.name}'s Wins updated.")
     return
-
+#Incrémente les défaites de l'utilisateur
 def update_lost(user : discord.User) -> None:
     connexion = sqlite3.connect("db.sqlite")
     cursor = connexion.cursor()
@@ -230,7 +237,7 @@ def update_lost(user : discord.User) -> None:
     connexion.close()
     print(f"{user.name}'s Lost updated.")
     return
-
+#Met à jour la date de la dernière partie jouée par l'utilisateur à aujourd'hui
 def update_date(user : discord.User) -> None:
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
@@ -244,24 +251,24 @@ def update_date(user : discord.User) -> None:
     print(f"{user.name}'s Date updated.")
     return
 
-def get_games_played(user : discord.User) -> int:
+#=============================================== BOOLÉENS ===================================================
+#Vérifie la présence de l'utilisateur dans la base de donnée
+def is_player_in_database(user : discord.User) -> bool:
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
-    request_get_win : str = f"SELECT Wins FROM Ranked WHERE User_ID='{user.id}'"
-    cursor.execute(request_get_win)
-    wins : int = cursor.fetchone()[0]
-    request_get_lost : str = f"SELECT Lost FROM Ranked WHERE User_ID='{user.id}'"
-    cursor.execute(request_get_lost)
-    lost : int = cursor.fetchone()[0]
-    games_played : int = wins + lost
-    return (games_played)
-
-def update_elo(user : discord.User, new_elo : int) -> None:
-    connexion = sqlite3.connect('db.sqlite')
-    cursor = connexion.cursor()
-    request_write : str = f"UPDATE Ranked SET Elo={new_elo} WHERE User_ID='{user.id}'"
-    cursor.execute(request_write)
-    connexion.commit()
+    request : str = f"SELECT * FROM Ranked WHERE User_ID='{user.id}'"
+    cursor.execute(request)
+    result : int = cursor.fetchone()
     connexion.close()
-    print(f"{user.name}'s Elo updated.")
-    return
+    if result:
+        return True
+    else:
+        return False
+#Vérifie la présence de l'utilisateur dans la liste d'utilisateurs donnée
+def is_in_list(user : discord.User, liste : list) -> bool:
+    i : int = 0
+    while (i < len(liste)):
+        if (user == liste[i]):
+            return True
+        i = i + 1
+    return False
