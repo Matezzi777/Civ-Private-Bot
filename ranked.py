@@ -40,7 +40,7 @@ async def valid_report(liste_players : list):
         if (i == 0):
             update_top1(user)
             update_wins(user)
-        elif (i < (nb_players//2)):
+        elif (i <= (nb_players//2) and nb_players >= 4):
             update_wins(user)
         else:
             update_lost(user)
@@ -103,7 +103,7 @@ async def display_scoreboard(ctx : commands.Context) -> None:
     i : int = 0
     nb_users_stored = len(result)
     while (i < nb_users_stored):
-        embed.add_field(name="", value=f"**{i+1} : <@{result[i][0]}>** | Elo : **{result[i][1]}** | Top 1 : **{result[i][2]}** | Wins : **{result[i][3]}** | Lost : **{result[i][4]}**", inline=False)
+        embed.add_field(name="", value=f"**{i+1}.** <@{result[i][0]}>\n`Games played : {result[i][3]+result[i][4]}` `Elo : {result[i][1]}` `Top 1 : {result[i][2]}` `Wins : {result[i][3]}` `Lost : {result[i][4]}` `Ratio : {round(float(float(result[i][3])/float(result[i][3]+result[i][4])), 2)}`", inline=False)
         i = i + 1
     await ctx.send(embed=embed)
     return 
