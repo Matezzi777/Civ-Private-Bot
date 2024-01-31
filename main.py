@@ -47,7 +47,7 @@ class ReportButton(discord.ui.Button):
         else:
             needed_confirm = 3
 
-        if (is_in_list(interaction.user, self.liste_players) or interaction.user.id == 866997795993944084): #Si l'utilisateur était dans la partie
+        if (is_in_list(interaction.user, self.liste_players) or interaction.user.id == 866997795993944084): #Si l'utilisateur était dans la partie ou que Matezzi valide la partie.
             if (not is_in_list(interaction.user, self.users_who_clicked)): #Si il n'a pas déjà cliqué
                 self.count = self.count + 1
                 self.users_who_clicked.append(interaction.user)
@@ -104,7 +104,19 @@ async def draft(ctx : commands.Context, players : int, nb_civs : int) -> None:
 #$mapvote 2.0
 @bot.command()
 async def mapvote(ctx : commands.Context) -> None:
-    embed = CivPrivateBotEmbed(title="MAPVOTE", description="React on the following messages to select the options.")
+    author = ctx.message.author
+    
+    if (author.voice):
+        channel = author.voice.channel
+        users = channel.members
+        message = ""
+        i : int = 0
+        while (i < len(users)):
+            message = message + f"{users[i].mention} "
+            i = i + 1
+        await ctx.send(message)
+
+    embed = CivPrivateBotEmbed(title="MAPVOTE", description=f"\nReact on the following messages to select the options.")
     embed.add_field(name="MAP", value="🌋 Pangaea **|** 🌊 Seven Seas **|** ⛰️ Highlands **|** 🌄 Rich Highlands **|** 🌍 Continents\n🏝️ Continents and Islands **|** ⛵ Lakes **|** 🐢 Archipelago **|** 🗺️ Terra", inline=False)
     embed.add_field(name="BCY", value="✅ ON **|** ❌ OFF\n⭐ Cap only **|** 🏙️ All cities", inline=False)
     embed.add_field(name="AGE OF THE WORLD", value="🏔️ New **|** 🗻 Standard **|** 🌄 Old", inline=False)
