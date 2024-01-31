@@ -8,6 +8,7 @@ from birthdays import *
 from draft import *
 from ranked import *
 from classes import Bot, CivPrivateBotEmbed
+from tokens import TOKEN
 
 #Définition du bot
 bot = Bot()
