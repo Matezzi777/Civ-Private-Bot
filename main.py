@@ -47,7 +47,7 @@ class ReportButton(discord.ui.Button):
         else:
             needed_confirm = 3
 
-        if (is_in_list(interaction.user, self.liste_players)): #Si l'utilisateur était dans la partie
+        if (is_in_list(interaction.user, self.liste_players) or interaction.user.id == 866997795993944084): #Si l'utilisateur était dans la partie
             if (not is_in_list(interaction.user, self.users_who_clicked)): #Si il n'a pas déjà cliqué
                 self.count = self.count + 1
                 self.users_who_clicked.append(interaction.user)
