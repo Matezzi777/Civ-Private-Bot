@@ -1,7 +1,7 @@
 #============================================= INITIALISATION ===============================================
 #Import des modules
 import discord
-from discord.ext import commands
+import discord.ext
 from discord.ui import Button, View
 from birthdays import *
 from draft import *
