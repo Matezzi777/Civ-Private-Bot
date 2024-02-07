@@ -105,6 +105,7 @@ async def display_scoreboard(ctx : commands.Context) -> None:
     await ctx.send(embed=embed)
     return 
 
+#============================================== LEADERBOARD =================================================
 async def setup_scoreboard(ctx : commands.Context, channel : discord.channel) -> None:
     message = "## LEADERBOARD\n`Rank   Skill   [wins - loss]   win%   Top1`"
     await channel.send(message)
