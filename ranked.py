@@ -106,7 +106,9 @@ async def display_scoreboard(ctx : commands.Context) -> None:
     return 
 
 async def setup_scoreboard(ctx : commands.Context, channel : discord.channel) -> None:
-    message = "`Rank   Skill   [wins - loss]   win%   Top1`\n"
+    message = "## LEADERBOARD\n`Rank   Skill   [wins - loss]   win%   Top1`"
+    await channel.send(message)
+    message = ""
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
     request : str = "SELECT User_ID, Elo, Top1, Wins, Lost FROM Ranked ORDER BY Elo DESC"
