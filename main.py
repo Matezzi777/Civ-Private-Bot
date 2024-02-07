@@ -266,6 +266,12 @@ async def leaderboard(ctx : commands.Context) -> None:
     await display_scoreboard(ctx)
     return
 
+@bot.command()
+async def setup_leaderboard(ctx: commands.Context) -> None:
+    channel = bot.get_channel(1204872785642389575)
+    await setup_scoreboard(ctx, channel)
+    return
+
 #================================================== RUN =====================================================
 #Run le bot
 bot.run(TOKEN)

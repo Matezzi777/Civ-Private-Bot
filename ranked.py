@@ -105,6 +105,90 @@ async def display_scoreboard(ctx : commands.Context) -> None:
     await ctx.send(embed=embed)
     return 
 
+async def setup_scoreboard(ctx : commands.Context, channel : discord.channel) -> None:
+    message = "`Rank   Skill   [wins - loss]   win%   Top1`\n"
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request : str = "SELECT User_ID, Elo, Top1, Wins, Lost FROM Ranked ORDER BY Elo DESC"
+    cursor.execute(request)
+    connexion.commit()
+    result : list = cursor.fetchall()
+    if (not result):
+        embed=CivPrivateBotEmbed(colour=discord.Colour.red(), title="Error !", description="Unable to get infos from the database (or database empty).")
+        await channel.send(embed=embed)
+    else:
+        nb_players_in_database : int = len(result)
+        i : int = 0
+        while (i < 3):
+            j : int = 0
+            while (j < 10):
+                n : int = i*10 + j
+                if (n < nb_players_in_database):
+                    user_id : int = result[n][0]
+                    elo : int = result[n][1]
+                    top1 : int = result[n][2]
+                    wins : int = result[n][3]
+                    lost : int = result[n][4]
+                    winrate = round((float(wins)/float(wins+lost)) * 100)
+                    message = message + f"`{parsed_rank(n+1)}    {parsed_skill(elo)}    [ {parsed_wins(wins)} - {parsed_lost(lost)} ]   {parsed_winrate(winrate)}   {parsed_top1(top1)}`  <@{user_id}>\n"
+                else:
+                    message = message + f"`{parsed_rank(n+1)}    ----    [   X - X   ]    --%   -   `\n"
+                j = j + 1
+            await channel.send(message)
+            message = ""
+            i = i + 1
+    return
+
+def parsed_rank(n : int) -> str:
+    if (n <= 9):
+        return (f"#{n} ")
+    else:
+        return (f"#{n}")
+
+def parsed_skill(skill : int) -> str:
+    if (skill <= 9):
+        return (f"{   skill}")
+    elif (skill <= 99):
+        return (f"{  skill}")
+    elif (skill <= 999):
+        return (f"{ skill}")
+    else:
+        return (f"{skill}")
+
+def parsed_wins(wins : int) -> str:
+    if (wins <= 9):
+        return (f"  {wins}")
+    elif (wins <= 99):
+        return (f" {wins}")
+    else:
+        return (f"{wins}")
+
+def parsed_lost(lost : int) -> str:
+    if (lost <= 9):
+        return (f"{lost}  ")
+    elif (lost <= 99):
+        return (f"{lost} ")
+    else:
+        return (f"{lost}")
+
+def parsed_winrate(winrate : int) -> str:
+    if (winrate == 100):
+        return (f"{winrate}%")
+    elif (winrate <= 9):
+        return (f"  {winrate}%")
+    else:
+        return (f" {winrate}%")
+
+def parsed_top1(top1 : int) -> str:
+    if (top1 <= 9):
+        return (f"{top1}   ")
+    elif(top1 <= 99):
+        return (f"{top1}  ")
+    elif(top1 <= 999):
+        return (f"{top1} ")
+    else:
+        return (f"{top1}")
+
 #======================================= BASE DE DONNÉE (LECTURE) ===========================================
 #Récupère le nombre de parties jouées par l'utilisateur
 def get_games_played(user : discord.User) -> int:
