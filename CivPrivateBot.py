@@ -100,6 +100,16 @@ async def datenow(ctx : commands.Context) -> None:
 #$draft X Y
 @bot.command()
 async def draft(ctx : commands.Context, players : int, nb_civs : int) -> None:
+    author = ctx.message.author
+    if (author.voice):
+        channel = author.voice.channel
+        users = channel.members
+        message = ""
+        i : int = 0
+        while (i < len(users)):
+            message = message + f"{users[i].mention} "
+            i = i + 1
+        await ctx.send(message)
     await launch_draft(ctx, players, nb_civs)
 #$mapvote 2.0
 @bot.command()
@@ -159,6 +169,11 @@ async def mapvote(ctx : commands.Context) -> None:
     await barbs.add_reaction("⚔️")
     await barbs.add_reaction("👔")
     await barbs.add_reaction("❌")
+
+#$draft 2.0
+@bot.command()
+async def draftv2(ctx : commands.Context, nb_civs : int) -> None:
+    await make_draft_v2(ctx, nb_civs)
 
 #========================================== COMMANDES BIRTHDAYS =============================================
 #$set_birthday DDMM
