@@ -7,56 +7,8 @@ import sqlite3
 from classes import CivPrivateBotEmbed
 
 #========================================= FONCTIONS PRINCIPALES ============================================
-#génère et envoie une draft
-async def launch_draft(ctx : commands.Context, players : int, nb_civs : int) -> None:
-    if (players < 2):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Not enough players to start a draft (min. 2 players).", colour=discord.Colour.red())
-        await ctx.send(embed=embed)
-        return
-    if (players > 25):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
-        await ctx.send(embed=embed)
-        return
-    if (players * nb_civs > 77):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
-        await ctx.send(embed=embed)
-        return
-    if (nb_civs > 15):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
-        await ctx.send(embed=embed)
-        return
-    else :
-        embed = CivPrivateBotEmbed(title="DRAFT", description=f"New draft for {players} players with {nb_civs} civilizations by player.")
-        draft = create_draft(players, nb_civs)
-        i : int = 0
-        while(i < players):
-            k : int = 0
-            message = ""
-            while (k < nb_civs):
-                message = message + f"{emote_from_id(draft[i*nb_civs+k])} {leader_from_id(draft[i*nb_civs+k])}\n"
-                k = k + 1
-            message = message[:-1]
-            embed.add_field(name=f"**Player {i+1}**", value=message, inline=True)
-            i = i + 1
-        await ctx.send(embed=embed)
-        return
 #génère une draft
-def create_draft(players : int, nb_civs : int) -> list:
-    i = 0
-    draft = []
-    
-    while (i < players):
-        j = 0
-        while (j < nb_civs):
-            id = 0
-            while (id == 0 or is_n_in_list(id, draft)):
-                id : int = randint(1, 77)
-            draft.append(id)
-            j = j + 1
-        i = i + 1
-    return (draft)
-
-async def make_draft_v2(ctx : commands.Context, nb_civs : int) -> None:
+async def make_draft(ctx : commands.Context, nb_civs : int) -> None:
     author = ctx.message.author
     if (not author.voice):
 
@@ -105,6 +57,58 @@ async def make_draft_v2(ctx : commands.Context, nb_civs : int) -> None:
             i = i + 1
         await ctx.send(embed=embed)
         return
+#génère une draft à l'aveugle
+async def make_blind_draft(ctx : commands.Context, nb_civs : int) -> None:
+    return
+#génère une draft générique
+async def make_generic_draft(ctx : commands.Context, players : int, nb_civs : int) -> None:
+    if (players < 2):
+        embed = CivPrivateBotEmbed(title="Process aborted.", description="Not enough players to start a draft (min. 2 players).", colour=discord.Colour.red())
+        await ctx.send(embed=embed)
+        return
+    if (players > 25):
+        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
+        await ctx.send(embed=embed)
+        return
+    if (players * nb_civs > 77):
+        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
+        await ctx.send(embed=embed)
+        return
+    if (nb_civs > 15):
+        embed = CivPrivateBotEmbed(title="Process aborted.", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
+        await ctx.send(embed=embed)
+        return
+    else :
+        embed = CivPrivateBotEmbed(title="DRAFT", description=f"New draft for {players} players with {nb_civs} civilizations by player.")
+        draft = create_draft(players, nb_civs)
+        i : int = 0
+        while(i < players):
+            k : int = 0
+            message = ""
+            while (k < nb_civs):
+                message = message + f"{emote_from_id(draft[i*nb_civs+k])} {leader_from_id(draft[i*nb_civs+k])}\n"
+                k = k + 1
+            message = message[:-1]
+            embed.add_field(name=f"**Player {i+1}**", value=message, inline=True)
+            i = i + 1
+        await ctx.send(embed=embed)
+        return
+
+#Distribue les civilizations
+def create_draft(players : int, nb_civs : int) -> list:
+    i = 0
+    draft = []
+    
+    while (i < players):
+        j = 0
+        while (j < nb_civs):
+            id = 0
+            while (id == 0 or is_n_in_list(id, draft)):
+                id : int = randint(1, 77)
+            draft.append(id)
+            j = j + 1
+        i = i + 1
+    return (draft)
 
 #========================================= FONCTIONS SECONDAIRES ============================================
 #Récupère l'émote associée à l'id d'un leader
