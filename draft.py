@@ -12,7 +12,7 @@ async def make_draft(ctx : commands.Context, nb_civs : int) -> None:
     author = ctx.message.author
     if (not author.voice):
 
-        embed=CivPrivateBotEmbed(title="🎤 JOIN A VOICE CHANNEL 🎤", description="Please, join a voice channel with the other players to use this command.\nIf you can't use the voice chat, consider using *$mapvote* instead.")
+        embed=CivPrivateBotEmbed(title="🎤 JOIN A VOICE CHANNEL 🎤", description="Please, join a voice channel with the other players to use this command.\nIf you can't use the voice chat, consider using *$generic_draft* instead.")
         await ctx.send(embed=embed)
         return
     else:
@@ -59,7 +59,46 @@ async def make_draft(ctx : commands.Context, nb_civs : int) -> None:
         return
 #génère une draft à l'aveugle
 async def make_blind_draft(ctx : commands.Context, nb_civs : int) -> None:
-    return
+    author = ctx.message.author
+    if (not author.voice):
+        embed=CivPrivateBotEmbed(title="🎤 JOIN A VOICE CHANNEL 🎤", description="Please, join a voice channel with the other players to use this command.\nIf you can't use the voice chat, consider using *$generic_draft* instead.")
+        await ctx.send(embed=embed)
+        return
+    else:
+        channel = author.voice.channel
+        users = channel.members
+
+    nb_users = len(users)
+    if (nb_users < 2):
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="It looks like you are alone here, find peoples to play with before to use this command.", color=discord.Colour.red())
+        await ctx.send(embed=embed)
+    elif (nb_users > 25):
+        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
+        await ctx.send(embed=embed)
+        return
+    elif (nb_users * nb_civs > 77):
+        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
+        await ctx.send(embed=embed)
+        return
+    elif (nb_civs > 15):
+        embed = CivPrivateBotEmbed(title="Process aborted.", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
+        await ctx.send(embed=embed)
+        return
+    else:
+        draft = create_draft(nb_users, nb_civs)
+        i : int = 0
+        while (i < nb_users):
+            actual_user : discord.User = users[i]
+            message : str = ""
+            j : int = 0
+            while (j < nb_civs):
+                
+                
+                j = j + 1
+            
+            i = i + 1
+        return
+
 #génère une draft générique
 async def make_generic_draft(ctx : commands.Context, players : int, nb_civs : int) -> None:
     if (players < 2):

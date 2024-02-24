@@ -169,8 +169,6 @@ async def mapvote(ctx : commands.Context) -> None:
     await barbs.add_reaction("👔")
     await barbs.add_reaction("❌")
 
-
-
 #========================================== COMMANDES BIRTHDAYS =============================================
 #$set_birthday DDMM
 @bot.command()
