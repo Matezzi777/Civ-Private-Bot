@@ -14,7 +14,8 @@
   - $draft (x : int) : draw x civs to all the players in the same voice chat than the caller of the command and send the result in the current channel.
   - $blind_draft (x : int) : draw x civs to all the players in the same voice chat than the caller of the command and send the result in private message to each one.
   - $generic_draft (x : int, y : int) : draw x civ to y players and send the result in the current channel.
-  - $mapvote : start a mapvote in the current channel.
+  - $mapvote : start a mapvote in the current channel (Voice Channel recommended).
+  - $generic_mapvote : start a generic mapvote in the current channel.
 * **Birthdays**
   - $set_birthday (date : str) : set the birthday of the caller of the function to the indicated date (use DDMM format (ex: 13th of March -> 1303)).
   - $rm_birthday : delete the birthday of the caller of the function from the database.
@@ -46,6 +47,9 @@
   - leader_from_id(id)
   - trim(str)
   - is_n_in_list(id, liste)
+* **mapvote.py**
+  - make_mapvote
+  - make_generic_mapvote
 * **ranked.py**
   - valid_report(liste_players)
   - display_scoreboard

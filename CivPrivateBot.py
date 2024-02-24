@@ -225,7 +225,7 @@ async def stats(ctx : commands.Context) -> None:
 async def leaderboard(ctx : commands.Context) -> None:
     await display_scoreboard(ctx)
     return
-
+#$setup_leaderboard
 @bot.command()
 async def setup_leaderboard(ctx: commands.Context) -> None:
     channel = bot.get_channel(1204872785642389575)
