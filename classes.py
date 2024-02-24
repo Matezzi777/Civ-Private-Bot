@@ -26,4 +26,4 @@ class CivPrivateBotEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text="Civ Private Bot 2.0")
+        self.set_footer(text="Civ Private Bot 2.1")

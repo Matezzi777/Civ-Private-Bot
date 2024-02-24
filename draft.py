@@ -102,7 +102,6 @@ async def make_blind_draft(ctx : commands.Context, nb_civs : int) -> None:
         embed_confirmation = CivPrivateBotEmbed(title="DRAFTS SENT", description="Check your private messages !", color=discord.Colour.green())
         await ctx.send(embed=embed_confirmation)
         return
-
 #génère une draft générique
 async def make_generic_draft(ctx : commands.Context, players : int, nb_civs : int) -> None:
     if (players < 2):
