@@ -89,13 +89,15 @@ async def make_blind_draft(ctx : commands.Context, nb_civs : int) -> None:
         i : int = 0
         while (i < nb_users):
             actual_user : discord.User = users[i]
+            embed = CivPrivateBotEmbed(title="BLIND DRAFT", description="Here is your secret draft 🤫")
             message : str = ""
             j : int = 0
             while (j < nb_civs):
-                
-                
+                message = message + f"{emote_from_id(draft[i*nb_civs+j])} {leader_from_id(draft[i*nb_civs+j])}\n"
                 j = j + 1
-            
+            message = message[:-1]
+            embed.add_field(name="", value=message)
+            #await #########################################################################################################
             i = i + 1
         return
 
@@ -150,6 +152,14 @@ def create_draft(players : int, nb_civs : int) -> list:
     return (draft)
 
 #========================================= FONCTIONS SECONDAIRES ============================================
+#Envoie un message en privé à un joueur
+async def send_dm(user : discord.User, content : str) -> None:
+    await user.send(content=content)
+    return
+#Envoie un embed en privé à un joueur
+async def send_embed_dm(user : discord.User, embed : CivPrivateBotEmbed) -> None:
+    await user.send(embed=embed)
+    return
 #Récupère l'émote associée à l'id d'un leader
 def emote_from_id(id : int) -> str:
     connexion = sqlite3.connect('db_leaders.sqlite')
