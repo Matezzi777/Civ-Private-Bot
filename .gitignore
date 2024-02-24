@@ -1,5 +1,2 @@
-
 tokens.py
 __pycache__/*
-db.sqlite
-.gitignore
