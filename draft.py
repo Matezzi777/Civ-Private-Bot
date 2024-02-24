@@ -11,7 +11,6 @@ from classes import CivPrivateBotEmbed
 async def make_draft(ctx : commands.Context, nb_civs : int) -> None:
     author = ctx.message.author
     if (not author.voice):
-
         embed=CivPrivateBotEmbed(title="🎤 JOIN A VOICE CHANNEL 🎤", description="Please, join a voice channel with the other players to use this command.\nIf you can't use the voice chat, consider using *$generic_draft* instead.")
         await ctx.send(embed=embed)
         return
@@ -23,16 +22,17 @@ async def make_draft(ctx : commands.Context, nb_civs : int) -> None:
     if (nb_users < 2):
         embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="It looks like you are alone here, find peoples to play with before to use this command.", color=discord.Colour.red())
         await ctx.send(embed=embed)
+        return
     elif (nb_users > 25):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     elif (nb_users * nb_civs > 77):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     elif (nb_civs > 15):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED.", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     else:
