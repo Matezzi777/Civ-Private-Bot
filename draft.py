@@ -24,15 +24,15 @@ async def make_draft(ctx : commands.Context, nb_civs : int) -> None:
         await ctx.send(embed=embed)
         return
     elif (nb_users > 25):
-        embed = CivPrivateBotEmbed(title="PROCESS ABORTED.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     elif (nb_users * nb_civs > 77):
-        embed = CivPrivateBotEmbed(title="PROCESS ABORTED.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     elif (nb_civs > 15):
-        embed = CivPrivateBotEmbed(title="PROCESS ABORTED.", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     else:
@@ -73,15 +73,15 @@ async def make_blind_draft(ctx : commands.Context, nb_civs : int) -> None:
         embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="It looks like you are alone here, find peoples to play with before to use this command.", color=discord.Colour.red())
         await ctx.send(embed=embed)
     elif (nb_users > 25):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     elif (nb_users * nb_civs > 77):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     elif (nb_civs > 15):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     else:
@@ -105,19 +105,19 @@ async def make_blind_draft(ctx : commands.Context, nb_civs : int) -> None:
 #génère une draft générique
 async def make_generic_draft(ctx : commands.Context, players : int, nb_civs : int) -> None:
     if (players < 2):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Not enough players to start a draft (min. 2 players).", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Not enough players to start a draft (min. 2 players).", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     if (players > 25):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     if (players * nb_civs > 77):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     if (nb_civs > 15):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
+        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="Maximum 15 civilizations by player.", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
     else :
