@@ -6,7 +6,7 @@ from discord.ext import commands
 #================================================== BOT =====================================================
 class Bot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix="$", intents=discord.Intents.all(), description="This bot is being actively developped by @Matezzi.")
+        super().__init__(command_prefix="$", intents=discord.Intents.all(), description="This bot is being actively developped by @Matezzi to manage Civ Private Club.")
 
     async def setup_hook(self):
         await self.tree.sync()
