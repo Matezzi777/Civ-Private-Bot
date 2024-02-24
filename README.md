@@ -1,8 +1,8 @@
 ## BOT INFORMATIONS :
--Bot Name : Civ Private Bot
--Bot Prefix : $
--Bot Intents : Admin (all)
--Bot Description : "Civ Private Bot v2.0.0"
+- Bot Name : Civ Private Bot
+- Bot Prefix : $
+- Bot Intents : Admin (all)
+- Bot Description : "Civ Private Bot v2.0.0"
 
 ## COMMANDS SUMMARY (CivPrivateBot.py) :
 * **Informations**
