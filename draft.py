@@ -69,14 +69,15 @@ async def make_blind_draft(ctx : commands.Context, nb_civs : int) -> None:
         users = channel.members
 
     nb_users = len(users)
-    if (nb_users < 2):
-        embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="It looks like you are alone here, find peoples to play with before to use this command.", color=discord.Colour.red())
-        await ctx.send(embed=embed)
-    elif (nb_users > 25):
-        embed = CivPrivateBotEmbed(title="Process aborted.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
-        await ctx.send(embed=embed)
-        return
-    elif (nb_users * nb_civs > 77):
+    # if (nb_users < 2):
+    #     embed = CivPrivateBotEmbed(title="PROCESS ABORTED", description="It looks like you are alone here, find peoples to play with before to use this command.", color=discord.Colour.red())
+    #     await ctx.send(embed=embed)
+    # elif (nb_users > 25):
+    #     embed = CivPrivateBotEmbed(title="Process aborted.", description="Too many players to start a draft (max. 25 players).", colour=discord.Colour.red())
+    #     await ctx.send(embed=embed)
+    #     return
+    # elif (nb_users * nb_civs > 77):
+    if (nb_users * nb_civs > 77):
         embed = CivPrivateBotEmbed(title="Process aborted.", description="Too much leader by player. Use less civs/player or ban an innocent player 😈", colour=discord.Colour.red())
         await ctx.send(embed=embed)
         return
@@ -97,8 +98,10 @@ async def make_blind_draft(ctx : commands.Context, nb_civs : int) -> None:
                 j = j + 1
             message = message[:-1]
             embed.add_field(name="", value=message)
-            #await #########################################################################################################
+            await send_embed_dm(actual_user, embed)
             i = i + 1
+        embed_confirmation = CivPrivateBotEmbed(title="DRAFTS SENT", description="Check your private messages !", color=discord.Colour.green())
+        await ctx.send(embed=embed_confirmation)
         return
 
 #génère une draft générique
@@ -160,6 +163,7 @@ async def send_dm(user : discord.User, content : str) -> None:
 async def send_embed_dm(user : discord.User, embed : CivPrivateBotEmbed) -> None:
     await user.send(embed=embed)
     return
+
 #Récupère l'émote associée à l'id d'un leader
 def emote_from_id(id : int) -> str:
     connexion = sqlite3.connect('db_leaders.sqlite')
