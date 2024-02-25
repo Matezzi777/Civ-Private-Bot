@@ -71,11 +71,15 @@ class ReportButton(discord.ui.Button):
             await interaction.response.edit_message(view=self.view)
 
 #============================================ COMMANDES INFOS ===============================================
+#$ping
+@bot.command()
+async def ping(ctx : commands.Context) -> None:
+    embed = discord.Embed(colour=discord.Colour.green(), title="PONG")
+    await ctx.send(embed=embed)
 #$hello
 @bot.command()
 async def hello(ctx : commands.Context) -> None:
     server = ctx.guild
-    # message = f"Hi *Civ enjoyer* ! Let me introduce myself...\nMy name is **Civ Private Bot** (but you can call me CPB), I make my best to add some tools on the **{serverName}**, like map vote, draft (in progress...), ...\nPlease message **@Matezzi** if you have any suggestions to make me more useful !"
     embed = CivPrivateBotEmbed(title="Hello *Civ enjoyer !*", description=f"Let me introduce myself...\nMy name is **Civ Private Bot** (but you can call me CPB), I try my best to add some useful tools on the **{server.name}**, like $mapvote, $draft.\n\nWe actualy are working on an elo ranking system 😉\n\nPlease message <@866997795993944084> if you have any suggestions or feedback !")
     await ctx.send(embed=embed)
 #$serverinfo

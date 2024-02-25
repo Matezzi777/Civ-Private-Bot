@@ -6,6 +6,7 @@
 
 ## COMMANDS SUMMARY (CivPrivateBot.py) :
 * **Informations**
+  - $ping : respond "PONG".
   - $hello : send a little hello message in the current channel (more like an Easter Egg).
   - $serverinfo : send some informations about the server in the current channel.
   - $clear (x : int) : delete the last x messages of the current channel.
