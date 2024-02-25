@@ -1,9 +1,3 @@
-# Getting Started :
-1. Create a database named *db.sqlite* at the root of the project.
-2. Create a table named *Anniversaires* containing the following columns (User_ID : integer, Date : integer) in *db.sqlite*
-3. Create a table named *Ranked* containing the following columns (User_ID : text, Elo : integer, Wins : integer, Top1 : integer, Lost : integer, Date : datetime) in *db.sqlite*
-4. Rock n'Roll !
-
 ## BOT INFORMATIONS :
 - Bot Name : Civ Private Bot
 - Bot Prefix : $
