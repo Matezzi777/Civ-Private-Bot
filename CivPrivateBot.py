@@ -240,23 +240,33 @@ async def setup_leaderboard(ctx: commands.Context) -> None:
 
 @bot.command()
 async def add_u(ctx : commands.Context, user : discord.User) -> None:
-    result : int = add_user(user)
-    if (result):
-        embed = CivPrivateBotEmbed(colour=discord.Colour.green(), title="USER ADDED", description=f"{user.mention} successfully added.")
+    caller : discord.User = ctx.message.author
+    if (caller.id != 866997795993944084):
+        embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
+        return
     else:
-        embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title=f"ERROR", description="Error during the adding process.")
-    await ctx.send(embed=embed)
-    return
+        result : int = add_user(user)
+        if (result):
+            embed = CivPrivateBotEmbed(colour=discord.Colour.green(), title="USER ADDED", description=f"{user.mention} successfully added.")
+        else:
+            embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title=f"ERROR", description="Error during the adding process.")
+        await ctx.send(embed=embed)
+        return
 
 @bot.command()
 async def rm_u(ctx : commands.Context, user : discord.User) -> None:
-    result : int = rm_user(user)
-    if (result):
-        embed = CivPrivateBotEmbed(colour=discord.Colour.green(), title="USER DELETED", description=f"{user.mention} successfully deleted.")
+    caller : discord.User = ctx.message.author
+    if (caller.id != 866997795993944084):
+        embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
+        return
     else:
-        embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="ERROR", description="Error during the deleting process.")
-    await ctx.send(embed=embed)
-    return
+        result : int = rm_user(user)
+        if (result):
+            embed = CivPrivateBotEmbed(colour=discord.Colour.green(), title="USER DELETED", description=f"{user.mention} successfully deleted.")
+        else:
+            embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="ERROR", description="Error during the deleting process.")
+        await ctx.send(embed=embed)
+        return
 
 #================================================== RUN =====================================================
 #Run le bot
