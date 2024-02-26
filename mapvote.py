@@ -2,7 +2,7 @@
 #Import des modules
 import discord
 from discord.ext import commands
-from classes import CivPrivateBotEmbed 
+from classes import BotEmbed, SuccessEmbed, ErrorEmbed 
 
 #================================================ BOUTONS ===================================================
 #Bouton choix validé générique
@@ -46,7 +46,7 @@ class Button_pangaea(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Seven Seas 🌊
@@ -80,7 +80,7 @@ class Button_seven_seas(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Highlands ⛰️
@@ -114,7 +114,7 @@ class Button_highlands(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Continents 🌍
@@ -148,7 +148,7 @@ class Button_continents(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Continents and Islands 🏝️
@@ -182,7 +182,7 @@ class Button_continents_and_islands(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton ON ✅
@@ -216,7 +216,7 @@ class Button_on(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton OFF ❌
@@ -250,7 +250,7 @@ class Button_off(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Cap Only ⭐
@@ -284,7 +284,7 @@ class Button_cap_only(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton All cities 🏙️
@@ -318,7 +318,7 @@ class Button_all_cities(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton New 🏔️
@@ -352,7 +352,7 @@ class Button_new(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Standard (Age)🗻
@@ -386,7 +386,7 @@ class Button_standard_age(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Standard (Ridge) 🔴
@@ -420,7 +420,7 @@ class Button_standard_ridge(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Old 🌄
@@ -454,7 +454,7 @@ class Button_old(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Classic 🔺
@@ -488,7 +488,7 @@ class Button_classic(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Standard (Barbarians) ⚔️
@@ -522,7 +522,7 @@ class Button_standard_barbs(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Civilized 👔
@@ -556,7 +556,7 @@ class Button_civilized(discord.ui.Button):
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
         else:
-            embed = CivPrivateBotEmbed(title="Not allowed to vote", description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.", colour=discord.Colour.red())
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 
@@ -653,7 +653,7 @@ async def make_mapvote(ctx : commands.Context) -> None:
     await ctx.send("**BARBARIANS**", view=BarbariansView(users))
 #Lance un mapvote générique
 async def make_generic_mapvote(ctx : commands.Context) -> None:
-    embed = CivPrivateBotEmbed(title="MAPVOTE", description=f"\nReact on the following messages to select the options.")
+    embed = BotEmbed(title="MAPVOTE", description=f"\nReact on the following messages to select the options.")
     embed.add_field(name="MAP", value="🌋 Pangaea **|** 🌊 Seven Seas **|** ⛰️ Highlands **|** 🌄 Rich Highlands **|** 🌍 Continents\n🏝️ Continents and Islands **|** ⛵ Lakes **|** 🐢 Archipelago **|** 🗺️ Terra", inline=False)
     embed.add_field(name="BCY", value="✅ ON **|** ❌ OFF\n⭐ Cap only **|** 🏙️ All cities", inline=False)
     embed.add_field(name="AGE OF THE WORLD", value="🏔️ New **|** 🗻 Standard **|** 🌄 Old", inline=False)
