@@ -122,14 +122,10 @@ async def update_scoreboard(bot : commands.Bot) -> None:
     message = ""
     if (not result):
         i : int = 0
-        while (i < 3):
-            j : int = 0
-            while (j < 10):
-                message = message + f"`{parsed_rank((i*10)+j+1)}    ----    [   X - X   ]    --%   -   `\n"
-                j = j + 1
-            await channel.send(message)
-            message = ""
+        while (i < 10):
+            message = message + f"`{parsed_rank(i+1)}    ----    [   X - X   ]    --%   -   `\n"
             i = i + 1
+        await channel.send(message)
 
     else:
         nb_players_in_database : int = len(result)
