@@ -285,11 +285,18 @@ async def leaderboard(ctx : commands.Context) -> None:
 #$setup_leaderboard
 @bot.command()
 async def update_leaderboard(ctx : commands.Context) -> None:
-    print(f"\n$update_leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
-    embed = SuccessEmbed(description="Leaderboard successfuly updated.")
-    await ctx.send(embed=embed)
-    await update_scoreboard(bot)
-    return
+    caller : discord.User = ctx.message.author
+    if (caller.id != 866997795993944084):
+        print(f"\n@{ctx.message.author.name} tried to use $add_user in #{ctx.channel.name}")
+        embed = ErrorEmbed(title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
+        await caller.send(embed=embed)
+        return
+    else:
+        print(f"\n$update_leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
+        embed = SuccessEmbed(description="Leaderboard successfuly updated.")
+        await ctx.send(embed=embed)
+        await update_scoreboard(bot)
+        return
 #$clear_leaderboard
 @bot.command()
 async def reset_leaderboard(ctx : commands.Context) -> None:
