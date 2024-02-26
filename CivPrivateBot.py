@@ -290,7 +290,29 @@ async def update_leaderboard(ctx : commands.Context) -> None:
     await ctx.send(embed=embed)
     await update_scoreboard(bot)
     return
-
+#$clear_leaderboard
+@bot.command()
+async def clear_leaderboard(ctx : commands.Context) -> None:
+    caller : discord.User = ctx.message.author
+    if (caller.id != 866997795993944084):
+        print(f"\n@{ctx.message.author.name} tried to use $clear_leaderboard in #{ctx.channel.name}")
+        embed = ErrorEmbed(title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
+        await caller.send(embed=embed)
+        return
+    else:
+        print(f"\n$clear_leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
+        if (not is_database_empty()):
+            result = rm_all_users()
+            if (result):
+                embed = SuccessEmbed(description=f"Leaderboard successfully cleared.")
+                await update_scoreboard(bot)
+            else:
+                print("Error during the leaderboard clearing process.")
+                embed = ErrorEmbed(description="Error during the leaderboard clearing process.")
+        else:
+            embed = ErrorEmbed(description="Database is already empty.")
+        await ctx.send(embed=embed)
+        return
 #$add_user
 @bot.command()
 async def add_user(ctx : commands.Context, user : discord.User) -> None:
@@ -327,29 +349,7 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
             embed = ErrorEmbed(description=f"{user.mention} is already not in the database.")
         await ctx.send(embed=embed)
         return
-#$clear_leaderboard
-@bot.command()
-async def clear_leaderboard(ctx : commands.Context) -> None:
-    caller : discord.User = ctx.message.author
-    if (caller.id != 866997795993944084):
-        print(f"\n@{ctx.message.author.name} tried to use $clear_leaderboard in #{ctx.channel.name}")
-        embed = ErrorEmbed(title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
-        await caller.send(embed=embed)
-        return
-    else:
-        print(f"\n$clear_leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
-        if (not is_database_empty()):
-            result = rm_all_users()
-            if (result):
-                embed = SuccessEmbed(description=f"Leaderboard successfully cleared.")
-                await update_scoreboard(bot)
-            else:
-                print("Error during the leaderboard clearing process.")
-                embed = ErrorEmbed(description="Error during the leaderboard clearing process.")
-        else:
-            embed = ErrorEmbed(description="Database is already empty.")
-        await ctx.send(embed=embed)
-        return
+
 
 
 #=============================================== CHANTIER ===================================================
