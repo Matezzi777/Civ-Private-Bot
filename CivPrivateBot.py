@@ -7,7 +7,7 @@ from birthdays import *
 from draft import *
 from mapvote import *
 from ranked import *
-from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed
+from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
 #Définition du bot
@@ -20,54 +20,74 @@ button_change = Button(label="Yes", style=discord.ButtonStyle.green)
 #============================================= CLASSES REPORT ===============================================
 #View $report
 class ReportView(discord.ui.View):
-    def __init__(self, liste_players) -> None:
+    def __init__(self, users) -> None:
         super().__init__()
-        self.liste_players = liste_players
-        self.add_item(ReportButton(liste_players))
+        self.nb_users : int = len(users)
+        if (self.nb_users == 2):
+            self.needed_confirm : int = 2
+            self.add_item(ReportButton(users, self.needed_confirm))
+        elif (self.nb_users > 2):
+            self.needed_confirm : int = 3
+            self.add_item(ReportButton(users, self.needed_confirm))
+        else:
+            print(f"Erreur nombre d'arguments. ({self.nb_users}/2+)")
 #Bouton validation $report
 class ReportButton(discord.ui.Button):
-    def __init__(self, liste_players : list) -> None:
+    def __init__(self, users : list, needed_confirm) -> None:
         super().__init__(
             label="✅ Confirm",
             style=discord.ButtonStyle.green
         )
-        self.liste_players : list = liste_players
+        self.users : list = users
+        self.needed_confirm = needed_confirm
         self.count = 0
         self.users_who_clicked : list = []
         i : int = 0
-        print("\n===== Users in the game : =====")
-        while (i < len(self.liste_players)):
-            print(f"{self.liste_players[i].name}")
+        print("\n===== Report Started : =====")
+        message : str = "Players in the game :"
+        while (i < len(self.users)):
+            message = message + f" {self.users[i].name}"
             i = i + 1
-        print("")
-    async def callback(self, interaction : discord.Interaction) -> None:
-        if (interaction.user.id == 866997795993944084):
-            needed_confirm = 1
-        elif (len(self.liste_players) == 2):
-            needed_confirm = 2
-        else:
-            needed_confirm = 3
+        print(message)
 
-        if (is_in_list(interaction.user, self.liste_players) or interaction.user.id == 866997795993944084): #Si l'utilisateur était dans la partie ou que Matezzi valide la partie.
+    async def callback(self, interaction : discord.Interaction) -> None:
+        #Permission admin
+        if (interaction.user.id == 866997795993944084): #Si Matezzi valide le résultat
+            #Changement de bouton
+            valid_button : discord.Button = ValidButton()
+            valid_button.label = "✅ Game reported"
+            valid_view = discord.ui.View()
+            valid_view.add_item(valid_button)
+            await interaction.response.edit_message(view=valid_view)
+            #Message retour
+            embed=SuccessEmbed(description="Result confirmed, result stored in the database and player's stats updated.")
+            await interaction.followup.send(embed=embed)
+            await valid_report(bot, self.users)
+            return
+        #Mise à jour du nombre de clics
+        if (is_in_list(interaction.user, self.users)): #Si l'utilisateur était dans la partie.
             if (not is_in_list(interaction.user, self.users_who_clicked)): #Si il n'a pas déjà cliqué
                 self.count = self.count + 1
                 self.users_who_clicked.append(interaction.user)
                 print(f"{interaction.user.name} confirmed the reported result.")
             else: #Si il a déjà cliqué
                 print(f"{interaction.user.name} already clicked.")
-
         else: #Si l'utilisateur n'était pas dans la partie.
             print(f"{interaction.user.name} clicked but wasn't on the game.")
-
-        if (self.count >= needed_confirm):
-            self.label="Report validated"
-            self.disabled=True
-            embed=SuccessEmbed(description="Result confirmed, result stored in the database and player's stats updated.")
-            await interaction.response.edit_message(view=self.view)
+        #Vérification du nombres de clics par rapport au nombre attendu
+        if (self.count == self.needed_confirm):
+            #Changement de bouton
+            valid_button : discord.Button = ValidButton()
+            valid_button.label = "✅ Game reported"
+            valid_view = discord.ui.View()
+            valid_view.add_item(valid_button)
+            await interaction.response.edit_message(view=valid_view)
+            #Message retour
+            embed=SuccessEmbed(description="Result confirmed.\nStats and leaderboard updated.")
             await interaction.followup.send(embed=embed)
-            await valid_report(bot, self.liste_players)
+            await valid_report(bot, self.users)
         else:
-            self.label=f"{needed_confirm-self.count} more ✅ needed"
+            self.label=f"{self.needed_confirm-self.count} more ✅ needed"
             await interaction.response.edit_message(view=self.view)
 
 #============================================ COMMANDES INFOS ===============================================
@@ -201,18 +221,20 @@ async def birthdays(ctx : commands.Context) -> None:
 #$report @First @Second @Third ...
 @bot.command()
 async def report(ctx : commands.Context, *args : discord.User) -> None:
-    if (len(args) < 2):
-        embed=ErrorEmbed(description="Not enough players in the game reported (minimum 2)")
+    users = args
+    if (len(users) < 2):
+        embed=ErrorEmbed(description="Not enough players in the game reported (minimum 2).")
         return await ctx.send(embed=embed)
-    embed=BotEmbed(title="Verify the Result", description="Please make sure the result reported is correct before verifying it.\nThe report needs to be confirmed by 3 different players (2 for a 1v1).")
-    i : int = 0
-    message = ""
-    while (i < len(args)):
-        message = message + f"**{i+1} :** {args[i].name}\n"
-        i = i + 1
-    embed.add_field(name="Result reported :", value=message)
-    view=ReportView(args)
-    await ctx.send(embed=embed, view=view)
+    else:
+        embed=BotEmbed(title="Verify the Result", description="Please make sure the result reported is correct before verifying it.\nThe report needs to be confirmed by 3 different players (2 for a 1v1).")
+        i : int = 0
+        message = ""
+        while (i < len(users)):
+            message = message + f"**{i+1} :** {users[i].mention}\n"
+            i = i + 1
+        embed.add_field(name="Result reported :", value=message)
+        view=ReportView(users)
+        await ctx.send(embed=embed, view=view)
 #$stats
 @bot.command()
 async def stats(ctx : commands.Context) -> None:
@@ -237,6 +259,8 @@ async def leaderboard(ctx : commands.Context) -> None:
 #$setup_leaderboard
 @bot.command()
 async def update_leaderboard(ctx : commands.Context) -> None:
+    embed = SuccessEmbed(description="Leaderboard successfuly updated.")
+    await ctx.send(embed=embed)
     await update_scoreboard(bot)
     return
 
@@ -285,6 +309,7 @@ async def clear_leaderboard(ctx : commands.Context) -> None:
             result = rm_all_users()
             if (result):
                 embed = SuccessEmbed(description=f"Leaderboard successfully cleared.")
+                await update_scoreboard(bot)
             else:
                 embed = ErrorEmbed(description="Error during the leaderboard clearing process.")
         else:

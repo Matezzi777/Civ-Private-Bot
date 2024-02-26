@@ -2,19 +2,9 @@
 #Import des modules
 import discord
 from discord.ext import commands
-from classes import BotEmbed, SuccessEmbed, ErrorEmbed 
+from classes import BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton 
 
 #================================================ BOUTONS ===================================================
-#Bouton choix validé générique
-class Valid_button(discord.ui.Button):
-    def __init__(self) -> None:
-        super().__init__(
-            label=" - ",
-            style=discord.ButtonStyle.green
-        )
-    
-    async def callback(self, interaction : discord.Interaction):
-        await interaction.response.edit_message(view=self.view)
 #Bouton Pangaea 🌋
 class Button_pangaea(discord.ui.Button):
     def __init__(self, list_users : list, needed_confirm : int) -> None:
@@ -40,7 +30,7 @@ class Button_pangaea(discord.ui.Button):
                 self.label = f"🌋 Pangaea ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🌋 Pangaea"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -74,7 +64,7 @@ class Button_seven_seas(discord.ui.Button):
                 self.label = f"🌊 Seven Seas ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🌊 Seven Seas"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -108,7 +98,7 @@ class Button_highlands(discord.ui.Button):
                 self.label = f"⛰️ Highlands ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "⛰️ Highlands"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -142,7 +132,7 @@ class Button_continents(discord.ui.Button):
                 self.label = f"🌍 Continents ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🌍 Continents"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -176,7 +166,7 @@ class Button_continents_and_islands(discord.ui.Button):
                 self.label = f"🏝️ Continents and Islands ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🏝️ Continents and Islands"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -210,7 +200,7 @@ class Button_on(discord.ui.Button):
                 self.label = f"✅ ON ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "✅ ON"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -244,7 +234,7 @@ class Button_off(discord.ui.Button):
                 self.label = f"❌ OFF ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "❌ OFF"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -278,7 +268,7 @@ class Button_cap_only(discord.ui.Button):
                 self.label = f"⭐ Cap Only ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "⭐ Cap Only"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -312,7 +302,7 @@ class Button_all_cities(discord.ui.Button):
                 self.label = f"🏙️ All Cities ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🏙️ All Cities"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -346,7 +336,7 @@ class Button_new(discord.ui.Button):
                 self.label = f"🏔️ New ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🏔️ New"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -380,7 +370,7 @@ class Button_standard_age(discord.ui.Button):
                 self.label = f"🗻 Standard ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🗻 Standard"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -414,7 +404,7 @@ class Button_standard_ridge(discord.ui.Button):
                 self.label = f"🔴 Standard ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🔴 Standard"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -448,7 +438,7 @@ class Button_old(discord.ui.Button):
                 self.label = f"🌄 Old ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🌄 Old"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -482,7 +472,7 @@ class Button_classic(discord.ui.Button):
                 self.label = f"🔺 Classic ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "🔺 Classic"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -516,7 +506,7 @@ class Button_standard_barbs(discord.ui.Button):
                 self.label = f"⚔️ Standard ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "⚔️ Standard"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
@@ -550,7 +540,7 @@ class Button_civilized(discord.ui.Button):
                 self.label = f"👔 Civilized ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
-                valid_button = Valid_button()
+                valid_button = ValidButton()
                 valid_button.label = "👔 Civilized"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
