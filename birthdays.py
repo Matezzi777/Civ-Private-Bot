@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 import sqlite3
 import datetime
-from classes import CivPrivateBotEmbed
+from classes import BotEmbed, SuccessEmbed, ErrorEmbed
 
 #========================================= FONCTIONS PRINCIPALES ============================================
 #Ajoute un anniversaire dans la base de donnée
@@ -38,13 +38,13 @@ async def display_birthdays(ctx : commands.Context) -> None:
     result = cursor.fetchall()
     connexion.close()
     if(result):
-        embed=CivPrivateBotEmbed(title="BIRTHDAYS", description="Birthdays stored in the database :")
+        embed=BotEmbed(title="BIRTHDAYS", description="Birthdays stored in the database :")
         for row in result:
             user = ctx.guild.get_member(row[0])
             embed.add_field(name="", value=f"<@{user.id}> : {parse_date(row[1])}", inline=False)
         await ctx.send(embed=embed)
     else:
-        embed=CivPrivateBotEmbed(title="Process aborted", description="No birthday stored in the database.")
+        embed=ErrorEmbed(description="No birthday stored in the database.")
         await ctx.send(embed=embed)
     return
 #Affiche la date (format : DD/MM/YYYY)
@@ -52,7 +52,7 @@ async def display_date(ctx : commands.Context) -> None:
     day = str(datetime.date.today())[8] + str(datetime.date.today())[9]
     month = str(datetime.date.today())[5] + str(datetime.date.today())[6]
     year = str(datetime.date.today())[0] + str(datetime.date.today())[1] + str(datetime.date.today())[2] + str(datetime.date.today())[3]
-    embed = CivPrivateBotEmbed(title="DATE", description=f"Today is : **{day}/{month}/{year}** (UTC + 1)")
+    embed = BotEmbed(title="DATE", description=f"Today is : **{day}/{month}/{year}** (UTC + 1)")
     await ctx.send(embed=embed)
     return
 
