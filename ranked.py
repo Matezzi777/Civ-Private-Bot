@@ -115,7 +115,6 @@ async def display_scoreboard(ctx : commands.Context) -> None:
 async def update_scoreboard(bot : commands.Bot) -> None:
     channel : discord.TextChannel = bot.get_channel(leaderboard_channel_id)
     async for message in channel.history(limit=12):
-        print(f"Message deleted from #{channel.name}")
         await message.delete()
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
@@ -159,6 +158,7 @@ async def update_scoreboard(bot : commands.Bot) -> None:
             await channel.send(message)
             message = ""
             i = i + 1
+    print(f"Leaderboard updated in #{channel.name}")
     return
 
 def parsed_rank(n : int) -> str:
