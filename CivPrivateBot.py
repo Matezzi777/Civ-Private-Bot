@@ -64,31 +64,33 @@ class ReportButton(discord.ui.Button):
             await interaction.followup.send(embed=embed)
             await valid_report(bot, self.users)
             return
-        #Mise à jour du nombre de clics
+        #Mise à jour et prise en compte des clics
         if (is_in_list(interaction.user, self.users)): #Si l'utilisateur était dans la partie.
             if (not is_in_list(interaction.user, self.users_who_clicked)): #Si il n'a pas déjà cliqué
                 self.count = self.count + 1
-                self.users_who_clicked.append(interaction.user)
-                print(f"{interaction.user.name} confirmed the reported result.")
+                self.users_who_clicked.append(interaction.user)#Vérification du nombres de clics par rapport au nombre attendu
+                if (self.count == self.needed_confirm):
+                    #Changement de bouton
+                    valid_button : discord.Button = ValidButton()
+                    valid_button.label = "✅ Game reported"
+                    valid_view = discord.ui.View()
+                    valid_view.add_item(valid_button)
+                    await interaction.response.edit_message(view=valid_view)
+                    #Message retour
+                    embed=SuccessEmbed(description="Result confirmed.\nStats and leaderboard updated.")
+                    await interaction.followup.send(embed=embed)
+                    await valid_report(bot, self.users)
+                else:
+                    self.label=f"{self.needed_confirm-self.count} more ✅ needed"
+                    await interaction.response.edit_message(view=self.view)
+                    print(f"@{interaction.user.name} confirmed the reported result.")
             else: #Si il a déjà cliqué
                 print(f"{interaction.user.name} already clicked.")
         else: #Si l'utilisateur n'était pas dans la partie.
-            print(f"{interaction.user.name} clicked but wasn't on the game.")
-        #Vérification du nombres de clics par rapport au nombre attendu
-        if (self.count == self.needed_confirm):
-            #Changement de bouton
-            valid_button : discord.Button = ValidButton()
-            valid_button.label = "✅ Game reported"
-            valid_view = discord.ui.View()
-            valid_view.add_item(valid_button)
-            await interaction.response.edit_message(view=valid_view)
-            #Message retour
-            embed=SuccessEmbed(description="Result confirmed.\nStats and leaderboard updated.")
-            await interaction.followup.send(embed=embed)
-            await valid_report(bot, self.users)
-        else:
-            self.label=f"{self.needed_confirm-self.count} more ✅ needed"
+            embed = ErrorEmbed(description="You tried to vote for a report which does not concern you.")
+            await interaction.user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
+            print(f"@{interaction.user.name} clicked but wasn't on the game.")
 
 #============================================ COMMANDES INFOS ===============================================
 #$ping
