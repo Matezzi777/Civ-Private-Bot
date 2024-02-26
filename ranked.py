@@ -258,10 +258,10 @@ def get_date(user : discord.User) -> str:
 
 #====================================== BASE DE DONNÉE (ÉCRITURE) ===========================================
 #Ajoute l'utilisateur à la base de donnée
-def add_user(user : discord.User) -> None:
+def add_user(user : discord.User) -> int:
     if (is_player_in_database(user)):
         print(f"{user.name} already stored in the database.")
-        return
+        return (0)
     else:
         connexion = sqlite3.connect('db.sqlite')
         cursor = connexion.cursor()
@@ -269,8 +269,31 @@ def add_user(user : discord.User) -> None:
         cursor.execute(request)
         connexion.commit()
         connexion.close()
-        print(f"{user.name} added to the database.")
-        return
+        if (is_player_in_database(user)):
+            print(f"{user.name} added to the database.")
+            return (1)
+        else:
+            print(f"Error in the INSERT request.")
+            return (0)
+
+#Supprime l'utilisateur de la base de donnée
+def rm_user(user : discord.User) -> int:
+    if (is_player_in_database(user)):
+        connexion = sqlite3.connect('db.sqlite')
+        cursor = connexion.cursor()
+        request : str = f"DELETE FROM Ranked WHERE User_ID='{user.id}'"
+        cursor.execute(request)
+        connexion.commit()
+        connexion.close()
+        if (not is_player_in_database(user)):
+            print(f"{user.name} removed from the database.")
+            return (1)
+        else:
+            print(f"Error in the DELETE request.")
+            return (0)
+    else:
+        print(f"Impossible to delete the user.\n{user.name} not found in the database.")
+        return (0)
 
 #Met à jour l'elo de l'utilisateur
 def update_elo(user : discord.User, new_elo : int) -> None:
