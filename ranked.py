@@ -37,7 +37,7 @@ async def valid_report(liste_players : list) -> None:
         if (i == 0):
             update_top1(user)
             update_wins(user)
-        elif (i <= (nb_players//2) and nb_players >= 4):
+        elif (i < ((nb_players//2)) and nb_players >= 4):
             update_wins(user)
         else:
             update_lost(user)
@@ -275,7 +275,6 @@ def add_u(user : discord.User) -> int:
         else:
             print(f"Error in the INSERT request.")
             return (0)
-
 #Supprime l'utilisateur de la base de donnée
 def rm_u(user : discord.User) -> int:
     if (is_player_in_database(user)):
