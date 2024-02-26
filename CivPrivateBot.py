@@ -242,6 +242,7 @@ async def add_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
         embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
+        await caller.send(embed=embed)
         return
     else:
         result : int = add_u(user)
@@ -257,6 +258,7 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
         embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
+        await caller.send(embed=embed)
         return
     else:
         result : int = rm_u(user)
@@ -266,6 +268,26 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
             embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="ERROR", description="Error during the deleting process.")
         await ctx.send(embed=embed)
         return
+#$clear_leaderboard
+@bot.command()
+async def clear_leaderboard(ctx : commands.Context) -> None:
+    caller : discord.User = ctx.message.author
+    if (caller.id != 866997795993944084):
+        embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
+        await caller.send(embed=embed)
+        return
+    else:
+        if (not is_database_empty()):
+            result = rm_all_users()
+            if (result):
+                embed = CivPrivateBotEmbed(colour=discord.Colour.green(), title="LEADERBOARD CLEARED", description=f"Leaderboard successfully cleared.")
+            else:
+                embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="ERROR", description="Error during the leaderboard clearing process.")
+        else:
+            embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="ERROR", description="Database is already empty.")
+        await ctx.send(embed=embed)
+        return
+
 
 #=============================================== CHANTIER ===================================================
 

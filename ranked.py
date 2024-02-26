@@ -92,6 +92,7 @@ async def display_scoreboard(ctx : commands.Context) -> None:
     cursor.execute(request)
     connexion.commit()
     result : list = cursor.fetchall()
+    connexion.close()
     if (not result):
         embed=CivPrivateBotEmbed(colour=discord.Colour.red(), title="Database empty", description="For now, any game has been reported. If you have a game to report, use $report.")
         await ctx.send(embed=embed)
@@ -204,6 +205,7 @@ def get_games_played(user : discord.User) -> int:
     cursor.execute(request_get_lost)
     lost : int = cursor.fetchone()[0]
     games_played : int = wins + lost
+    connexion.close()
     return (games_played)
 #Récupère l'elo de l'utilisateur
 def get_elo(user : discord.User) -> int:
@@ -254,6 +256,7 @@ def get_date(user : discord.User) -> str:
     connexion.commit()
     result : int = cursor.fetchone()[0]
     date : str = str(result//1000)+str((result%1000)//100)+"/"+str((result%100)//10)+str(result%10)
+    connexion.close()
     return (date)
 
 #====================================== BASE DE DONNÉE (ÉCRITURE) ===========================================
@@ -292,6 +295,21 @@ def rm_u(user : discord.User) -> int:
             return (0)
     else:
         print(f"Impossible to delete the user.\n{user.name} not found in the database.")
+        return (0)
+#Reset la base de donnée Ranked
+def rm_all_users() -> int:
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request : str = f"DELETE FROM Ranked"
+    cursor.execute(request)
+    connexion.commit()
+    connexion.close()
+    result = is_database_empty()
+    if (result):
+        print(f"Database cleared.")
+        return (1)
+    else:
+        print(f"Error during the database clearing process.")
         return (0)
 
 #Met à jour l'elo de l'utilisateur
@@ -381,3 +399,16 @@ def is_in_list(user : discord.User, liste : list) -> bool:
             return True
         i = i + 1
     return False
+#Vérifie si la base de donnée est vide
+def is_database_empty() -> bool:
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request : str = f"SELECT * FROM Ranked"
+    cursor.execute(request)
+    connexion.commit()
+    result : list = cursor.fetchall()
+    connexion.close()
+    if (not result):
+        return True
+    else:
+        return False
