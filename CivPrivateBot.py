@@ -270,9 +270,11 @@ async def stats(ctx : commands.Context) -> None:
     wins : int = get_wins(user)
     lost : int = get_lost(user)
     date : str = get_date(user)
-    embed=BotEmbed(title="STATS", description=f"<@{user.id}>")
+    rank : int = get_rank(user)
+    embed=BotEmbed(title="STATS", description=f"**{user.mention}\nRANK : {rank}**")
     embed.set_thumbnail(url=user.avatar)
-    embed.add_field(name="", value=f"**Games played : {wins+lost}\nElo : {elo}\nTop 1 : {top1}\nWins : {wins}\nLost : {lost}\nLast game played : {date}**")
+    # embed.add_field(name="", value=f"**Games played : {wins+lost}\nElo : {elo}\nTop 1 : {top1}\nWins : {wins}\nLost : {lost}\nLast game played : {date}**")
+    embed.add_field(name="", value=f"`Games played    ` : `{wins+lost}`\n`Elo             ` : `{elo}`\n`Top 1           ` : `{top1}`\n`Wins            ` : `{wins}`\n`Lost            ` : `{lost}`\n`Last game played` : `{date}`")
     return await ctx.send(embed=embed)
 #$scoreboard
 @bot.command()
