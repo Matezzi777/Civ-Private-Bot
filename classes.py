@@ -3,6 +3,8 @@
 import discord
 from discord.ext import commands
 
+bot_version : str = "Civ Private Bot 2.1"
+
 #================================================== BOT =====================================================
 class Bot(commands.Bot):
     def __init__(self):
@@ -26,7 +28,7 @@ class BotEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text="Civ Private Bot 2.0")
+        self.set_footer(text=bot_version)
 
 class SuccessEmbed(discord.Embed):
     def __init__(self, *, colour=discord.Colour.green(), color=discord.Colour.green(), title="SUCCESS", type='rich', url=None, description=None, timestamp=None) -> None:
@@ -39,7 +41,7 @@ class SuccessEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text="Civ Private Bot 2.0")
+        self.set_footer(text=bot_version)
 
 class ErrorEmbed(discord.Embed):
     def __init__(self, *, colour=discord.Colour.red(), color=discord.Colour.red(), title="ERROR", type='rich', url=None, description=None, timestamp=None) -> None:
@@ -52,7 +54,7 @@ class ErrorEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text="Civ Private Bot 2.0")
+        self.set_footer(text=bot_version)
 
 # BUTTONS
 #Bouton choix validé générique
