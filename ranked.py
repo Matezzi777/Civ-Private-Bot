@@ -4,9 +4,12 @@ import discord
 import sqlite3
 import datetime
 from discord.ext import commands
-from classes import CivPrivateBotEmbed
+from classes import BotEmbed, SuccessEmbed, ErrorEmbed
 
-#============================================= CALIBRAGE ELO ================================================
+#=============================================== CALIBRAGE ==================================================
+#Leaderboard's channel ID
+leaderboard_channel_id = 1211156479269404692
+
 #Elo initial attribué aux nouveaux utilisateurs
 elo_new_player = 1200
 #Différence d'elo nécessaire pour avoir 90% de chances de victoire estimées
@@ -14,7 +17,7 @@ theta = 400
 
 #========================================= COMMANDES PRINCIPALES ============================================
 #$report @X @Y @Z
-async def valid_report(liste_players : list) -> None:
+async def valid_report(bot : commands.Bot, liste_players : list) -> None:
 
     nb_players : int = len(liste_players)
     actual_elos : list= []
@@ -83,6 +86,7 @@ async def valid_report(liste_players : list) -> None:
         i = i + 1
     print("")
     print(f"===== Result validated =====")
+    await update_scoreboard(bot)
     return
 #Affiche le tableau des scores
 async def display_scoreboard(ctx : commands.Context) -> None:
@@ -94,36 +98,50 @@ async def display_scoreboard(ctx : commands.Context) -> None:
     result : list = cursor.fetchall()
     connexion.close()
     if (not result):
-        embed=CivPrivateBotEmbed(colour=discord.Colour.red(), title="Database empty", description="For now, any game has been reported. If you have a game to report, use $report.")
+        embed=ErrorEmbed(description="For now, any game has been reported. If you have a game to report, use $report.")
         await ctx.send(embed=embed)
         return
-    embed=CivPrivateBotEmbed(title="LEADERBOARD CIV PRIVATE CLUB SEASON #1", description="Here is the actual leaderboard for the 1st Ranked season of the Civ Private Club")
+    embed=BotEmbed(title="LEADERBOARD CIV PRIVATE CLUB SEASON #1", description="Here is the actual leaderboard for the 1st Ranked season of the Civ Private Club")
     i : int = 0
     nb_users_stored = len(result)
     while (i < nb_users_stored):
         embed.add_field(name="", value=f"**{i+1}.** <@{result[i][0]}>\n`Games played :` {result[i][3]+result[i][4]}\n`Ratio        :` {round(float(float(result[i][3])/float(result[i][3]+result[i][4])), 2)}\n`Elo          :` {result[i][1]}\n`Top 1        :` {result[i][2]}\n`Wins         :` {result[i][3]}\n`Lost         :` {result[i][4]}", inline=True)
         i = i + 1
-    await ctx.send(embed=embed)
+    await ctx.message.delete()
+    await ctx.send(embed=embed, delete_after=30)
     return 
 
 #============================================== LEADERBOARD =================================================
-async def setup_scoreboard(channel : discord.channel) -> None:
-    message = "## LEADERBOARD\n`Rank   Skill   [wins - loss]   win%   Top1`"
-    await channel.send(message)
-    message = ""
+async def update_scoreboard(bot : commands.Bot) -> None:
+    channel : discord.TextChannel = bot.get_channel(leaderboard_channel_id)
+    async for message in channel.history(limit=12):
+        print(f"Message deleted from #{channel.name}")
+        await message.delete()
     connexion = sqlite3.connect('db.sqlite')
     cursor = connexion.cursor()
     request : str = "SELECT User_ID, Elo, Top1, Wins, Lost FROM Ranked ORDER BY Elo DESC"
     cursor.execute(request)
     connexion.commit()
     result : list = cursor.fetchall()
+    connexion.close()
+    message = "## LEADERBOARD\n`Rank   Skill   [wins - loss]   win%   Top1`"
+    await channel.send(message)
+    message = ""
     if (not result):
-        embed=CivPrivateBotEmbed(colour=discord.Colour.red(), title="Error !", description="Unable to get infos from the database (or database empty).")
-        await channel.send(embed=embed)
+        i : int = 0
+        while (i < 3):
+            j : int = 0
+            while (j < 10):
+                message = message + f"`{parsed_rank((i*10)+j+1)}    ----    [   X - X   ]    --%   -   `\n"
+                j = j + 1
+            await channel.send(message)
+            message = ""
+            i = i + 1
+
     else:
         nb_players_in_database : int = len(result)
         i : int = 0
-        while (i < 3):
+        while ((i <= nb_players_in_database // 10) and (i < 10)):
             j : int = 0
             while (j < 10):
                 n : int = i*10 + j
