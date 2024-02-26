@@ -25,7 +25,7 @@ async def valid_report(liste_players : list) -> None:
     while (i < nb_players):
         user : discord.User = liste_players[i]
         if (not is_player_in_database(user)):
-            add_user(user)
+            add_u(user)
         actual_elos.append(get_elo(user))
         i = i + 1
 
