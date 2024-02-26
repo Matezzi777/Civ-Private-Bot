@@ -104,8 +104,7 @@ async def display_scoreboard(ctx : commands.Context) -> None:
     await ctx.message.delete()
     await ctx.send(embed=embed, delete_after=30)
     return 
-
-#============================================== LEADERBOARD =================================================
+#Met à jour le leaderboard dans le channel dédié
 async def update_scoreboard(bot : commands.Bot) -> None:
     channel : discord.TextChannel = bot.get_channel(leaderboard_channel_id)
     async for message in channel.history(limit=12):
@@ -151,12 +150,14 @@ async def update_scoreboard(bot : commands.Bot) -> None:
     print(f"Leaderboard updated in #{channel.name}")
     return
 
+#========================================== PARSING LEADERBOARD =============================================
+#Parse le rank afin de correctement l'afficher
 def parsed_rank(n : int) -> str:
     if (n <= 9):
         return (f"#{n} ")
     else:
         return (f"#{n}")
-
+#Parse le skill afin de correctement l'afficher
 def parsed_skill(skill : int) -> str:
     if (skill <= 9):
         return (f"{   skill}")
@@ -166,7 +167,7 @@ def parsed_skill(skill : int) -> str:
         return (f"{ skill}")
     else:
         return (f"{skill}")
-
+#Parse les wins afin de correctement l'afficher
 def parsed_wins(wins : int) -> str:
     if (wins <= 9):
         return (f"  {wins}")
@@ -174,7 +175,7 @@ def parsed_wins(wins : int) -> str:
         return (f" {wins}")
     else:
         return (f"{wins}")
-
+#Parse les lost afin de correctement l'afficher
 def parsed_lost(lost : int) -> str:
     if (lost <= 9):
         return (f"{lost}  ")
@@ -182,7 +183,7 @@ def parsed_lost(lost : int) -> str:
         return (f"{lost} ")
     else:
         return (f"{lost}")
-
+#Parse le winrate afin de correctement l'afficher
 def parsed_winrate(winrate : int) -> str:
     if (winrate == 100):
         return (f"{winrate}%")
@@ -190,7 +191,7 @@ def parsed_winrate(winrate : int) -> str:
         return (f"  {winrate}%")
     else:
         return (f" {winrate}%")
-
+#Parse les top1 afin de correctement l'afficher
 def parsed_top1(top1 : int) -> str:
     if (top1 <= 9):
         return (f"{top1}   ")

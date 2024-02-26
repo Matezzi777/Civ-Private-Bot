@@ -292,7 +292,7 @@ async def update_leaderboard(ctx : commands.Context) -> None:
     return
 #$clear_leaderboard
 @bot.command()
-async def clear_leaderboard(ctx : commands.Context) -> None:
+async def reset_leaderboard(ctx : commands.Context) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
         print(f"\n@{ctx.message.author.name} tried to use $clear_leaderboard in #{ctx.channel.name}")

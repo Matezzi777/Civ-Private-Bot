@@ -2,7 +2,7 @@
 - Bot Name : Civ Private Bot
 - Bot Prefix : $
 - Bot Intents : Admin (all)
-- Bot Description : "Civ Private Bot v2.0.0"
+- Bot Description : "Civ Private Bot v2.1"
 
 ## COMMANDS SUMMARY (CivPrivateBot.py) :
 * **Informations**
@@ -25,7 +25,10 @@
   - $report (users : list) : report the result of a ranked game (mention the player in the same order than the scoreboard at the end of the game (winner first anyway)).
   - $stats : display the stats of the caller of the function in the current channel.
   - $leaderboard : update the leaderboard in the leaderboard channel.
-  - $setup_leaderboard : create the leaderboard in the indicated channel (in order to update later).
+  - $update_leaderboard : update the leaderboard.
+  - $reset_leaderboard : reset the leaderboard.
+  - $add_user(user : discord.User) : add an user in the Ranked Database.
+  - $rm_user(user : discord.User) : remove an user from the Ranked Database.
 
 ## FUNCTIONS SUMMARY :
 * **birthdays.py**
@@ -52,22 +55,25 @@
   - make_mapvote
   - make_generic_mapvote
 * **ranked.py**
-  - valid_report(liste_players)
+  - valid_report(bot, liste_players)
   - display_scoreboard
-  - setup_scoreboard(channel)
+  - update_scoreboard(bot)
   - parsed_rank(n)
   - parsed_skill(skill)
   - parsed_wins(wins)
   - parsed_lost(lost)
-  - parsed_top1(top1)
   - parsed_winrate(winrate)
+  - parsed_top1(top1)
   - get_games_played(user)
   - get_elo(user)
   - get_top1(user)
   - get_wins(user)
   - get_lost(user)
   - get_date(user)
-  - add_user(user)
+  - get_rank(user)
+  - add_u(user)
+  - rm_u(user)
+  - rm_all_users
   - update_elo(user, new_elo)
   - update_top1(user)
   - update_wins(user)
@@ -75,3 +81,4 @@
   - update_date(user)
   - is_player_in_database(user)
   - is_in_list(user, liste)
+  - is_database_empty
