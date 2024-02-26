@@ -18,11 +18,8 @@ theta = 400
 #========================================= COMMANDES PRINCIPALES ============================================
 #$report @X @Y @Z
 async def valid_report(bot : commands.Bot, liste_players : list) -> None:
-
     nb_players : int = len(liste_players)
     actual_elos : list= []
-
-    print("")
 
     i : int = 0
     while (i < nb_players):
@@ -31,8 +28,6 @@ async def valid_report(bot : commands.Bot, liste_players : list) -> None:
             add_u(user)
         actual_elos.append(get_elo(user))
         i = i + 1
-
-    print("")
 
     i = 0
     while (i < nb_players):
@@ -46,7 +41,7 @@ async def valid_report(bot : commands.Bot, liste_players : list) -> None:
             update_lost(user)
 
         update_date(user)
-        print("")
+        print(f"@{user.name} stats updated ({i+1}/{nb_players})")
         i = i + 1
     
     i = 0
@@ -84,8 +79,7 @@ async def valid_report(bot : commands.Bot, liste_players : list) -> None:
         new_elo : int = round(actual_elo + elo_variation)
         update_elo(user, new_elo)
         i = i + 1
-    print("")
-    print(f"===== Result validated =====")
+    print(f"Game reported.")
     await update_scoreboard(bot)
     return
 #Affiche le tableau des scores
@@ -338,7 +332,6 @@ def update_elo(user : discord.User, new_elo : int) -> None:
     cursor.execute(request_write)
     connexion.commit()
     connexion.close()
-    print(f"{user.name}'s Elo updated.")
     return
 #Incrémente les top 1 de l'utilisateur
 def update_top1(user : discord.User) -> None:
@@ -352,7 +345,6 @@ def update_top1(user : discord.User) -> None:
     cursor.execute(request_write)
     connexion.commit()
     connexion.close()
-    print(f"{user.name}'s Top1 updated.")
     return
 #Incrémente les wins de l'utilisateur
 def update_wins(user : discord.User) -> None:
@@ -366,7 +358,6 @@ def update_wins(user : discord.User) -> None:
     cursor.execute(request_write)
     connexion.commit()
     connexion.close()
-    print(f"{user.name}'s Wins updated.")
     return
 #Incrémente les défaites de l'utilisateur
 def update_lost(user : discord.User) -> None:
@@ -380,7 +371,6 @@ def update_lost(user : discord.User) -> None:
     cursor.execute(request_write)
     connexion.commit()
     connexion.close()
-    print(f"{user.name}'s Lost updated.")
     return
 #Met à jour la date de la dernière partie jouée par l'utilisateur à aujourd'hui
 def update_date(user : discord.User) -> None:
@@ -393,7 +383,6 @@ def update_date(user : discord.User) -> None:
     cursor.execute(request_write)
     connexion.commit()
     connexion.close()
-    print(f"{user.name}'s Date updated.")
     return
 
 #=============================================== BOOLÉENS ===================================================
