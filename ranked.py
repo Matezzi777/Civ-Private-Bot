@@ -266,6 +266,22 @@ def get_date(user : discord.User) -> str:
     date : str = str(result//1000)+str((result%1000)//100)+"/"+str((result%100)//10)+str(result%10)
     connexion.close()
     return (date)
+#Récupère le classement du joueur
+def get_rank(user : discord.User) -> int:
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request : str = "SELECT User_ID, Elo, Top1, Wins, Lost FROM Ranked ORDER BY Elo DESC"
+    cursor.execute(request)
+    connexion.commit()
+    result : list = cursor.fetchall()
+    connexion.close()
+    rank : int = 0
+    while (rank < len(result)):
+        user_id = result[rank][0]
+        if (int(user_id) == int(user.id)):
+            return (rank+1)
+        rank = rank + 1
+    return (-1)
 
 #====================================== BASE DE DONNÉE (ÉCRITURE) ===========================================
 #Ajoute l'utilisateur à la base de donnée
