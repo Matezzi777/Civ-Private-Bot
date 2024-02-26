@@ -236,8 +236,7 @@ async def setup_leaderboard(ctx: commands.Context) -> None:
     await setup_scoreboard(ctx, channel)
     return
 
-#=============================================== CHANTIER ===================================================
-
+#$add_user
 @bot.command()
 async def add_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
@@ -252,7 +251,7 @@ async def add_user(ctx : commands.Context, user : discord.User) -> None:
             embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title=f"ERROR", description="Error during the adding process.")
         await ctx.send(embed=embed)
         return
-
+#$rm_user
 @bot.command()
 async def rm_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
@@ -267,6 +266,10 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
             embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="ERROR", description="Error during the deleting process.")
         await ctx.send(embed=embed)
         return
+
+#=============================================== CHANTIER ===================================================
+
+
 
 #================================================== RUN =====================================================
 #Run le bot
