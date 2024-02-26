@@ -53,3 +53,15 @@ class ErrorEmbed(discord.Embed):
             timestamp=timestamp
             )
         self.set_footer(text="Civ Private Bot 2.0")
+
+# BUTTONS
+#Bouton choix validé générique
+class ValidButton(discord.ui.Button):
+    def __init__(self) -> None:
+        super().__init__(
+            label=" - ",
+            style=discord.ButtonStyle.green
+        )
+    
+    async def callback(self, interaction : discord.Interaction):
+        await interaction.response.edit_message(view=self.view)
