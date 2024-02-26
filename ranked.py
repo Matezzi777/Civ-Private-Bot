@@ -258,7 +258,7 @@ def get_date(user : discord.User) -> str:
 
 #====================================== BASE DE DONNÉE (ÉCRITURE) ===========================================
 #Ajoute l'utilisateur à la base de donnée
-def add_user(user : discord.User) -> int:
+def add_u(user : discord.User) -> int:
     if (is_player_in_database(user)):
         print(f"{user.name} already stored in the database.")
         return (0)
@@ -277,7 +277,7 @@ def add_user(user : discord.User) -> int:
             return (0)
 
 #Supprime l'utilisateur de la base de donnée
-def rm_user(user : discord.User) -> int:
+def rm_u(user : discord.User) -> int:
     if (is_player_in_database(user)):
         connexion = sqlite3.connect('db.sqlite')
         cursor = connexion.cursor()

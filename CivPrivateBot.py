@@ -239,13 +239,13 @@ async def setup_leaderboard(ctx: commands.Context) -> None:
 #=============================================== CHANTIER ===================================================
 
 @bot.command()
-async def add_u(ctx : commands.Context, user : discord.User) -> None:
+async def add_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
         embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
         return
     else:
-        result : int = add_user(user)
+        result : int = add_u(user)
         if (result):
             embed = CivPrivateBotEmbed(colour=discord.Colour.green(), title="USER ADDED", description=f"{user.mention} successfully added.")
         else:
@@ -254,13 +254,13 @@ async def add_u(ctx : commands.Context, user : discord.User) -> None:
         return
 
 @bot.command()
-async def rm_u(ctx : commands.Context, user : discord.User) -> None:
+async def rm_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
         embed = CivPrivateBotEmbed(colour=discord.Colour.red(), title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
         return
     else:
-        result : int = rm_user(user)
+        result : int = rm_u(user)
         if (result):
             embed = CivPrivateBotEmbed(colour=discord.Colour.green(), title="USER DELETED", description=f"{user.mention} successfully deleted.")
         else:
