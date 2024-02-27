@@ -7,7 +7,7 @@ from birthdays import *
 from draft import *
 from mapvote import *
 from ranked import *
-from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
+from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton, MenuSelectBans1, MenuSelectBans2, MenuSelectBans3, MenuSelectBans4
 from tokens import TOKEN
 
 #Définition du bot
@@ -361,7 +361,10 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
 
 #=============================================== CHANTIER ===================================================
 
-
+@bot.command()
+async def test(ctx : commands.Context):
+    embed = BotEmbed(title="SELECT BANS", description="👇 Please select up to 10 civs to ban in the select menu below 👇.")
+    await ctx.send(embed=embed, view=MenuSelectBans4())
 
 #================================================== RUN =====================================================
 #Run le bot
