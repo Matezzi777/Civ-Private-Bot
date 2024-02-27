@@ -28,7 +28,7 @@ async def make_draft(ctx : commands.Context, nb_civs : int) -> None:
         await ctx.send(embed=embed)
         return
     elif (nb_users * nb_civs > 77):
-        embed = ErrorEmbed(title="PROCESS ABORTED", description="Too much leader by player. Use less civs/player or ban an innocent player 😈")
+        embed = ErrorEmbed(title="PROCESS ABORTED", description="Too much leader by player. Retry with less civs by player.")
         await ctx.send(embed=embed)
         return
     elif (nb_civs > 15):
