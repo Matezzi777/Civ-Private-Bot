@@ -7,7 +7,8 @@ from birthdays import *
 from draft import *
 from mapvote import *
 from ranked import *
-from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton, MenuSelectBans1, MenuSelectBans2, MenuSelectBans3, MenuSelectBans4
+from bans import *
+from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
 #Définition du bot
@@ -38,7 +39,7 @@ class ReportButton(discord.ui.Button):
             label="✅ Confirm",
             style=discord.ButtonStyle.green
         )
-        self.users : list = users
+        self.users : list[discord.User] = users
         self.needed_confirm = needed_confirm
         self.count = 0
         self.users_who_clicked : list = []
@@ -129,10 +130,10 @@ async def clear(ctx : commands.Context, n : int) -> None:
     i : int = 0
     async for message in ctx.channel.history(limit=n+1):
         if (i != 0):
-            print(f"Message deleted from #{ctx.channel.name} ({i}/{n})")
+            print(f"    Message deleted from #{ctx.channel.name} ({i}/{n})")
         await message.delete()
         i = i + 1
-    print(f"#{ctx.channel.name} cleaned.")
+    print(f"    #{ctx.channel.name} cleaned.")
 #$datenow
 @bot.command()
 async def datenow(ctx : commands.Context) -> None:
@@ -362,9 +363,9 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
 #=============================================== CHANTIER ===================================================
 
 @bot.command()
-async def test(ctx : commands.Context):
-    embed = BotEmbed(title="SELECT BANS", description="👇 Please select up to 10 civs to ban in the select menu below 👇.")
-    await ctx.send(embed=embed, view=MenuSelectBans4())
+async def bans(ctx : commands.Context):
+    print(f"\n$bans used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    await make_bans(ctx)
 
 #================================================== RUN =====================================================
 #Run le bot
