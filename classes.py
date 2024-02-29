@@ -60,13 +60,14 @@ class BansEmbed(discord.Embed):
     def __init__(self, users : list[discord.User], waiting_for : list[discord.User]) -> None:
         super().__init__(
             colour=discord.Colour.purple(),
-            color=discord.Colour.red(),
+            color=discord.Colour.purple(),
             title="SELECT BANS",
             type='rich',
             url=None,
             description="Let's vote for bans !",
             timestamp=None
         )
+        self.users = users
         self.nb_users = len(users)
         self.needed_votes = (self.nb_users//2) + 1
         self.str_mentions = ""
@@ -81,8 +82,19 @@ class BansEmbed(discord.Embed):
             i = i + 1
         self.add_field(name="**🎮Players in the game🎮**", value=self.str_mentions)
         self.add_field(name="**❔How to ban civs❔**", value="1. Select the leaders you want to propose to ban.\n2. Confirm your choice.", inline=False)
-        self.add_field(name="**⏲Waiting for...**", value=self.str_waiting_for_mentions)
-        
+        self.add_field(name="**⏲Waiting for...**", value=self.str_waiting_for_mentions)  
+
+class VoteBansEmbed(discord.Embed):
+    def __init__(self, votes_needed : int) -> None:
+        super().__init__(
+            colour=discord.Colour.purple(),
+            color=discord.Colour.purple(),
+            title="VOTE FOR THE BANS",
+            type='rich',
+            url=None,
+            description=f"{votes_needed} votes needed to ban a leader.",
+            timestamp=None
+        )
 
 #================================================== BANS ====================================================
 #View Select Bans
@@ -93,6 +105,7 @@ class Bans(discord.ui.View):
         )
         self.users = users
         self.nb_users : int = len(users)
+        self.count : int = 0
         self.waiting_for : list[discord.User] = users
         self.users_who_already_confirmed : list[discord.User] = []
         self.selected_bans : list = []
@@ -102,7 +115,6 @@ class Bans(discord.ui.View):
         self.add_item(SelectBans(4))
         self.add_item(ConfirmBansButton())
         self.add_item(NoBansButton())
-
 #SelectMenu Bans
 class SelectBans(discord.ui.Select):
     def __init__(self, page : int) -> None:
@@ -211,24 +223,24 @@ class SelectBans(discord.ui.Select):
     
     async def callback(self, interaction : discord.Interaction):
         user = interaction.user
-        if (not user in self.view.users):
+        if (not user in self.view.users): #Si l'utilisateur n'est pas concerné
             embed = ErrorEmbed(title="YOUR ARE NOT IN THIS GAME", description="You tried to choose leaders to ban for a game which does not concern you.")
             await interaction.response.edit_message(view=self.view)
             await interaction.followup.send(embed=embed, ephemeral=True)
             print(f"    @{user.name} tried to choose leaders to ban for a game which does not concern them.")
             return
-        elif (user in self.view.users_who_already_confirmed):
+        elif (user in self.view.users_who_already_confirmed): #Si l'utilisateur est concerné mais a déjà envoyé sa proposition
             embed = ErrorEmbed(title="PROPOSITION ALREADY SENT", description="Your already sent a proposition !\nPlease, wait for the other players to finish their choices.")
             await interaction.response.edit_message(view=self.view)
             await interaction.followup.send(embed=embed, ephemeral=True)
             print(f"    @{user.name} tried to select new leaders but has already validated")
             return
-        elif (user in self.users_who_already_selected):
+        elif (user in self.users_who_already_selected): #Si l'utilisateur est concerné mais qu'il a déjà utilisé ce menu select
             embed = ErrorEmbed(title="ALREADY PICKED IN THIS LIST", description=f"You already picked in the [{self.placeholder}] list.")
             await interaction.response.edit_message(view=self.view)
             await user.send(embed=embed)
             return
-        else:
+        else: #Si l'utilisateur est concerné et qu'il n'a pas encore utilisé ce menu select
             print(f"    @{user.name} added leaders to his selection")
             return_message : str = ""
             i : int = 0
@@ -243,6 +255,8 @@ class SelectBans(discord.ui.Select):
             self.users_who_already_selected.append(user)
             return_message = return_message[:-2] + " added to your selection."
             embed=BansEmbed(self.view.users, self.view.waiting_for)
+            if (self.view.children[5]):
+                self.view.remove_item(self.view.children[5])
             await interaction.response.edit_message(view=self.view)
             embed=SuccessEmbed(description=return_message)
             await user.send(embed=embed)
@@ -259,6 +273,70 @@ class ConfirmBansButton(discord.ui.Button):
 
     async def callback(self, interaction : discord.Interaction):
         user = interaction.user
+
+        #Si l'utilisateur n'est pas concerné
+        if (not user in self.view.users):
+            print(f"    @{user.name} tried to send a proposition for a game which does not concern them.")
+            print(f"        self.view.count : {self.view.count}")
+            print(f"        self.view.users : {self.view.users}")
+            embed = ErrorEmbed(title="YOUR ARE NOT IN THIS GAME", description="You tried to send a ban proposition for a game which does not concern you.")
+            await interaction.response.edit_message(view=self.view)
+            await interaction.followup.send(embed=embed, ephemeral=True)
+            return
+        
+        #Si l'utilisateur est concerné et qu'il n'a pas encore envoyé son choix
+        elif (not user in self.view.users_who_already_confirmed):
+            print(f"    @{interaction.user.name} sent his proposition")
+            print(f"        self.view.count : {self.view.count}")
+            #Retire l'utilisateur de la liste des utilisateurs en attente
+            self.view.waiting_for.remove(user)
+            #Ajoute l'utilisateur à la liste des utilisateur ayant validé
+            self.view.users_who_already_confirmed.append(user)
+            self.view.count = self.view.count + 1
+            print(f"        self.view.count : {self.view.count}")
+            print(f"        self.view.users : {self.view.users}")
+
+            #Si tous les joueurs ont choisi
+            if (self.view.count == self.view.nb_users):
+                print("    All players sent their choices")
+                print("    Values selected :")
+                i : int = 0
+                while (i < len(self.view.selected_bans)):
+                    print(f"        {self.view.selected_bans[i]}")
+                    i = i + 1
+                votes_needed : int = (self.view.nb_users // 2) + 1
+                vote_bans_view = VoteBans(self.view.users, self.view.selected_bans)
+                vote_bans_embed = VoteBansEmbed(votes_needed)
+                await interaction.response.edit_message(embed=vote_bans_embed, view=vote_bans_view)
+            #S'il reste des joueurs qui n'ont pas sélectionné
+            else:
+                bans_embed = BansEmbed(self.view.users ,self.view.waiting_for)
+                await interaction.response.edit_message(embed=bans_embed, view=self.view)
+
+            success_embed = SuccessEmbed(title="PROPOSITION SENT")
+            success_embed.remove_footer()
+            await interaction.followup.send(embed=success_embed)
+
+        #Si l'utilisateur est concerné mais qu'il a déjà choisi
+        else: 
+            embed = ErrorEmbed(title="PROPOSITION ALREADY SENT")
+            embed.remove_footer()
+            await interaction.response.edit_message(view=self.view)
+            await interaction.send(embed=embed, ephemeral=True)
+            print(f"    @{user.name} already validated")
+            return
+
+#Bouton de validation pour aucun bans
+class NoBansButton(discord.ui.Button):
+    def __init__(self) -> None:
+        super().__init__(
+            label="❌ No bans",
+            style=discord.ButtonStyle.red
+        )
+    
+    async def callback(self, interaction: discord.Interaction):
+        user = interaction.user
+        user = interaction.user
         if (not user in self.view.users):
             embed = ErrorEmbed(title="YOUR ARE NOT IN THIS GAME", description="You tried to send a ban proposition for a game which does not concern you.")
             await interaction.response.edit_message(view=self.view)
@@ -269,12 +347,14 @@ class ConfirmBansButton(discord.ui.Button):
             print(f"    @{interaction.user.name} sent his proposition")
             self.view.waiting_for.remove(user)
             self.view.users_who_already_confirmed.append(user)
-            self.count = self.count + 1
+            self.view.count = self.view.count + 1
 
             bans_embed = BansEmbed(self.view.users ,self.view.waiting_for)
-            success_embed = SuccessEmbed(title="PROPOSITION SENT", description="Proposition confirmed !\nPlease, wait for the other players to finish their choices.")
+            bans_embed.remove_field(len(bans_embed.fields) - 1)
+            success_embed = SuccessEmbed(title="PROPOSITION SENT")
+            success_embed.remove_footer()
 
-            if (self.count == self.view.nb_users):
+            if (self.view.count == self.view.nb_users):
                 self.view.clear_items()
                 valid_button = ValidButton()
                 valid_button.label="✅ Confirmed"
@@ -289,40 +369,24 @@ class ConfirmBansButton(discord.ui.Button):
                 return
 
         else:
-            embed = ErrorEmbed(title="PROPOSITION ALREADY SENT", description="Your already sent a proposition !\nPlease, wait for the other players to finish their choices.")
+            embed = ErrorEmbed(title="PROPOSITION ALREADY SENT")
+            embed.remove_footer()
             await interaction.response.edit_message(view=self.view)
             await interaction.send(embed=embed, ephemeral=True)
             print(f"    @{user.name} already validated")
             return
 
-class NoBansButton(discord.ui.Button):
-    def __init__(self) -> None:
+#View Vote Bans
+class VoteBans(discord.ui.View):
+    def __init__(self, users : list[discord.User], bans : list[int]) -> None:
         super().__init__(
-            label="❌ No bans",
-            style=discord.ButtonStyle.red
+            timeout=600
         )
-    
-    async def callback(self, interaction: discord.Interaction):
-        user = interaction.user
-        if (not user in self.view.users):
-            embed = ErrorEmbed(title="YOUR ARE NOT IN THIS GAME", description="You tried to send a ban proposition for a game which does not concern you.")
-            await interaction.response.edit_message(view=self.view)
-            await interaction.followup.send(embed=embed, ephemeral=True)
-            print(f"    @{user.name} tried to send a proposition for a game which does not concern them.")
-            return
-        elif (not user in self.view.waiting_users):
-            embed = SuccessEmbed(title="PROPOSITION SENT", description="You choose to not ban leaders.\nPlease, wait for the other players to finish their choices.")
-            await interaction.response.edit_message(view=self.view)
-            self.view.waiting_users.append(user)
-            await interaction.followup.send(embed=embed, ephemeral=True)
-            print(f"    @{interaction.user.name} sent his proposition (No Bans)")
-            return
-        else:
-            embed = ErrorEmbed(title="PROPOSITION ALREADY SENT", description="Your already sent a proposition !\nPlease, wait for the other players to finish their choices.")
-            await interaction.response.edit_message(view=self.view)
-            await interaction.followup.send(embed=embed, ephemeral=True)
-            print(f"    @{user.name} already validated")
-            return
+        self.users : list[discord.User] = users
+        self.bans_list : list[int] = bans
+
+
+
 
 #================================================ BUTTONS ===================================================
 #Bouton choix validé générique

@@ -8,6 +8,7 @@ from draft import *
 from mapvote import *
 from ranked import *
 from bans import *
+from chantier import *
 from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
@@ -366,6 +367,12 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
 async def bans(ctx : commands.Context):
     print(f"\n$bans used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_bans(ctx)
+
+# @bot.command()
+# async def modal_bans(ctx : commands.Context):
+#     print(f"\n$modal_bans used by @{ctx.message.author.name} in #{ctx.channel.name}")
+#     await make_modal_bans(ctx)
+
 
 #================================================== RUN =====================================================
 #Run le bot
