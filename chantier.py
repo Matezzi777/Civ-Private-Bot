@@ -2,7 +2,7 @@
 #Import des modules
 import discord
 from discord.ext import commands
-from classes import BotEmbed, SuccessEmbed, ErrorEmbed, BansEmbed, ValidButton, Bans
+from classes import BotEmbed, SuccessEmbed, ErrorEmbed,  ValidButton
 
 #================================================= MODALS ===================================================
 
