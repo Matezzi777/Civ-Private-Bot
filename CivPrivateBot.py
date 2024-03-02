@@ -100,21 +100,35 @@ class ReportButton(discord.ui.Button):
 
 #============================================ COMMANDES INFOS ===============================================
 #$ping
-@bot.command()
+@bot.command(aliases=['p', 'pong'],
+        help="Respond PONG if the bot is running.",
+        description="PING",
+        brief="- Pong",
+        enabled=True,
+        hidden=False)
 async def ping(ctx : commands.Context) -> None:
     print(f"\n$ping used by @{ctx.message.author.name} in #{ctx.channel.name}")
     embed = SuccessEmbed(title="PONG")
     embed.remove_footer()
     await ctx.send(embed=embed)
 #$hello
-@bot.command()
+@bot.command(aliases=['h'],
+        help="Let me introduce myself !",
+        description="HELLO",
+        brief="- Some introductions",
+        enabled=True,
+        hidden=False)
 async def hello(ctx : commands.Context) -> None:
     print(f"\n$hello used by @{ctx.message.author.name} in #{ctx.channel.name}")
     server = ctx.guild
     embed = BotEmbed(title="Hello *Civ enjoyer !*", description=f"Let me introduce myself...\nMy name is **Civ Private Bot** (but you can call me CPB), I try my best to add some useful tools on the **{server.name}**, like $mapvote, $draft.\n\nWe actualy are working on an elo ranking system 😉\n\nPlease message <@866997795993944084> if you have any suggestions or feedback !")
     await ctx.send(embed=embed)
 #$serverinfo
-@bot.command()
+@bot.command(help="Some informations about Civ Private Club !",
+        description="SERVERINFO",
+        brief="- Informations",
+        enabled=True,
+        hidden=False)
 async def serverinfo(ctx : commands.Context) -> None:
     print(f"\n$serverinfo used by @{ctx.message.author.name} in #{ctx.channel.name}")
     server = ctx.guild
@@ -123,7 +137,12 @@ async def serverinfo(ctx : commands.Context) -> None:
     embed.add_field(name="", value=f"Created by <@866997795993944084> and <@828975075951902733> the {server.created_at.date()}", inline=False)
     await ctx.send(embed=embed)
 #$clear X
-@bot.command()
+@bot.command(aliases=['del', 'delete', 'clean'],
+        help="Delete the X previous messages in the current Textchannel.",
+        description="CLEAR",
+        brief="- Clean the channel",
+        enabled=True,
+        hidden=True)
 async def clear(ctx : commands.Context, n : int) -> None:
     print(f"\n$clear {n} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     i : int = 0
@@ -134,42 +153,62 @@ async def clear(ctx : commands.Context, n : int) -> None:
         i = i + 1
     print(f"#{ctx.channel.name} cleaned.")
 #$datenow
-@bot.command()
+@bot.command(aliases=['date', 'd'],
+        help="Returns the actual date (UTC+1).",
+        description="DATENOW",
+        brief="- Returns the date",
+        enabled=True,
+        hidden=False)
 async def datenow(ctx : commands.Context) -> None:
     print(f"\n$datenow used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await display_date(ctx)
 
 #========================================== COMMANDES PRE - GAME ============================================
 #$draft 2.0
-@bot.command()
+@bot.command(help="Create randoms list of leaders and assign them to the players.\n\nTake 1 parameter :\n- nb_civs (int) : The number of civs given to each player.\n\nMUST BE USED IN VOICE CHANNEL !\n\nTo use without VoiceChannel, prefer $generic_draft <nb_players> <nb_civs>",
+        description="DRAFT",
+        brief="- Draw the drafts",
+        enabled=True,
+        hidden=False)
 async def draft(ctx : commands.Context, nb_civs : int) -> None:
     print(f"\n$draft {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_draft(ctx, nb_civs)  
 #$blind_draft
-@bot.command()
+@bot.command(help="Create randoms list of leaders and assign them to the players IN PRIVATE MESSAGE.\n\nTake 1 parameter :\n- nb_civs (int) : The number of civs given to each player.\n\nMUST BE USED IN VOICE CHANNEL !",
+        description="BLIND_DRAFT",
+        brief="- Draw the drafts in private messages",
+        enabled=True,
+        hidden=False)
 async def blind_draft(ctx : commands.Context, nb_civs : int) -> None:
     print(f"\n$blind_draft {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_blind_draft(ctx, nb_civs)
 #$draft X Y
-@bot.command()
+@bot.command(help="Create randoms list of leaders and assign them to the players.\n\nTake 2 parameter :\n- nb_players (int) : The number of players in the game.\n- nb_civs (int) : The number of civs given to each player.",
+        description="GENERIC_DRAFT",
+        brief="- Draw the drafts (for non-VoiceChat use)",
+        enabled=True,
+        hidden=False)
 async def generic_draft(ctx : commands.Context, nb_players : int, nb_civs : int) -> None:
     print(f"\n$generic_draft {nb_players} {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_generic_draft(ctx, nb_players, nb_civs)
 
 #$mapvote v2
-@bot.command()
+@bot.command(help="Launch a mapvote.\n\nBehaves differently if used with or without VoiceChannel.",
+        description="MAPVOTE",
+        brief="- Launch the mapvote",
+        enabled=True,
+        hidden=False)
 async def mapvote(ctx : commands.Context) -> None:
     print(f"\n$mapvote used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_mapvote(ctx)
-#$generic_mapvote
-@bot.command()
-async def generic_mapvote(ctx : commands.Context) -> None:
-    print(f"\n$generic_mapvote used by @{ctx.message.author.name} in #{ctx.channel.name}")
-    await make_generic_mapvote(ctx)
 
 #========================================== COMMANDES BIRTHDAYS =============================================
 #$set_birthday DDMM
-@bot.command()
+@bot.command(help="Set your birthday in the database.\n\nTake 1 parameter :\n- Date (str) : The birthday date to set (Use the following format : DDMM)\nExample : 6th of May -> 0605\nExample : 24th of September -> 2409",
+        description="SET_BIRTHDAY",
+        brief="- Set your birthday",
+        enabled=True,
+        hidden=False)
 async def set_birthday(ctx : commands.Context, date : str) -> None:
     print(f"\n$set_birthday {date} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     yesno = View()
@@ -209,8 +248,12 @@ async def set_birthday(ctx : commands.Context, date : str) -> None:
         button_no.callback = button_no_callback
         embed=BotEmbed(title="Add birthday ?", description=f"You birthday is not on the database.\n\nDo you want to set it to *{date_parsed}* ?")
         await ctx.send(embed=embed, view=yesno, delete_after=7)
-#$rem_birthday
-@bot.command()
+#$rm_birthday
+@bot.command(help="Remove your birthday in the database.",
+        description="RM_BIRTHDAY",
+        brief="- Remove your birthday",
+        enabled=True,
+        hidden=False)
 async def rm_birthday(ctx : commands.Context) -> None:
     print(f"\n$rm_birthday used by @{ctx.message.author.name} in #{ctx.channel.name}")
     yesno = View()
@@ -233,14 +276,22 @@ async def rm_birthday(ctx : commands.Context) -> None:
         embed= ErrorEmbed(description="No birthday found in the database for you.")
         return await ctx.send(embed=embed)
 #$birthdays
-@bot.command()
+@bot.command(help="Display the birthdays in the database.",
+        description="BIRTHDAYS",
+        brief="- Display the birthdays",
+        enabled=True,
+        hidden=False)
 async def birthdays(ctx : commands.Context) -> None:
     print(f"\n$birthdays used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await display_birthdays(ctx)
 
 #=========================================== COMMANDES RANKED ===============================================
 #$report @First @Second @Third ...
-@bot.command()
+@bot.command(help="Report a game in the ranking system.\n\nTake n parameter :\n- User1 (discord.User) : The player won.\n- User2 (discord.User) : The player who finished second.\n...\n- UserN (discord.User) : The player who finished Nth.",
+        description="REPORT",
+        brief="- Report a game",
+        enabled=True,
+        hidden=False)
 async def report(ctx : commands.Context, *args : discord.User) -> None:
     print(f"\n$report used by @{ctx.message.author.name} in #{ctx.channel.name}")
     users = args
@@ -258,7 +309,11 @@ async def report(ctx : commands.Context, *args : discord.User) -> None:
         view=ReportView(users)
         await ctx.send(embed=embed, view=view)
 #$stats
-@bot.command()
+@bot.command(help="Show your stats (based on reported games).\n\n",
+        description="STATS",
+        brief="- Show your stats",
+        enabled=True,
+        hidden=False)
 async def stats(ctx : commands.Context) -> None:
     print(f"\n$stats used by @{ctx.message.author.name} in #{ctx.channel.name}")
     user : discord.User = ctx.message.author
@@ -277,13 +332,21 @@ async def stats(ctx : commands.Context) -> None:
     embed.add_field(name="", value=f"`Games played    ` : `{wins+lost}`\n`Elo             ` : `{elo}`\n`Top 1           ` : `{top1}`\n`Wins            ` : `{wins}`\n`Lost            ` : `{lost}`\n`Last game played` : `{date}`")
     return await ctx.send(embed=embed)
 #$scoreboard
-@bot.command()
+@bot.command(help="Display the leaderboard.",
+        description="SCOREBOARD",
+        brief="- Display the leaderboard",
+        enabled=True,
+        hidden=False)
 async def leaderboard(ctx : commands.Context) -> None:
     print(f"\n$leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await display_scoreboard(ctx)
     return
-#$setup_leaderboard
-@bot.command()
+#$update_leaderboard
+@bot.command(help="Refresh the leaderboard in the #leaderboard channel.",
+        description="UPDATE_LEADERBOARD",
+        brief="- Refresh the leaderboard",
+        enabled=True,
+        hidden=True)
 async def update_leaderboard(ctx : commands.Context) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
@@ -297,8 +360,12 @@ async def update_leaderboard(ctx : commands.Context) -> None:
         await ctx.send(embed=embed)
         await update_scoreboard(bot)
         return
-#$clear_leaderboard
-@bot.command()
+#$reset_leaderboard
+@bot.command(help="Reset the ranked database.",
+        description="RESET_LEADERBOARD",
+        brief="- Reset the ranked database",
+        enabled=False,
+        hidden=True)
 async def reset_leaderboard(ctx : commands.Context) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
@@ -321,7 +388,11 @@ async def reset_leaderboard(ctx : commands.Context) -> None:
         await ctx.send(embed=embed)
         return
 #$add_user
-@bot.command()
+@bot.command(help="Add the user to the database.",
+        description="ADD_USER",
+        brief="- Add an user",
+        enabled=True,
+        hidden=True)
 async def add_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
@@ -339,7 +410,11 @@ async def add_user(ctx : commands.Context, user : discord.User) -> None:
         await ctx.send(embed=embed)
         return
 #$rm_user
-@bot.command()
+@bot.command(help="Remove the user to the database.",
+        description="RM_USER",
+        brief="- Remove an user",
+        enabled=True,
+        hidden=True)
 async def rm_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
