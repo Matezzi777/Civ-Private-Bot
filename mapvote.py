@@ -551,6 +551,15 @@ class Button_civilized(discord.ui.Button):
             await interaction.response.edit_message(view=self.view)
 
 #================================================= VIEWS ====================================================
+#View DRAFT
+class DraftView(discord.ui.View):
+    def __init__(self, users) -> None:
+        super().__init__()
+        self.nb_users : int = len(users)
+        self.needed_confirm : int = (self.nb_users // 2) + 1
+        self.add_item(Button_on(users, self.needed_confirm))
+        self.add_item(Button_off(users, self.needed_confirm))
+
 #View MAP
 class MapView(discord.ui.View):
     def __init__(self, users) -> None:
@@ -629,6 +638,8 @@ async def make_mapvote(ctx : commands.Context) -> None:
     message = f"Let's vote !\n\n*{nb_users}* players in the game :\n" + message
     await ctx.send(message)
 
+    #Envoie le message pour les drafts
+    await ctx.send("**DRAFT**", view=DraftView(users))
     #Envoie le message pour la map
     await ctx.send("**MAP**", view=MapView(users))
     #Envoie le message pour le BCY
