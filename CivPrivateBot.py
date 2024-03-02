@@ -7,7 +7,6 @@ from birthdays import *
 from draft import *
 from mapvote import *
 from ranked import *
-from chantier import *
 from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
@@ -39,7 +38,7 @@ class ReportButton(discord.ui.Button):
             label="✅ Confirm",
             style=discord.ButtonStyle.green
         )
-        self.users : list[discord.User] = users
+        self.users : list = users
         self.needed_confirm = needed_confirm
         self.count = 0
         self.users_who_clicked : list = []
@@ -130,10 +129,10 @@ async def clear(ctx : commands.Context, n : int) -> None:
     i : int = 0
     async for message in ctx.channel.history(limit=n+1):
         if (i != 0):
-            print(f"    Message deleted from #{ctx.channel.name} ({i}/{n})")
+            print(f"Message deleted from #{ctx.channel.name} ({i}/{n})")
         await message.delete()
         i = i + 1
-    print(f"    #{ctx.channel.name} cleaned.")
+    print(f"#{ctx.channel.name} cleaned.")
 #$datenow
 @bot.command()
 async def datenow(ctx : commands.Context) -> None:
@@ -358,11 +357,11 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
         await ctx.send(embed=embed)
         return
 
-#================================================== DEV =====================================================
 
-@bot.command()
-async def test(ctx : commands.Context):
-    ...
+
+#=============================================== CHANTIER ===================================================
+
+
 
 #================================================== RUN =====================================================
 #Run le bot
