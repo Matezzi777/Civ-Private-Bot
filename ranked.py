@@ -33,7 +33,8 @@ async def valid_report(bot : commands.Bot, liste_players : list) -> None:
     while (i < nb_players):
         user : discord.User = liste_players[i]
         if (i == 0):
-            update_top1(user)
+            if (nb_players > 2):
+                update_top1(user)
             update_wins(user)
         elif (i < ((nb_players//2)) and nb_players >= 4):
             update_wins(user)
