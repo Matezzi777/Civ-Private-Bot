@@ -1,7 +1,41 @@
 #============================================= INITIALISATION ===============================================
 #Import des modules
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
+from datetime import datetime, date
+import sqlite3
+
+#================================================= TASKS ====================================================
+
+# @tasks.loop(time=datetime.time(hour=0, minute=0))
+# async def check_birthday():
+#     #Parsing today's date to be understund by the database
+#     day = date.today().day
+#     if (day < 10):
+#         parsed_day : str = f"0{day}"
+#     else:
+#         parsed_day : str = f"{day}"
+#     month = date.today().month
+#     if (month < 10):
+#         parsed_month : str = f"0{month}"
+#     else:
+#         parsed_month : str = f"{month}"
+#     parsed_date : str = f"{parsed_day}{parsed_month}"
+#     #Check in the database if there is a birthday today
+#     connexion = sqlite3.connect('db.sqlite')
+#     cursor = connexion.cursor()
+#     request : str = f"SELECT User_ID FROM Anniversaires WHERE Date='{parsed_date}'"
+#     cursor.execute(request)
+#     connexion.commit()
+#     result = cursor.fetchall()
+#     connexion.close()
+
+#     #Result
+#     if (result):
+#         await 
+#     else:
+        
+#     return
 
 #================================================== BOT =====================================================
 class Bot(commands.Bot):
@@ -9,6 +43,7 @@ class Bot(commands.Bot):
         super().__init__(command_prefix="$", intents=discord.Intents.all(), description="Civ Private Bot v2.1")
 
     async def setup_hook(self):
+        # check_birthday().start()
         await self.tree.sync()
     
     async def on_ready(self):
