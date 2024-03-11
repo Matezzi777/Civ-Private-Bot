@@ -508,6 +508,8 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
         hidden=False)
 async def lfg(ctx : commands.Context, format : str = None) -> None:
     print(f"\n$lfg used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    if (format == None):
+        format=""
     if (format.lower()=="ranked"):
         await ctx.send("<@&1211165398003884093>")
         message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
