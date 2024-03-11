@@ -102,7 +102,7 @@ class LFGButtonYes(discord.ui.Button):
     def __init__(self):
         super().__init__(
             label="✅ Count me in",
-            style=discord.ButtonStyle.grey
+            style=discord.ButtonStyle.green
         )
 
     async def callback(self, interaction : discord.Interaction) -> None:
@@ -527,6 +527,7 @@ async def lfg(ctx : commands.Context, format : str = None) -> None:
         view=LFGView(ctx.message.author)
         await ctx.send(embed=embed, view=view)
     else:
+        await ctx.send("<@&1112525992267890780>")
         message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
         embed=BotEmbed(title="LOOKING FOR GAME", description=message)
         embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}")
