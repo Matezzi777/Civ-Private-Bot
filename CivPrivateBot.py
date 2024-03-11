@@ -123,8 +123,8 @@ class LFGButtonYes(discord.ui.Button):
             maybe = maybe + f"{self.view.maybe[i].mention}\n"
             i = i + 1
         embed = BotEmbed(title="LOOKING FOR GAME", description="Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure.")
-        embed.add_field(name="✅ Will play :", value=will_play)
-        embed.add_field(name="❔ Maybe :", value=maybe)
+        embed.add_field(name="✅ Will play :", value=will_play, inline=False)
+        embed.add_field(name="❔ Maybe :", value=maybe, inline=False)
         await interaction.response.edit_message(embed=embed, view=self.view)
         return
 
@@ -153,8 +153,8 @@ class LFGButtonMaybe(discord.ui.Button):
             maybe = maybe + f"{self.view.maybe[i].mention}\n"
             i = i + 1
         embed = BotEmbed(title="LOOKING FOR GAME", description="Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure.")
-        embed.add_field(name="✅ Will play :", value=will_play)
-        embed.add_field(name="❔ Maybe :", value=maybe)
+        embed.add_field(name="✅ Will play :", value=will_play, inline=False)
+        embed.add_field(name="❔ Maybe :", value=maybe, inline=False)
         await interaction.response.edit_message(embed=embed, view=self.view)
         return
 
@@ -514,26 +514,29 @@ async def lfg(ctx : commands.Context, format : str = None) -> None:
         await ctx.send("<@&1211165398003884093>")
         message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
         embed=BotEmbed(title="LOOKING FOR GAME", description=message)
-        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}")
-        embed.add_field(name="❔ Maybe :", value="")
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
+        embed.add_field(name="❔ Maybe :", value="", inline=False)
         view=LFGView(ctx.message.author)
         await ctx.send(embed=embed, view=view)
+        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
     elif (format.lower()=="casual"or format.lower()=="chill"):
         await ctx.send("<@&1211165189274337340>")
         message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
         embed=BotEmbed(title="LOOKING FOR GAME", description=message)
-        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}")
-        embed.add_field(name="❔ Maybe :", value="")
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
+        embed.add_field(name="❔ Maybe :", value="", inline=False)
         view=LFGView(ctx.message.author)
         await ctx.send(embed=embed, view=view)
+        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
     else:
         await ctx.send("<@&1112525992267890780>")
         message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
         embed=BotEmbed(title="LOOKING FOR GAME", description=message)
-        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}")
-        embed.add_field(name="❔ Maybe :", value="")
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
+        embed.add_field(name="❔ Maybe :", value="", inline=False)
         view=LFGView(ctx.message.author)
         await ctx.send(embed=embed, view=view)
+        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
     return
 
 
