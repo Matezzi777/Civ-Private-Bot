@@ -98,6 +98,75 @@ class ReportButton(discord.ui.Button):
             await interaction.response.edit_message(view=self.view)
             return
 
+class LFGButtonYes(discord.ui.Button):
+    def __init__(self):
+        super().__init__(
+            label="✅ Count me in",
+            style=discord.ButtonStyle.grey
+        )
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        if (interaction.user in self.view.users): #Si l'utilisateur a déjà cliqué
+            self.view.users.remove(interaction.user)
+        else: #Si l'utilisateur n'a pas encore cliqué
+            if (interaction.user in self.view.maybe): #Si l'utilisateur a déjà cliqué sur Maybe
+                self.view.maybe.remove(interaction.user)
+            self.view.users.append(interaction.user)
+        will_play : str = f""
+        maybe : str = f""
+        i : int = 0
+        while (i < len(self.view.users)):
+            will_play = will_play + f"{self.view.users[i].mention}\n"
+            i = i + 1
+        i = 0
+        while (i < len(self.view.maybe)):
+            maybe = maybe + f"{self.view.maybe[i].mention}\n"
+            i = i + 1
+        embed = BotEmbed(title="LOOKING FOR GAME", description="Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure.")
+        embed.add_field(name="✅ Will play :", value=will_play)
+        embed.add_field(name="❔ Maybe :", value=maybe)
+        await interaction.response.edit_message(embed=embed, view=self.view)
+        return
+
+class LFGButtonMaybe(discord.ui.Button):
+    def __init__(self):
+        super().__init__(
+            label="❔ Maybe",
+            style=discord.ButtonStyle.grey
+        )
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        if (interaction.user in self.view.maybe): #Si l'utilisateur a déjà cliqué
+            self.view.maybe.remove(interaction.user)
+        else: #Si l'utilisateur n'a pas encore cliqué
+            if (interaction.user in self.view.users): #Si l'utilisateur a déjà cliqué sur Maybe
+                self.view.users.remove(interaction.user)
+            self.view.maybe.append(interaction.user)
+        will_play : str = f""
+        maybe : str = f""
+        i : int = 0
+        while (i < len(self.view.users)):
+            will_play = will_play + f"{self.view.users[i].mention}\n"
+            i = i + 1
+        i = 0
+        while (i < len(self.view.maybe)):
+            maybe = maybe + f"{self.view.maybe[i].mention}\n"
+            i = i + 1
+        embed = BotEmbed(title="LOOKING FOR GAME", description="Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure.")
+        embed.add_field(name="✅ Will play :", value=will_play)
+        embed.add_field(name="❔ Maybe :", value=maybe)
+        await interaction.response.edit_message(embed=embed, view=self.view)
+        return
+
+class LFGView(discord.ui.View):
+    def __init__(self, caller : discord.User) -> None:
+        super().__init__()
+        self.users : list[discord.User] = []
+        self.maybe : list[discord.User] = []
+        self.users.append(caller)
+        self.add_item(LFGButtonYes())
+        self.add_item(LFGButtonMaybe())
+
 #============================================ COMMANDES INFOS ===============================================
 #$ping
 @bot.command(aliases=['p', 'pong'],
@@ -432,6 +501,37 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
         await ctx.send(embed=embed)
         return
 
+@bot.command(help="Send a formatted lfg message.\n\nTake 0 to 1 parameter :\n- Type of game (Ranked / Casual).",
+        description="LFG",
+        brief="- Send a formatted lfg message.",
+        enabled=True,
+        hidden=False)
+async def lfg(ctx : commands.Context, format : str = None) -> None:
+    print(f"\n$lfg used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    if (format.lower()=="ranked"):
+        await ctx.send("<@&1211165398003884093>")
+        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
+        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}")
+        embed.add_field(name="❔ Maybe :", value="")
+        view=LFGView(ctx.message.author)
+        await ctx.send(embed=embed, view=view)
+    elif (format.lower()=="casual"or format.lower()=="chill"):
+        await ctx.send("<@&1211165189274337340>")
+        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
+        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}")
+        embed.add_field(name="❔ Maybe :", value="")
+        view=LFGView(ctx.message.author)
+        await ctx.send(embed=embed, view=view)
+    else:
+        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
+        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}")
+        embed.add_field(name="❔ Maybe :", value="")
+        view=LFGView(ctx.message.author)
+        await ctx.send(embed=embed, view=view)
+    return
 
 
 #=============================================== CHANTIER ===================================================
