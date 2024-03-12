@@ -21,7 +21,7 @@ button_change = Button(label="Yes", style=discord.ButtonStyle.green)
 #View $report
 class ReportView(discord.ui.View):
     def __init__(self, users) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.nb_users : int = len(users)
         if (self.nb_users == 2):
             self.needed_confirm : int = 2
@@ -160,7 +160,7 @@ class LFGButtonMaybe(discord.ui.Button):
 
 class LFGView(discord.ui.View):
     def __init__(self, caller : discord.User) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.users : list[discord.User] = []
         self.maybe : list[discord.User] = []
         self.users.append(caller)

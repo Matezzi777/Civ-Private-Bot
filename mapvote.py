@@ -554,7 +554,7 @@ class Button_civilized(discord.ui.Button):
 #View DRAFT
 class DraftView(discord.ui.View):
     def __init__(self, users) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_on(users, self.needed_confirm))
@@ -563,7 +563,7 @@ class DraftView(discord.ui.View):
 #View MAP
 class MapView(discord.ui.View):
     def __init__(self, users) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_pangaea(users, self.needed_confirm))
@@ -574,7 +574,7 @@ class MapView(discord.ui.View):
 #View BCY
 class BCYView(discord.ui.View):
    def __init__(self, users) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_cap_only(users, self.needed_confirm))
@@ -583,7 +583,7 @@ class BCYView(discord.ui.View):
 #View Age
 class AgeView(discord.ui.View):
     def __init__(self, users) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_new(users, self.needed_confirm))
@@ -592,7 +592,7 @@ class AgeView(discord.ui.View):
 #View Ridge
 class RidgeView(discord.ui.View):
     def __init__(self, users) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_standard_ridge(users, self.needed_confirm))
@@ -600,7 +600,7 @@ class RidgeView(discord.ui.View):
 #View Religion
 class ReligionView(discord.ui.View):
     def __init__(self, users) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_on(users, self.needed_confirm))
@@ -608,7 +608,7 @@ class ReligionView(discord.ui.View):
 #View Barbares
 class BarbariansView(discord.ui.View):
     def __init__(self, users) -> None:
-        super().__init__()
+        super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_standard_barbs(users, self.needed_confirm))
