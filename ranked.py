@@ -117,7 +117,7 @@ async def update_scoreboard(bot : commands.Bot) -> None:
     connexion.commit()
     result : list = cursor.fetchall()
     connexion.close()
-    message = "## LEADERBOARD\n`Rank   Skill   [wins - loss]   win%   Top1`"
+    message = f"## LEADERBOARD CIV PRIVATE CLUB SEASON #1\n`Rank   Skill   [wins - loss]   win%   Top1`"
     await channel.send(message)
     message = ""
     if (not result):
@@ -284,6 +284,16 @@ def get_rank(user : discord.User) -> int:
             return (rank+1)
         rank = rank + 1
     return (-1)
+#Récupère le nombre de parties reportées
+def get_games_reported() -> int:
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request : str = "SELECT Games_reported FROM Ranked_Infos"
+    cursor.execute(request)
+    connexion.commit()
+    result : int = cursor.fetchone()[0]
+    connexion.close()
+    return (result)
 
 #====================================== BASE DE DONNÉE (ÉCRITURE) ===========================================
 #Ajoute l'utilisateur à la base de donnée
@@ -394,6 +404,16 @@ def update_date(user : discord.User) -> None:
     month = str(datetime.date.today())[5] + str(datetime.date.today())[6]
     date : int = int(day+month)
     request_write : str = f"UPDATE Ranked SET Date={date} WHERE User_ID={user.id}"
+    cursor.execute(request_write)
+    connexion.commit()
+    connexion.close()
+    return
+#Met à jour le nombre de parties reportées
+def update_games_reported() -> None:
+    games_reported : int = get_games_reported()
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request_write : str = f"UPDATE Ranked_Infos SET Games_reported={games_reported+1} WHERE Games_reported={games_reported}"
     cursor.execute(request_write)
     connexion.commit()
     connexion.close()
