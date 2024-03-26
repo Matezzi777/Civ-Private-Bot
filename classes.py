@@ -5,49 +5,26 @@ from discord.ext import commands, tasks
 from datetime import datetime, date
 import sqlite3
 
+#=============================================== CONSTANTS ==================================================
+version : str = "2.1"
+welcome_channel_id = 1211150113477627955
+
 #================================================= TASKS ====================================================
-
-# @tasks.loop(time=datetime.time(hour=0, minute=0))
-# async def check_birthday():
-#     #Parsing today's date to be understund by the database
-#     day = date.today().day
-#     if (day < 10):
-#         parsed_day : str = f"0{day}"
-#     else:
-#         parsed_day : str = f"{day}"
-#     month = date.today().month
-#     if (month < 10):
-#         parsed_month : str = f"0{month}"
-#     else:
-#         parsed_month : str = f"{month}"
-#     parsed_date : str = f"{parsed_day}{parsed_month}"
-#     #Check in the database if there is a birthday today
-#     connexion = sqlite3.connect('db.sqlite')
-#     cursor = connexion.cursor()
-#     request : str = f"SELECT User_ID FROM Anniversaires WHERE Date='{parsed_date}'"
-#     cursor.execute(request)
-#     connexion.commit()
-#     result = cursor.fetchall()
-#     connexion.close()
-
-#     #Result
-#     if (result):
-#         await 
-#     else:
-        
-#     return
 
 #================================================== BOT =====================================================
 class Bot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix="$", intents=discord.Intents.all(), description="Civ Private Bot v2.1")
+        super().__init__(command_prefix="$", intents=discord.Intents.all(), description=f"Civ Private Bot v{version}")
 
     async def setup_hook(self):
-        # check_birthday().start()
         await self.tree.sync()
     
     async def on_ready(self):
         print(f"{self.user.id} successfully logged in as {self.user.name}.\nRock n'Roll !")
+
+    async def on_message(self, message : discord.Message):
+        if (message.channel.id == welcome_channel_id):
+            message.add_reaction("👋")
 
 #================================================= EMBEDS ===================================================
 class BotEmbed(discord.Embed):
@@ -61,7 +38,7 @@ class BotEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text="Civ Private Bot 2.0")
+        self.set_footer(text=f"Civ Private Bot {version}")
 
 class SuccessEmbed(discord.Embed):
     def __init__(self, *, colour=discord.Colour.green(), color=discord.Colour.green(), title="SUCCESS", type='rich', url=None, description=None, timestamp=None) -> None:
@@ -74,7 +51,7 @@ class SuccessEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text="Civ Private Bot 2.0")
+        self.set_footer(text=f"Civ Private Bot {version}")
 
 class ErrorEmbed(discord.Embed):
     def __init__(self, *, colour=discord.Colour.red(), color=discord.Colour.red(), title="ERROR", type='rich', url=None, description=None, timestamp=None) -> None:
@@ -87,7 +64,7 @@ class ErrorEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text="Civ Private Bot 2.0")
+        self.set_footer(text=f"Civ Private Bot {version}")
 
 # BUTTONS
 #Bouton choix validé générique
