@@ -24,7 +24,7 @@ class Bot(commands.Bot):
 
     async def on_message(self, message : discord.Message):
         if (message.channel.id == welcome_channel_id):
-            message.add_reaction("👋")
+            await message.add_reaction("👋")
 
 #================================================= EMBEDS ===================================================
 class BotEmbed(discord.Embed):
