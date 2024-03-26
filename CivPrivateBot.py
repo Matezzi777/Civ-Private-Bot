@@ -232,6 +232,29 @@ async def datenow(ctx : commands.Context) -> None:
     print(f"\n$datenow used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await display_date(ctx)
 
+#$annonce
+@bot.command(aliases=['say', 'annonce', 'repeat'],
+        help="Tool to make announcements !",
+        description="ANNOUNCE",
+        brief="- Announce something in a channel",
+        enabled=True,
+        hidden=True)
+async def announce(ctx : commands.Context, channel_ID : int, *, content : str) -> None:
+    channel : discord.TextChannel = bot.get_channel(channel_ID)
+    await channel.send(content.capitalize())
+
+#$annonce_embed
+@bot.command(aliases=['say_embed', 'annonce_embed', 'repeat_embed'],
+        help="Tool to make announcements (with embed) !",
+        description="ANNOUNCE_EMBED",
+        brief="- Announce something in a channel with an embed",
+        enabled=True,
+        hidden=True)
+async def announce_embed(ctx : commands.Context, channel_ID : int, title : str, *, content : str) -> None:
+    channel : discord.TextChannel = bot.get_channel(channel_ID)
+    embed = BotEmbed(title=title.upper(), description=content.capitalize())
+    await channel.send(embed=embed)
+
 #========================================== COMMANDES PRE - GAME ============================================
 #$draft 2.0
 @bot.command(help="Create randoms list of leaders and assign them to the players.\n\nTake 1 parameter :\n- nb_civs (int) : The number of civs given to each player.\n\nMUST BE USED IN VOICE CHANNEL !\n\nTo use without VoiceChannel, prefer $generic_draft <nb_players> <nb_civs>",
