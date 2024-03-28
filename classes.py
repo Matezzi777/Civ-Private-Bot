@@ -22,10 +22,6 @@ class Bot(commands.Bot):
     async def on_ready(self):
         print(f"{self.user.id} successfully logged in as {self.user.name}.\nRock n'Roll !")
 
-    async def on_message(self, message : discord.Message):
-        if (message.channel.id == welcome_channel_id):
-            await message.add_reaction("👋")
-
 #================================================= EMBEDS ===================================================
 class BotEmbed(discord.Embed):
     def __init__(self, *, colour=discord.Colour.purple(), color=discord.Colour.purple(), title=None, type='rich', url=None, description=None, timestamp=None) -> None:
