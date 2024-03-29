@@ -233,10 +233,10 @@ async def clear(ctx : commands.Context, n : int) -> None:
     i : int = 0
     async for message in ctx.channel.history(limit=n+1):
         if (i != 0):
-            print(f"Message deleted from #{ctx.channel.name} ({i}/{n})")
+            print(f"  Message deleted from #{ctx.channel.name} ({i}/{n})")
         await message.delete()
         i = i + 1
-    print(f"#{ctx.channel.name} cleaned.")
+    print(f"  #{ctx.channel.name} cleaned.")
 #$datenow
 @bot.command(aliases=['date', 'd'],
         help="Returns the actual date (UTC+1).",
