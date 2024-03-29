@@ -2,6 +2,7 @@
 #Import des modules
 import discord
 import discord.ext
+import datetime
 from discord.ui import Button, View
 from birthdays import *
 from draft import *
@@ -16,6 +17,9 @@ bot = Bot()
 button_yes = Button(label="Yes", style=discord.ButtonStyle.green)
 button_no = Button(label="No", style=discord.ButtonStyle.red)
 button_change = Button(label="Yes", style=discord.ButtonStyle.green)
+
+#=============================================== CONSTANTS ==================================================
+welcome_channel_id = 1211150113477627955
 
 #============================================= CLASSES REPORT ===============================================
 #View $report
@@ -166,6 +170,17 @@ class LFGView(discord.ui.View):
         self.users.append(caller)
         self.add_item(LFGButtonYes())
         self.add_item(LFGButtonMaybe())
+
+#================================================ EVENTS ====================================================
+
+@bot.event
+async def on_message(message : discord.Message):
+    await bot.process_commands(message)
+    channel = message.channel
+    if (channel.id == welcome_channel_id):
+        await message.add_reaction("👋")
+        print(f"New member joined\n  {datetime.datetime.now()}\n")
+    return
 
 #============================================ COMMANDES INFOS ===============================================
 #$ping
