@@ -47,7 +47,7 @@ class ReportButton(discord.ui.Button):
         self.count = 0
         self.users_who_clicked : list = []
         i : int = 0
-        message : str = "Players in the game :"
+        message : str = "  Players in the game :"
         while (i < len(self.users)):
             message = message + f" @{self.users[i].name}"
             i = i + 1
@@ -55,6 +55,7 @@ class ReportButton(discord.ui.Button):
 
     async def callback(self, interaction : discord.Interaction) -> None:
         if (interaction.user.id == 866997795993944084): #Si admin
+            print(f"  @{interaction.user.name} confirmed.")
             #Remplace par ValidButton
             valid_button : discord.Button = ValidButton()
             valid_button.label = "✅ Game reported"
