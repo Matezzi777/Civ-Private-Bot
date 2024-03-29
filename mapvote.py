@@ -145,10 +145,10 @@ class Button_continents(discord.ui.Button):
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 #Bouton Continents and Islands 🏝️
-class Button_continents_and_islands(discord.ui.Button):
+class Button_tsl(discord.ui.Button):
     def __init__(self, list_users : list, needed_confirm : int) -> None:
         super().__init__(
-            label="🏝️ Continents and Islands",
+            label="🗺 True Start Locations",
             style=discord.ButtonStyle.grey
         )
         self.list_users : list = list_users
@@ -166,11 +166,11 @@ class Button_continents_and_islands(discord.ui.Button):
                 self.count = self.count - 1
                 self.users_who_clicked.remove(user)
             if (self.count < self.needed_confirm):
-                self.label = f"🏝️ Continents and Islands ({self.count})"
+                self.label = f"🗺 True Start Locations ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
                 valid_button = ValidButton()
-                valid_button.label = "🏝️ Continents and Islands"
+                valid_button.label = "🗺 True Start Locations"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
@@ -609,11 +609,80 @@ class Button_BBGBeta(discord.ui.Button):
                 self.count = self.count - 1
                 self.users_who_clicked.remove(user)
             if (self.count < self.needed_confirm):
-                self.label = f"🔎 BBG Beta ({bbg_beta_version})"
+                self.label = f"🔎 BBG Beta ({bbg_beta_version}) ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
                 valid_button = ValidButton()
                 valid_button.label = f"🔎 BBG Beta ({bbg_beta_version})"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+
+#Bouton BBG 
+class Button_1v1(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int) -> None:
+        super().__init__(
+            label=f"1️⃣ 1v1",
+            style=discord.ButtonStyle.grey
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"1️⃣ 1v1 ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = f"1️⃣ 1v1"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+#Bouton BBG Beta
+class Button_Teamer(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int) -> None:
+        super().__init__(
+            label=f"👪 Teamer",
+            style=discord.ButtonStyle.grey
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"👪 Teamer ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = f"👪 Teamer"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
@@ -642,7 +711,7 @@ class MapView(discord.ui.View):
         self.add_item(Button_seven_seas(users, self.needed_confirm))
         self.add_item(Button_highlands(users, self.needed_confirm))
         self.add_item(Button_continents(users, self.needed_confirm))
-        self.add_item(Button_continents_and_islands(users, self.needed_confirm))
+        self.add_item(Button_tsl(users, self.needed_confirm))
 #View BCY
 class BCYView(discord.ui.View):
    def __init__(self, users) -> None:
@@ -694,6 +763,14 @@ class VersionView(discord.ui.View):
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_BBG(users, self.needed_confirm))
         self.add_item(Button_BBGBeta(users, self.needed_confirm))
+#View Format
+class FormatView(discord.ui.View):
+    def __init__(self, users) -> None:
+        super().__init__(timeout=None)
+        self.nb_users : int = len(users)
+        self.needed_confirm : int = (self.nb_users // 2) + 1
+        self.add_item(Button_1v1(users, self.needed_confirm))
+        self.add_item(Button_Teamer(users, self.needed_confirm))
 
 #=============================================== FONCTIONS ==================================================
 #Lance un mapvote
@@ -720,6 +797,8 @@ async def make_mapvote(ctx : commands.Context) -> None:
 
     #Envoie le message pour la version
     await ctx.send("**BBG VERSION**", view=VersionView(users))
+    #Envoie le message du fortmay (FFA / Teamer)
+    await ctx.send("**FORMAT**", view=FormatView(users))
     #Envoie le message pour les drafts
     await ctx.send("**DRAFT**", view=DraftView(users))
     #Envoie le message pour la map
