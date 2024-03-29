@@ -4,6 +4,9 @@ import discord
 from discord.ext import commands
 from classes import BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton 
 
+bbg_stable_version : str = "5.7"
+bbg_beta_version : str = "5.8"
+
 #================================================ BOUTONS ===================================================
 #Bouton Pangaea 🌋
 class Button_pangaea(discord.ui.Button):
@@ -550,6 +553,75 @@ class Button_civilized(discord.ui.Button):
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 
+#Bouton BBG 
+class Button_BBG(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int) -> None:
+        super().__init__(
+            label=f"💪 BBG ({bbg_stable_version})",
+            style=discord.ButtonStyle.grey
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"💪 BBG ({bbg_stable_version}) ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = f"💪 BBG ({bbg_stable_version})"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+#Bouton BBG Beta
+class Button_BBGBeta(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int) -> None:
+        super().__init__(
+            label=f"🔎 BBG Beta ({bbg_beta_version})",
+            style=discord.ButtonStyle.grey
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"🔎 BBG Beta ({bbg_beta_version})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = f"🔎 BBG Beta ({bbg_beta_version})"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+
 #================================================= VIEWS ====================================================
 #View DRAFT
 class DraftView(discord.ui.View):
@@ -614,6 +686,14 @@ class BarbariansView(discord.ui.View):
         self.add_item(Button_standard_barbs(users, self.needed_confirm))
         self.add_item(Button_civilized(users, self.needed_confirm))
         self.add_item(Button_off(users, self.needed_confirm))
+#View Version BBG
+class VersionView(discord.ui.View):
+    def __init__(self, users) -> None:
+        super().__init__(timeout=None)
+        self.nb_users : int = len(users)
+        self.needed_confirm : int = (self.nb_users // 2) + 1
+        self.add_item(Button_BBG(users, self.needed_confirm))
+        self.add_item(Button_BBGBeta(users, self.needed_confirm))
 
 #=============================================== FONCTIONS ==================================================
 #Lance un mapvote
@@ -638,6 +718,8 @@ async def make_mapvote(ctx : commands.Context) -> None:
     message = f"Let's vote !\n\n*{nb_users}* players in the game :\n" + message
     await ctx.send(message)
 
+    #Envoie le message pour la version
+    await ctx.send("**BBG VERSION**", view=VersionView(users))
     #Envoie le message pour les drafts
     await ctx.send("**DRAFT**", view=DraftView(users))
     #Envoie le message pour la map
@@ -697,3 +779,12 @@ async def make_generic_mapvote(ctx : commands.Context) -> None:
     await barbs.add_reaction("⚔️")
     await barbs.add_reaction("👔")
     await barbs.add_reaction("❌")
+
+
+
+#Lance un mapvote plus long
+async def make_long_mapvote(ctx : commands.Context) -> None:
+    return
+#Lance un mapvote générique plus long
+async def make_long_generic_mapvote(ctx : commands.Context) -> None:
+    return
