@@ -148,7 +148,7 @@ async def update_scoreboard(bot : commands.Bot) -> None:
             await channel.send(message)
             message = ""
             i = i + 1
-    print(f"Leaderboard updated in #{channel.name}")
+    print(f"  Leaderboard updated in #{channel.name}")
     return
 
 #========================================== PARSING LEADERBOARD =============================================

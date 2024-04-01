@@ -469,7 +469,7 @@ async def leaderboard(ctx : commands.Context) -> None:
 async def update_leaderboard(ctx : commands.Context) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
-        print(f"\n@{ctx.message.author.name} tried to use $add_user in #{ctx.channel.name}")
+        print(f"\n@{ctx.message.author.name} tried to use $update_leaderboard in #{ctx.channel.name}")
         embed = ErrorEmbed(title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
         await caller.send(embed=embed)
         return
