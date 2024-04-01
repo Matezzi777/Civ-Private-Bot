@@ -81,17 +81,21 @@ class ReportButton(discord.ui.Button):
         else: #Si non-admin
             if (is_in_list(interaction.user, self.users)): #Si l'utilisateur était dans la partie
                 if (is_in_list(interaction.user, self.users_who_clicked)): #Si l'utilisateur a déjà cliqué
-                    print(f"@{interaction.user.name} already confirmed the result.") #Console : L'utilisateur a déjà cliqué
+                    print(f"    @{interaction.user.name} already confirmed.") #Console : L'utilisateur a déjà cliqué
+                    embed = ErrorEmbed(description="You already confirmed this report.")
+                    await interaction.response.send_message(embed=embed, ephemeral=True)
 
                 else: #Si l'utilisateur n'a pas encore cliqué
                     self.count = self.count + 1 #+1 clic
                     self.users_who_clicked.append(interaction.user)
-                    print(f"@{interaction.user.name} confirmed the result.") #Console : Clic enregistré
+                    print(f"  @{interaction.user.name} confirmed.") #Console : Clic enregistré
+                    embed = SuccessEmbed(title="YOU CONFIRMED THIS REPORT")
+                    await interaction.response.send_message(embed=embed, ephemeral=True)
             
             else: #Si l'utilisateur n'était pas dans la partie
-                embed = ErrorEmbed(description="You tried to vote for a report which does not concern you.") #Créé le message d'erreur
-                await interaction.user.send(embed=embed) #Envoie un MP d'erreur à l'utilisateur
-                print(f"@{interaction.user.name} tried to vote but wasn't in the game.")
+                embed = ErrorEmbed(description="You tried to confirm a report which does not concern you.") #Créé le message d'erreur
+                await interaction.response.send_message(embed=embed, ephemeral=True) #Envoie un MP d'erreur à l'utilisateur
+                print(f"    @{interaction.user.name} tried to confirm.")
         
         if (self.count == self.needed_confirm): #Si le nombre de clics est atteint
             #valid()
