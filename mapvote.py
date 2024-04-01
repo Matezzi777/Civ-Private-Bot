@@ -623,10 +623,10 @@ class Button_BBGBeta(discord.ui.Button):
             await interaction.response.edit_message(view=self.view)
 
 #Bouton BBG 
-class Button_1v1(discord.ui.Button):
+class Button_FFA(discord.ui.Button):
     def __init__(self, list_users : list, needed_confirm : int) -> None:
         super().__init__(
-            label=f"1️⃣ 1v1",
+            label=f"🙍‍♂️ FFA",
             style=discord.ButtonStyle.grey
         )
         self.list_users : list = list_users
@@ -644,11 +644,11 @@ class Button_1v1(discord.ui.Button):
                 self.count = self.count - 1
                 self.users_who_clicked.remove(user)
             if (self.count < self.needed_confirm):
-                self.label = f"1️⃣ 1v1 ({self.count})"
+                self.label = f"🙍‍♂️ FFA ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
                 valid_button = ValidButton()
-                valid_button.label = f"1️⃣ 1v1"
+                valid_button.label = f"🙍‍♂️ FFA"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
@@ -769,7 +769,7 @@ class FormatView(discord.ui.View):
         super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
-        self.add_item(Button_1v1(users, self.needed_confirm))
+        self.add_item(Button_FFA(users, self.needed_confirm))
         self.add_item(Button_Teamer(users, self.needed_confirm))
 
 #=============================================== FONCTIONS ==================================================
