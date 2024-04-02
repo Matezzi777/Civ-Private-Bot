@@ -15,7 +15,7 @@ from birthdays import *
 from draft import *
 from mapvote import *
 from ranked import *
-# from civilopedia import *
+from civilopedia import *
 from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
@@ -278,7 +278,7 @@ async def announce(ctx : commands.Context, channel_ID : int, *, content : str) -
         brief="- Announce something in a channel with an embed",
         enabled=True,
         hidden=True)
-async def announce_embed(channel_ID : int, title : str, *, content : str) -> None:
+async def announce_embed(ctx : commands.Context, channel_ID : int, title : str, *, content : str) -> None:
     channel : discord.TextChannel = bot.get_channel(channel_ID)
     embed = BotEmbed(title=title.upper(), description=content.capitalize())
     await channel.send(embed=embed)
@@ -593,14 +593,13 @@ async def lfg(ctx : commands.Context, format : str = None) -> None:
 
 #=============================================== CHANTIER ===================================================
 
-# @bot.command()
-# async def civilopedia(ctx : commands.Context, article : str = None):
-#     if (not article):
-#         await navigate_civilopedia(ctx)
-#     else:
-#         await civilopedia_article(ctx, article)
-#         ...
-#     return
+@bot.command()
+async def civilopedia(ctx : commands.Context, article : str = None, lang : str = "en"):
+    print(f"$civilopedia used by {ctx.message.author} in {ctx.message.channel}")
+
+    await make_civilopedia(ctx, article.upper(), lang)
+
+
 
 #================================================== RUN =====================================================
 #Run le bot
