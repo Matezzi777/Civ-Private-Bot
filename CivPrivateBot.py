@@ -15,6 +15,7 @@ from birthdays import *
 from draft import *
 from mapvote import *
 from ranked import *
+from civilopedia import *
 from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
