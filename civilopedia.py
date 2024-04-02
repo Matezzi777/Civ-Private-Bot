@@ -65,16 +65,16 @@ async def display_article(ctx : commands.Context, article : str, url : str):
         print(f"{log}")
 
         #4. Récupérer les contenus des fields à partir de l'url
+        print(f"  Extracting embed's fields contents...")
+        sections_contents : list[str] = extract_sections_contents_from_html(html, type_article)
+        print(f"    Fields content found : {len(sections_contents)}")
 
-        #5. Récupérer la description
-
-        #6. Construction de l'embed
+        #5. Construction de l'embed
         embed = BotEmbed(title=article_title.upper(), description=f"[Link to civilopedia.net]({url})")
-        
         nb_sections : int = len(sections_titles)
         i : int = 0
         while (i < nb_sections):
-            embed.add_field(name=sections_titles[i], value="...", inline=False)
+            embed.add_field(name=sections_titles[i], value=sections_contents[i], inline=False)
             i = i + 1
 
         embed.set_thumbnail(url=f"{url_image}")
@@ -147,12 +147,12 @@ def get_html(url : str):
     response = requests.get(url)
     return (response.text)
 
-#Extrait le title de l'article à partir de son url
+#Extrait le title de l'article à partir de son code HTML
 def extract_title_from_html(html : str):
     soup = BeautifulSoup(html, 'html.parser')
     title = soup.find('div', class_='App_pageHeaderText__SsfWm')
     return (title.text)
-#Extrait l'url de l'image de l'article à partir de son url
+#Extrait l'url de l'image de l'article à partir de son code HTML
 def extract_image_from_html(html : str, type_article : str):
     soup = BeautifulSoup(html, 'html.parser')
     if (type_article == "CIV" or type_article=="DIS" or type_article=="CS"): #Si type CIV DIS ou CS
@@ -212,8 +212,48 @@ def extract_sections_titles_from_html(html : str, type_article : str) -> list[st
             i = i + 1
 
     else:
-        print(f"    Unable to find sections of {type_article} type.")
+        print(f"    Unable to find sections titles of {type_article} type.")
         return None
     
     return (sections_titles)
+#Extrait le contenu des fields de l'embed
+def extract_sections_contents_from_html(html, type_article) -> list[str]:
+    sections_contents : list[str] = []
+    soup = BeautifulSoup(html, 'html.parser')
+    if (type_article == "CIV"):
+        
+        ...
+
+    elif (type_article == "LEA"):
+        ...
+
+    elif (type_article == "DIS"):
+        ...
+
+    elif (type_article == "CS"):
+        details_content = soup.find_all('p', class_='Component_headerBodyHeaderBody__MkvCp')
+        nb_fields : int = len(details_content) / 2
+        i : int = 0
+        while (i < nb_fields):
+            sections_contents.append(parse_field_content(details_content[i].text))
+            i = i + 1
+
+    else:
+        print(f"    Unable to find sections content of {type_article} type.")
+        return None
+
+    return (sections_contents)
+
+#Met en forme le contenu des fields (remplace les '.' par '.\n')
+def parse_field_content(content : str) -> str:
+    parsed_content : str = ""
+    len_content : int = len(content)
+    i : int = 0
+    while (i < len_content):
+        if (content[i] == '.'):
+            parsed_content = parsed_content + ".\n"
+        else:
+            parsed_content = parsed_content + content[i]
+        i = i + 1
+    return (parsed_content)
 
