@@ -15,7 +15,7 @@ from birthdays import *
 from draft import *
 from mapvote import *
 from ranked import *
-from civilopedia import *
+# from civilopedia import *
 from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
@@ -593,7 +593,14 @@ async def lfg(ctx : commands.Context, format : str = None) -> None:
 
 #=============================================== CHANTIER ===================================================
 
-
+# @bot.command()
+# async def civilopedia(ctx : commands.Context, article : str = None):
+#     if (not article):
+#         await navigate_civilopedia(ctx)
+#     else:
+#         await civilopedia_article(ctx, article)
+#         ...
+#     return
 
 #================================================== RUN =====================================================
 #Run le bot
