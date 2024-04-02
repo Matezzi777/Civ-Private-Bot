@@ -277,7 +277,7 @@ async def announce(ctx : commands.Context, channel_ID : int, *, content : str) -
         brief="- Announce something in a channel with an embed",
         enabled=True,
         hidden=True)
-async def announce_embed(ctx : commands.Context, channel_ID : int, title : str, *, content : str) -> None:
+async def announce_embed(channel_ID : int, title : str, *, content : str) -> None:
     channel : discord.TextChannel = bot.get_channel(channel_ID)
     embed = BotEmbed(title=title.upper(), description=content.capitalize())
     await channel.send(embed=embed)
