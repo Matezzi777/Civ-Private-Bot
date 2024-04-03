@@ -68,18 +68,17 @@ async def display_article(ctx : commands.Context, article : str, url : str):
         print(f"  Extracting embed's fields contents...")
         sections_contents : list[str] = extract_sections_contents_from_html(html, type_article)
         print(f"    Fields contents found : {len(sections_contents)}")
-        print(f"titles : {len(sections_titles)}  |  contents : {len(sections_contents)}")
 
         # 5. Construction de l'embed
         embed = BotEmbed(title=article_title.upper(), description=f"[Link to civilopedia.net]({url})")
-        nb_sections : int = len(sections_titles)
+        nb_sections : int = len(sections_contents[0])
         i : int = 0
         while (i < nb_sections):
-            embed.add_field(name=sections_titles[i], value=sections_contents[i], inline=False)
+            embed.add_field(name=sections_contents[0][i], value=sections_contents[1][i], inline=False)
             i = i + 1
-
         embed.set_thumbnail(url=f"{url_image}")
 
+        #6. Envoi de l'embed
         i : int = 0
         async for message in ctx.channel.history(limit=1):
             await message.edit(embed=embed)
@@ -225,6 +224,7 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
     sections_contents : list[str] = []
     soup = BeautifulSoup(html, 'html.parser')
     if (type_article == "CIV"):
+        sections_titles = extract_sections_titles_from_html(html, type_article)
         temp_contents : list[str] = []
         full_elements = soup.find_all('div', class_='StatBox_statBoxComponent__M3Gcj')
         nb_elements : int = len(full_elements) / 2
@@ -255,6 +255,7 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
             i = i + 1
     
     elif (type_article == "LEA"):
+        sections_titles = extract_sections_titles_from_html(html, type_article)
         nb_civs : int = 0
         specificites = soup.find_all('div', class_='StatBox_statBoxFrame__Cgdpy')[0]
         content_civilizations : str = ""
@@ -277,9 +278,68 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
         sections_contents.append(agenda)
 
     elif (type_article == "DIS"):
-        ...
+        sections_titles : list[str] = []
+        description_content = soup.find('div', class_='App_leftColumnItem__GHlpJ').find('div', class_='Component_paragraphs__tSvTZ').text
+        sections_titles.append("Description")
+        sections_contents.append(parse_field_content(description_content))
+        right_column_elements = soup.find_all('div', class_='App_rightColumnItem__l6cEG')
+        temp_contents : list[str] = []
+
+        for section in right_column_elements:
+            traits_elements = section.find_all('div', class_='StatBox_statBoxComponent__M3Gcj')
+            element_scraped : str = ""
+            is_title : bool = False
+
+            for element in traits_elements:
+                separator = element.find('div', class_='StatBox_separator__33cx4')
+                title = element.find('div', class_='StatBox_statBoxHeaderText__bedSz')
+                to_scrap_link = element.find('div', class_='StatBox_iconLabelCaption__i_uw4')
+                to_scrap_label = element.find('div', class_='StatBox_statBoxLabel__y5ZB2')
+
+                if (separator):
+                    if (is_title):
+                        temp_contents.append(element_scraped)
+                        element_scraped = ""
+                    is_title = False
+
+                elif (title):
+                    sections_titles.append(title.text)
+                    if (is_title):
+                        temp_contents.append(element_scraped)
+                        element_scraped = ""
+                    is_title = True
+
+                elif ((to_scrap_link or to_scrap_label)):
+
+                    if (is_title):
+                        if (to_scrap_link):
+                            element_scraped = element_scraped + f"{to_scrap_link.text}\n"
+                        elif (to_scrap_label):
+                            element_scraped = element_scraped + f"{to_scrap_label.text}\n"
+
+                    else:
+                        if (to_scrap_link):
+                            sections_contents[0] = sections_contents[0] + f"\n{to_scrap_link.text}"
+                        elif (to_scrap_label):
+                            sections_contents[0] = sections_contents[0] + f"\n{to_scrap_label.text}"
+
+            if (element_scraped != ""):
+                temp_contents.append(element_scraped)
+
+
+        temp_contents_2 = []
+        for line in temp_contents:
+            if (line != ""):
+                sections_contents.append(line)
+                temp_contents_2.append(line)
+
+        i : int = 0
+        for line in temp_contents_2:
+            i = i + 1
+
 
     elif (type_article == "CS"):
+        sections_titles = extract_sections_titles_from_html(html, type_article)
         details_content = soup.find_all('p', class_='Component_headerBodyHeaderBody__MkvCp')
         nb_fields : int = len(details_content) / 2
         i : int = 0
@@ -290,7 +350,11 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
         print(f"    Unable to find sections content of {type_article} type.")
         return None
 
-    return (sections_contents)
+    scrapped_infos = []
+    scrapped_infos.append(sections_titles)
+    scrapped_infos.append(sections_contents)
+
+    return (scrapped_infos)
 
 #Met en forme le contenu des fields (remplace les '.' par '.\n')
 def parse_field_content(content : str) -> str:
