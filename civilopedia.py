@@ -65,6 +65,7 @@ async def display_article(ctx : commands.Context, article : str, url : str):
         print(f"  Extracting embed's fields contents...")
         sections_contents : list[str] = extract_sections_contents_from_html(html, type_article)
         print(f"    Fields contents found : {len(sections_contents)}")
+        print(f"titles : {len(sections_titles)}  |  contents : {len(sections_contents)}")
 
         # 5. Construction de l'embed
         embed = BotEmbed(title=article_title.upper(), description=f"[Link to civilopedia.net]({url})")
@@ -188,7 +189,6 @@ def extract_sections_titles_from_html(html : str, type_article : str) -> list[st
         sections_titles.append(ability_title)
         sections_titles.append("**Description :**")
         sections_titles.append("**AI Agenda :**")
-        sections_titles.append("**AI Religion :**")
 
     elif (type_article == "DIS"):
         sections_titles.append("**Description :**")
@@ -224,7 +224,6 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
         i : int = 0
         new_section : bool = False
         content : str = ""
-
         while (i < nb_elements):
             child = full_elements[i].findChild()
             if (child.name == "a"):
@@ -237,7 +236,6 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
                     content = ""
                     new_section = False
             i = i + 1
-
         i = 0
         while (i < len(temp_contents) + 1):
             if (i == 0):
@@ -248,9 +246,25 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
             else:
                 sections_contents.append(temp_contents[i-1])
             i = i + 1
-
+    
     elif (type_article == "LEA"):
-        ...
+        content_civilization : str = ""
+        civilizations = soup.find_all('div', class_='StatBox_iconLabelCaption__i_uw4')
+        nb_civilizations : int = len(civilizations) / 2
+        i : int = 0
+        while (i < nb_civilizations):
+            content_civilization = content_civilization + f"{civilizations[i].text}\n"
+            i = i + 1
+        sections_contents.append(f"{content_civilization}")
+        ability = soup.find('p', class_="Component_headerBodyHeaderBody__MkvCp").text
+        sections_contents.append(f"{parse_field_content(ability)}")
+        left_column_elements = soup.find_all('div', class_='App_leftColumnItem__GHlpJ')
+        resume = left_column_elements[2].find('div', class_='Component_paragraphs__tSvTZ').text
+        sections_contents.append(f"{resume}")
+        labels = soup.find_all('div', class_='StatBox_statBoxLabel__y5ZB2')
+        agenda = f"**{labels[0].text}**\n{parse_field_content(labels[1].text)}"
+        print(f"\n\nAgenda :\n{agenda}\n\n")
+        sections_contents.append(agenda)
 
     elif (type_article == "DIS"):
         ...
@@ -262,7 +276,6 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
         while (i < nb_fields):
             sections_contents.append(parse_field_content(details_content[i].text))
             i = i + 1
-
     else:
         print(f"    Unable to find sections content of {type_article} type.")
         return None
