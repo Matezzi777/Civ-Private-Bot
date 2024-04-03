@@ -18,7 +18,7 @@ URL_BASE = "https://www.civilopedia.net"
 #Lance la commande $civilopedia
 async def make_civilopedia(ctx : commands.Context, article : str = None, lang : str = "en"):
     if (article == None): #Si aucun article n'est renseigné
-        embed = SuccessEmbed(title="BROWSER", description="No specific article mentionned.\n\nThe browser will be displayed here later...")
+        embed = SuccessEmbed(title="BROWSER", description="Coming soon...")
         await ctx.send(embed=embed)
 
     else: #Si un article est renseigné
