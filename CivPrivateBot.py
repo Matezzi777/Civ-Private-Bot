@@ -596,8 +596,7 @@ async def lfg(ctx : commands.Context, format : str = None) -> None:
 @bot.command()
 async def civilopedia(ctx : commands.Context, article : str = None, lang : str = "en"):
     print(f"$civilopedia used by {ctx.message.author} in {ctx.message.channel}")
-
-    await make_civilopedia(ctx, article.upper(), lang)
+    await make_civilopedia(ctx, article, lang)
 
 
 

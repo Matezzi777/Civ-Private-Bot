@@ -22,6 +22,7 @@ async def make_civilopedia(ctx : commands.Context, article : str = None, lang : 
         await ctx.send(embed=embed)
 
     else: #Si un article est renseigné
+        article = article.upper()
         if (check_article_in_db(article)): #Si l'article est trouvé dans la base de donnée
             if (is_valid_lang(lang)): #Si la langue est valide
                 url = find_url(article, lang)
@@ -44,6 +45,8 @@ async def display_article(ctx : commands.Context, article : str, url : str):
         await ctx.send(embed=embed)
 
     else : #Si le type de page est supporté (CIV/LEA/DIS/CS)
+        embed = BotEmbed(title="LOADING INFOS...")
+        await ctx.send(embed=embed)
         html = get_html(url)
 
         #1. Récupérer le titre à partir de l'url
@@ -76,9 +79,13 @@ async def display_article(ctx : commands.Context, article : str, url : str):
             i = i + 1
 
         embed.set_thumbnail(url=f"{url_image}")
-        #7. Envoi de l'embed
-        await ctx.send(embed=embed)
-        print(f"Article {article_title} displayed in {ctx.message.channel}")
+
+        i : int = 0
+        async for message in ctx.channel.history(limit=1):
+            await message.edit(embed=embed)
+            i = i + 1
+
+    print(f"Article {article_title} displayed in {ctx.message.channel}")
 
 #============================================= SUB-FONCTIONS ================================================
 #Retrouve l'url d'un article à partir de son nom
@@ -248,14 +255,27 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
             i = i + 1
     
     elif (type_article == "LEA"):
-        content_civilization : str = ""
-        civilizations = soup.find_all('div', class_='StatBox_iconLabelCaption__i_uw4')
-        nb_civilizations : int = len(civilizations) / 2
-        i : int = 0
-        while (i < nb_civilizations):
-            content_civilization = content_civilization + f"{civilizations[i].text}\n"
-            i = i + 1
-        sections_contents.append(f"{content_civilization}")
+        nb_civs : int = 0
+        specificites = soup.find_all('div', class_='StatBox_statBoxFrame__Cgdpy')[0]
+        content_civilizations : str = ""
+        for element in specificites:
+            child = element.findChild()
+            if (child):
+                if (child.name == "a"):
+                    nb_civs += 1
+                    content_civilizations = content_civilizations + f"{child.text}\n"
+                    print(f"      {child.text}\n")
+        print(f"\n    nb_civs : {nb_civs}\n{content_civilizations}")
+
+        # civilizations = soup.find_all('div', class_='StatBox_iconLabelCaption__i_uw4')
+        # nb_civilizations : int = len(civilizations) / 2
+        # i : int = 0
+        # while (i < nb_civilizations):
+        #     content_civilization = content_civilization + f"{civilizations[i].text}\n"
+        #     i = i + 1
+        sections_contents.append(content_civilizations)
+
+
         ability = soup.find('p', class_="Component_headerBodyHeaderBody__MkvCp").text
         sections_contents.append(f"{parse_field_content(ability)}")
         left_column_elements = soup.find_all('div', class_='App_leftColumnItem__GHlpJ')
@@ -263,7 +283,6 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
         sections_contents.append(f"{resume}")
         labels = soup.find_all('div', class_='StatBox_statBoxLabel__y5ZB2')
         agenda = f"**{labels[0].text}**\n{parse_field_content(labels[1].text)}"
-        print(f"\n\nAgenda :\n{agenda}\n\n")
         sections_contents.append(agenda)
 
     elif (type_article == "DIS"):
