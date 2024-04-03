@@ -59,17 +59,14 @@ async def display_article(ctx : commands.Context, article : str, url : str):
         #3. Récupérer les titres des fields à partir de l'url
         print(f"  Extracting embed's fields titles...")
         sections_titles : list[str] = extract_sections_titles_from_html(html, type_article)
-        log : str = f"    Fields titles found : "
-        for field in sections_titles:
-            log = log + f"'{field}' "
-        print(f"{log}")
+        print(f"    Fields titles found : {len(sections_titles)}")
 
         #4. Récupérer les contenus des fields à partir de l'url
         print(f"  Extracting embed's fields contents...")
         sections_contents : list[str] = extract_sections_contents_from_html(html, type_article)
-        print(f"    Fields content found : {len(sections_contents)}")
+        print(f"    Fields contents found : {len(sections_contents)}")
 
-        #5. Construction de l'embed
+        # 5. Construction de l'embed
         embed = BotEmbed(title=article_title.upper(), description=f"[Link to civilopedia.net]({url})")
         nb_sections : int = len(sections_titles)
         i : int = 0
@@ -80,7 +77,7 @@ async def display_article(ctx : commands.Context, article : str, url : str):
         embed.set_thumbnail(url=f"{url_image}")
         #7. Envoi de l'embed
         await ctx.send(embed=embed)
-        print(f"  Article {article_title} displayed in {ctx.message.channel}")
+        print(f"Article {article_title} displayed in {ctx.message.channel}")
 
 #============================================= SUB-FONCTIONS ================================================
 #Retrouve l'url d'un article à partir de son nom
@@ -221,8 +218,36 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
     sections_contents : list[str] = []
     soup = BeautifulSoup(html, 'html.parser')
     if (type_article == "CIV"):
-        
-        ...
+        temp_contents : list[str] = []
+        full_elements = soup.find_all('div', class_='StatBox_statBoxComponent__M3Gcj')
+        nb_elements : int = len(full_elements) / 2
+        i : int = 0
+        new_section : bool = False
+        content : str = ""
+
+        while (i < nb_elements):
+            child = full_elements[i].findChild()
+            if (child.name == "a"):
+                element_to_scrap = child.find('div', class_='StatBox_iconLabelCaption__i_uw4')
+                content = content + f"{element_to_scrap.text}\n"
+                new_section = True
+            else:
+                if (new_section):
+                    temp_contents.append(content)
+                    content = ""
+                    new_section = False
+            i = i + 1
+
+        i = 0
+        while (i < len(temp_contents) + 1):
+            if (i == 0):
+                sections_contents.append(temp_contents[i])
+            elif (i == 1):
+                ability : str = soup.find('p', class_='Component_headerBodyHeaderBody__MkvCp').text
+                sections_contents.append(parse_field_content(ability))
+            else:
+                sections_contents.append(temp_contents[i-1])
+            i = i + 1
 
     elif (type_article == "LEA"):
         ...
