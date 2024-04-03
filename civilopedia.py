@@ -189,7 +189,7 @@ def extract_sections_titles_from_html(html : str, type_article : str) -> list[st
         sections_titles.append("**UI :**")
 
     elif (type_article == "LEA"):
-        sections_titles.append("**Civilizations :**")
+        sections_titles.append("**Civilization :**")
         ability_title : str = "**Ability :** "
         ability_name = soup.find('p', class_='Component_headerBodyHeaderText__LuO9w').text
         ability_title = ability_title+ability_name
@@ -264,15 +264,6 @@ def extract_sections_contents_from_html(html, type_article) -> list[str]:
                 if (child.name == "a"):
                     nb_civs += 1
                     content_civilizations = content_civilizations + f"{child.text}\n"
-                    print(f"      {child.text}\n")
-        print(f"\n    nb_civs : {nb_civs}\n{content_civilizations}")
-
-        # civilizations = soup.find_all('div', class_='StatBox_iconLabelCaption__i_uw4')
-        # nb_civilizations : int = len(civilizations) / 2
-        # i : int = 0
-        # while (i < nb_civilizations):
-        #     content_civilization = content_civilization + f"{civilizations[i].text}\n"
-        #     i = i + 1
         sections_contents.append(content_civilizations)
 
 
