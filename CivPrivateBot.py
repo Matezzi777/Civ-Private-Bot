@@ -287,6 +287,44 @@ async def announce_embed(ctx : commands.Context, channel_ID : int, title : str, 
     await channel.send(embed=embed)
 
 #========================================== COMMANDES PRE - GAME ============================================
+#$lfg
+@bot.command(help="Send a formatted lfg message.\n\nTake 0 to 1 parameter :\n- Type of game (Ranked / Casual).",
+        description="LFG",
+        brief="- Send a formatted lfg message.",
+        enabled=True,
+        hidden=False)
+async def lfg(ctx : commands.Context, format : str = None) -> None:
+    print(f"\n$lfg used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    if (format == None):
+        format=""
+    if (format.lower()=="ranked"):
+        await ctx.send("<@&1211165398003884093>")
+        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
+        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
+        embed.add_field(name="❔ Maybe :", value="", inline=False)
+        view=LFGView(ctx.message.author)
+        await ctx.send(embed=embed, view=view)
+        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
+    elif (format.lower()=="casual"or format.lower()=="chill"):
+        await ctx.send("<@&1211165189274337340>")
+        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
+        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
+        embed.add_field(name="❔ Maybe :", value="", inline=False)
+        view=LFGView(ctx.message.author)
+        await ctx.send(embed=embed, view=view)
+        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
+    else:
+        await ctx.send("<@&1112525992267890780>")
+        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
+        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
+        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
+        embed.add_field(name="❔ Maybe :", value="", inline=False)
+        view=LFGView(ctx.message.author)
+        await ctx.send(embed=embed, view=view)
+        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
+    return
 #$draft 2.0
 @bot.command(help="Create randoms list of leaders and assign them to the players.\n\nTake 1 parameter :\n- nb_civs (int) : The number of civs given to each player.\n\nMUST BE USED IN VOICE CHANNEL !\n\nTo use without VoiceChannel, prefer $generic_draft <nb_players> <nb_civs>",
         description="DRAFT",
@@ -315,7 +353,7 @@ async def generic_draft(ctx : commands.Context, nb_players : int, nb_civs : int)
     print(f"\n$generic_draft {nb_players} {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_generic_draft(ctx, nb_players, nb_civs)
 
-#$mapvote v2
+#$mapvote
 @bot.command(help="Launch a mapvote.\n\nBehaves differently if used with or without VoiceChannel.",
         description="MAPVOTE",
         brief="- Launch the mapvote",
@@ -555,51 +593,15 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
         await ctx.send(embed=embed)
         return
 
-@bot.command(help="Send a formatted lfg message.\n\nTake 0 to 1 parameter :\n- Type of game (Ranked / Casual).",
-        description="LFG",
-        brief="- Send a formatted lfg message.",
-        enabled=True,
-        hidden=False)
-async def lfg(ctx : commands.Context, format : str = None) -> None:
-    print(f"\n$lfg used by @{ctx.message.author.name} in #{ctx.channel.name}")
-    if (format == None):
-        format=""
-    if (format.lower()=="ranked"):
-        await ctx.send("<@&1211165398003884093>")
-        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
-        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
-        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
-        embed.add_field(name="❔ Maybe :", value="", inline=False)
-        view=LFGView(ctx.message.author)
-        await ctx.send(embed=embed, view=view)
-        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
-    elif (format.lower()=="casual"or format.lower()=="chill"):
-        await ctx.send("<@&1211165189274337340>")
-        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
-        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
-        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
-        embed.add_field(name="❔ Maybe :", value="", inline=False)
-        view=LFGView(ctx.message.author)
-        await ctx.send(embed=embed, view=view)
-        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
-    else:
-        await ctx.send("<@&1112525992267890780>")
-        message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
-        embed=BotEmbed(title="LOOKING FOR GAME", description=message)
-        embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
-        embed.add_field(name="❔ Maybe :", value="", inline=False)
-        view=LFGView(ctx.message.author)
-        await ctx.send(embed=embed, view=view)
-        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
-    return
 
-
-#=============================================== CHANTIER ===================================================
+#============================================== CIVILOPEDIA =================================================
 
 @bot.command()
 async def civilopedia(ctx : commands.Context, article : str = None, lang : str = "en"):
     print(f"\n$civilopedia used by {ctx.message.author} in {ctx.message.channel}")
     await make_civilopedia(ctx, article, lang)
+
+#=========================================== FEEDBACKS & IDEAS ==============================================
 
 @bot.command()
 async def make_suggestion(ctx : commands.Context):
