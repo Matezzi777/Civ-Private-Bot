@@ -16,6 +16,7 @@ from draft import *
 from mapvote import *
 from ranked import *
 from civilopedia import *
+from feedback import *
 from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
@@ -28,6 +29,8 @@ button_change = Button(label="Yes", style=discord.ButtonStyle.green)
 
 #=============================================== CONSTANTS ==================================================
 welcome_channel_id = 1211150113477627955
+feedback_channel_id = 1225240183516172329
+suggestion_channel_id = 1225272619192811633
 
 #============================================= CLASSES REPORT ===============================================
 #View $report
@@ -244,9 +247,9 @@ async def clear(ctx : commands.Context, n : int) -> None:
     print(f"\n$clear {n} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     i : int = 0
     async for message in ctx.channel.history(limit=n+1):
+        await message.delete()
         if (i != 0):
             print(f"  Message deleted from #{ctx.channel.name} ({i}/{n})")
-        await message.delete()
         i = i + 1
     print(f"  #{ctx.channel.name} cleaned.")
 #$datenow
@@ -598,7 +601,15 @@ async def civilopedia(ctx : commands.Context, article : str = None, lang : str =
     print(f"$civilopedia used by {ctx.message.author} in {ctx.message.channel}")
     await make_civilopedia(ctx, article, lang)
 
+@bot.command()
+async def make_suggestion(ctx : commands.Context):
+    channel_suggestion = bot.get_channel(suggestion_channel_id)
+    await create_suggestion(ctx, channel_suggestion)
 
+@bot.command()
+async def feedback(ctx : commands.Context):
+    channel_feedback = bot.get_channel(feedback_channel_id)
+    await make_feedback(ctx, channel_feedback)
 
 #================================================== RUN =====================================================
 #Run le bot

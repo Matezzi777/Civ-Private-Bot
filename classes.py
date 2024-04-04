@@ -6,7 +6,7 @@ from datetime import datetime, date
 import sqlite3
 
 #=============================================== CONSTANTS ==================================================
-version : str = "2.2"
+version : str = "2.3"
 
 #================================================= TASKS ====================================================
 
@@ -59,6 +59,32 @@ class ErrorEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
+        self.set_footer(text=f"Civ Private Bot {version}")
+
+class FeedbackEmbed(discord.Embed):
+    def __init__(self, *, colour=discord.Colour.from_rgb(52, 235, 198), color=discord.Colour.dark_purple(), title="NEW FEEDBACK !", type='rich', url=None, description=None, timestamp=None) -> None:
+        super().__init__(
+            colour=colour,
+            color=color,
+            title=title,
+            type=type,
+            url=url,
+            description=description,
+            timestamp=timestamp
+        )
+        self.set_footer(text=f"Civ Private Bot {version}")
+
+class SuggestionEmbed(discord.Embed):
+    def __init__(self, *, colour=discord.Colour.dark_orange(), color=discord.Colour.dark_orange(), title="NEW SUGGESTION !", type='rich', url=None, description=None, timestamp=None) -> None:
+        super().__init__(
+            colour=colour,
+            color=color,
+            title=title,
+            type=type,
+            url=url,
+            description=description,
+            timestamp=timestamp
+        )
         self.set_footer(text=f"Civ Private Bot {version}")
 
 # BUTTONS
