@@ -60,21 +60,21 @@ async def display_article(ctx : commands.Context, article : str, url : str):
         print(f"    {article}'s icon url found : {url_image}")
 
         #3. Récupérer les titres des fields à partir de l'url
-        print(f"  Extracting embed's fields titles...")
-        sections_titles : list[str] = extract_sections_titles_from_html(html, type_article)
-        print(f"    Fields titles found : {len(sections_titles)}")
+        # print(f"  Extracting embed's fields titles...")
+        # sections_titles : list[str] = extract_sections_titles_from_html(html, type_article)
+        # print(f"    Fields titles found : {len(sections_titles)}")
 
         #4. Récupérer les contenus des fields à partir de l'url
-        print(f"  Extracting embed's fields contents...")
-        sections_contents : list[str] = extract_sections_contents_from_html(html, type_article)
-        print(f"    Fields contents found : {len(sections_contents)}")
+        print(f"  Extracting data...")
+        scraped_data : list[str] = extract_data_from_html(html, type_article)
+        print(f"    Fields contents found : {len(scraped_data)}")
 
         # 5. Construction de l'embed
         embed = BotEmbed(title=article_title.upper(), description=f"[Link to civilopedia.net]({url})")
-        nb_sections : int = len(sections_contents[0])
+        nb_sections : int = len(scraped_data[0])
         i : int = 0
         while (i < nb_sections):
-            embed.add_field(name=sections_contents[0][i], value=sections_contents[1][i], inline=False)
+            embed.add_field(name=scraped_data[0][i], value=scraped_data[1][i], inline=False)
             i = i + 1
         embed.set_thumbnail(url=f"{url_image}")
 
@@ -186,7 +186,6 @@ def extract_sections_titles_from_html(html : str, type_article : str) -> list[st
         sections_titles.append(ability_title)
         sections_titles.append("**UU :**")
         sections_titles.append("**UI :**")
-
     elif (type_article == "LEA"):
         sections_titles.append("**Civilization :**")
         ability_title : str = "**Ability :** "
@@ -195,7 +194,6 @@ def extract_sections_titles_from_html(html : str, type_article : str) -> list[st
         sections_titles.append(ability_title)
         sections_titles.append("**Description :**")
         sections_titles.append("**AI Agenda :**")
-
     elif (type_article == "DIS"):
         sections_titles.append("**Description :**")
         stat_box_headers = soup.find_all('div', class_='StatBox_statBoxHeaderText__bedSz')
@@ -204,8 +202,6 @@ def extract_sections_titles_from_html(html : str, type_article : str) -> list[st
         while (i < nb_fields):
             sections_titles.append(stat_box_headers[i].text)
             i = i + 1
-
-    
     elif (type_article == "CS"):
         details_titles = soup.find_all('p', class_='Component_headerBodyHeaderText__LuO9w')
         nb_fields : int = len(details_titles) / 2
@@ -213,14 +209,12 @@ def extract_sections_titles_from_html(html : str, type_article : str) -> list[st
         while (i < nb_fields):
             sections_titles.append(details_titles[i].text)
             i = i + 1
-
     else:
         print(f"    Unable to find sections titles of {type_article} type.")
         return None
-    
     return (sections_titles)
 #Extrait le contenu des fields de l'embed
-def extract_sections_contents_from_html(html, type_article) -> list[str]:
+def extract_data_from_html(html, type_article) -> list[str]:
     sections_contents : list[str] = []
     soup = BeautifulSoup(html, 'html.parser')
     if (type_article == "CIV"):
