@@ -10,6 +10,7 @@ SUCCESS_RGB = discord.Colour.from_rgb(14, 209, 96)
 ERROR_RGB = discord.Colour.from_rgb(204, 30, 15)
 FEEDBACK_RGB = discord.Colour.from_rgb(84, 5, 241)
 SUGGESTION_RGB = discord.Colour.from_rgb(168, 67, 0)
+STEAM_RGB = discord.Colour.from_rgb(18, 48, 100)
 
 #================================================= TASKS ====================================================
 
@@ -75,6 +76,18 @@ class FeedbackEmbed(discord.Embed):
         self.set_footer(text=f"Civ Private Bot {VERSION}")
 class SuggestionEmbed(discord.Embed):
     def __init__(self, *, colour=SUGGESTION_RGB, color=SUGGESTION_RGB, title="NEW SUGGESTION !", type='rich', url=None, description=None, timestamp=None) -> None:
+        super().__init__(
+            colour=colour,
+            color=color,
+            title=title,
+            type=type,
+            url=url,
+            description=description,
+            timestamp=timestamp
+        )
+        self.set_footer(text=f"Civ Private Bot {VERSION}")
+class SteamEmbed(discord.Embed):
+    def __init__(self, *, colour=STEAM_RGB, color=STEAM_RGB, title="LINK YOUR ACCOUNT", type='rich', url=None, description="Click 🔗 to link your Steam account", timestamp=None) -> None:
         super().__init__(
             colour=colour,
             color=color,
