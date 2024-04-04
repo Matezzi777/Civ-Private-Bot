@@ -1,12 +1,15 @@
 #============================================= INITIALISATION ===============================================
 #Import des modules
 import discord
-from discord.ext import commands, tasks
-from datetime import datetime, date
-import sqlite3
+from discord.ext import commands
 
 #=============================================== CONSTANTS ==================================================
 version : str = "2.3"
+BOT_EMBED_RGB = discord.Colour.from_rgb(118, 22, 148)
+SUCCESS_RGB = discord.Colour.from_rgb(14, 209, 96)
+ERROR_RGB = discord.Colour.from_rgb(204, 30, 15)
+FEEDBACK_RGB = discord.Colour.from_rgb(84, 5, 241)
+SUGGESTION_RGB = discord.Colour.from_rgb(168, 67, 0)
 
 #================================================= TASKS ====================================================
 
@@ -23,7 +26,7 @@ class Bot(commands.Bot):
 
 #================================================= EMBEDS ===================================================
 class BotEmbed(discord.Embed):
-    def __init__(self, *, colour=discord.Colour.purple(), color=discord.Colour.purple(), title=None, type='rich', url=None, description=None, timestamp=None) -> None:
+    def __init__(self, *, colour=BOT_EMBED_RGB, color=BOT_EMBED_RGB, title=None, type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
             colour=colour,
             color=color,
@@ -34,9 +37,8 @@ class BotEmbed(discord.Embed):
             timestamp=timestamp
             )
         self.set_footer(text=f"Civ Private Bot {version}")
-
 class SuccessEmbed(discord.Embed):
-    def __init__(self, *, colour=discord.Colour.green(), color=discord.Colour.green(), title="SUCCESS", type='rich', url=None, description=None, timestamp=None) -> None:
+    def __init__(self, *, colour=SUCCESS_RGB, color=SUCCESS_RGB, title="SUCCESS", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
             colour=colour,
             color=color,
@@ -47,9 +49,8 @@ class SuccessEmbed(discord.Embed):
             timestamp=timestamp
             )
         self.set_footer(text=f"Civ Private Bot {version}")
-
 class ErrorEmbed(discord.Embed):
-    def __init__(self, *, colour=discord.Colour.red(), color=discord.Colour.red(), title="ERROR", type='rich', url=None, description=None, timestamp=None) -> None:
+    def __init__(self, *, colour=ERROR_RGB, color=ERROR_RGB, title="ERROR", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
             colour=colour,
             color=color,
@@ -60,9 +61,8 @@ class ErrorEmbed(discord.Embed):
             timestamp=timestamp
             )
         self.set_footer(text=f"Civ Private Bot {version}")
-
 class FeedbackEmbed(discord.Embed):
-    def __init__(self, *, colour=discord.Colour.from_rgb(52, 235, 198), color=discord.Colour.dark_purple(), title="NEW FEEDBACK !", type='rich', url=None, description=None, timestamp=None) -> None:
+    def __init__(self, *, colour=FEEDBACK_RGB, color=FEEDBACK_RGB, title="NEW FEEDBACK !", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
             colour=colour,
             color=color,
@@ -73,9 +73,8 @@ class FeedbackEmbed(discord.Embed):
             timestamp=timestamp
         )
         self.set_footer(text=f"Civ Private Bot {version}")
-
 class SuggestionEmbed(discord.Embed):
-    def __init__(self, *, colour=discord.Colour.dark_orange(), color=discord.Colour.dark_orange(), title="NEW SUGGESTION !", type='rich', url=None, description=None, timestamp=None) -> None:
+    def __init__(self, *, colour=SUGGESTION_RGB, color=SUGGESTION_RGB, title="NEW SUGGESTION !", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
             colour=colour,
             color=color,
