@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 #=============================================== CONSTANTS ==================================================
-version : str = "2.3"
+VERSION = "2.3"
 BOT_EMBED_RGB = discord.Colour.from_rgb(118, 22, 148)
 SUCCESS_RGB = discord.Colour.from_rgb(14, 209, 96)
 ERROR_RGB = discord.Colour.from_rgb(204, 30, 15)
@@ -16,7 +16,7 @@ SUGGESTION_RGB = discord.Colour.from_rgb(168, 67, 0)
 #================================================== BOT =====================================================
 class Bot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix="$", intents=discord.Intents.all(), description=f"Civ Private Bot v{version}")
+        super().__init__(command_prefix="$", intents=discord.Intents.all(), description=f"Civ Private Bot v{VERSION}")
 
     async def setup_hook(self):
         await self.tree.sync()
@@ -36,7 +36,7 @@ class BotEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text=f"Civ Private Bot {version}")
+        self.set_footer(text=f"Civ Private Bot {VERSION}")
 class SuccessEmbed(discord.Embed):
     def __init__(self, *, colour=SUCCESS_RGB, color=SUCCESS_RGB, title="SUCCESS", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
@@ -48,7 +48,7 @@ class SuccessEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text=f"Civ Private Bot {version}")
+        self.set_footer(text=f"Civ Private Bot {VERSION}")
 class ErrorEmbed(discord.Embed):
     def __init__(self, *, colour=ERROR_RGB, color=ERROR_RGB, title="ERROR", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
@@ -60,7 +60,7 @@ class ErrorEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
             )
-        self.set_footer(text=f"Civ Private Bot {version}")
+        self.set_footer(text=f"Civ Private Bot {VERSION}")
 class FeedbackEmbed(discord.Embed):
     def __init__(self, *, colour=FEEDBACK_RGB, color=FEEDBACK_RGB, title="NEW FEEDBACK !", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
@@ -72,7 +72,7 @@ class FeedbackEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
         )
-        self.set_footer(text=f"Civ Private Bot {version}")
+        self.set_footer(text=f"Civ Private Bot {VERSION}")
 class SuggestionEmbed(discord.Embed):
     def __init__(self, *, colour=SUGGESTION_RGB, color=SUGGESTION_RGB, title="NEW SUGGESTION !", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
@@ -84,7 +84,7 @@ class SuggestionEmbed(discord.Embed):
             description=description,
             timestamp=timestamp
         )
-        self.set_footer(text=f"Civ Private Bot {version}")
+        self.set_footer(text=f"Civ Private Bot {VERSION}")
 
 # BUTTONS
 #Bouton choix validé générique
