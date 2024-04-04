@@ -1,6 +1,6 @@
 import discord
+import discord.ui
 from discord.ext import commands
-from discord.ui import Button, View
 from classes import BotEmbed, SuccessEmbed, FeedbackEmbed, SuggestionEmbed
 
 #================================================================= SUGGESTION =================================================================
@@ -14,12 +14,10 @@ class ButtonStartSuggestion(discord.ui.Button):
     
     async def callback(self, interaction : discord.Interaction):
         await interaction.response.send_modal(SuggestionModal(self.channel))
-
 class SuggestionView(discord.ui.View):
     def __init__(self, channel)-> None:
         super().__init__()
         self.add_item(ButtonStartSuggestion(channel))
-
 class SuggestionModal(discord.ui.Modal):
     def __init__(self, channel : discord.TextChannel) -> None:
         super().__init__(title="GIVE A SUGGESTION !")
@@ -37,7 +35,6 @@ class SuggestionModal(discord.ui.Modal):
 async def create_suggestion(ctx : commands.Context, channel):
     embed = BotEmbed(title="NEW SUGGESTION", description="Click ✅ to give your suggestion!")
     await ctx.send(embed=embed, view=SuggestionView(channel))
-
 async def process_suggestion(channel : discord.TextChannel, name, description):
     embed = SuggestionEmbed()
     embed.add_field(name=f"**{name}**", value=description, inline=False)
@@ -54,12 +51,10 @@ class ButtonStartFeedback(discord.ui.Button):
     
     async def callback(self, interaction : discord.Interaction):
         await interaction.response.send_modal(FeedbackModal(self.channel))
-
 class FeedbackView(discord.ui.View):
     def __init__(self, channel)-> None:
         super().__init__()
         self.add_item(ButtonStartFeedback(channel))
-
 class FeedbackModal(discord.ui.Modal):
     def __init__(self, channel : discord.TextChannel) -> None:
         super().__init__(title="GIVE YOUR FEEDBACK !")
@@ -77,10 +72,9 @@ class FeedbackModal(discord.ui.Modal):
 async def make_feedback(ctx : commands.Context, channel):
     embed = BotEmbed(title="NEW FEEDBACK", description="Click ✅ to give your feedback!")
     await ctx.send(embed=embed, view=FeedbackView(channel))
-
 async def process_feedback(channel : discord.TextChannel, rate, details):
     embed = FeedbackEmbed()
-    embed.add_field(name=f"**Rate :**", value=rate, inline=False)
+    embed.add_field(name=f"**Rate :**", value=f"{rate}/5", inline=False)
     if (details):
             embed.add_field(name="**Feedback content :**", value=details, inline=False)
     await channel.send(embed=embed)
