@@ -264,29 +264,6 @@ async def datenow(ctx : commands.Context) -> None:
     print(f"\n$datenow used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await display_date(ctx)
 
-#$annonce
-@bot.command(aliases=['say', 'annonce', 'repeat'],
-        help="Tool to make announcements !",
-        description="ANNOUNCE",
-        brief="- Announce something in a channel",
-        enabled=True,
-        hidden=True)
-async def announce(ctx : commands.Context, channel_ID : int, *, content : str) -> None:
-    channel : discord.TextChannel = bot.get_channel(channel_ID)
-    await channel.send(content.capitalize())
-
-#$annonce_embed
-@bot.command(aliases=['say_embed', 'annonce_embed', 'repeat_embed'],
-        help="Tool to make announcements (with embed) !",
-        description="ANNOUNCE_EMBED",
-        brief="- Announce something in a channel with an embed",
-        enabled=True,
-        hidden=True)
-async def announce_embed(ctx : commands.Context, channel_ID : int, title : str, *, content : str) -> None:
-    channel : discord.TextChannel = bot.get_channel(channel_ID)
-    embed = BotEmbed(title=title.upper(), description=content.capitalize())
-    await channel.send(embed=embed)
-
 #========================================== COMMANDES PRE - GAME ============================================
 #$lfg
 @bot.command(help="Send a formatted lfg message.\n\nTake 0 to 1 parameter :\n- Type of game (Ranked / Casual).",
