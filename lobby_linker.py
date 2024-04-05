@@ -29,12 +29,10 @@ class LinkSteamModal(discord.ui.Modal):
         else:
             embed_response = ErrorEmbed()
             await interaction.response.edit_message(embed=embed_response)
-
 class LinkSteamView(discord.ui.View):
     def __init__(self) -> None:
         super().__init__(timeout=None)
         self.add_item(StartLinkButton())
-
 class StartLinkButton(discord.ui.Button):
     def __init__(self) -> None:
         super().__init__(label="🔗 Link your account", style=discord.ButtonStyle.green)
@@ -43,7 +41,6 @@ class StartLinkButton(discord.ui.Button):
     def callback(self, interaction: discord.Interaction):
         self.disabled=True
         return interaction.response.send_modal(LinkSteamModal())
-
 class ConfirmAccountButton(discord.ui.Button):
     def __init__(self, user, account_url) -> None:
         super().__init__(label="✅ Confirm", style=discord.ButtonStyle.green)
@@ -54,7 +51,6 @@ class ConfirmAccountButton(discord.ui.Button):
         embed = SuccessEmbed(description="Your account is now linked, use the command again to display a link to your lobby")
         store_account_in_database(self.user_to_remember, self.account_url)
         return interaction.response.edit_message(embed=embed, view=None)
-
 class CancelAccountButton(discord.ui.Button):
     def __init__(self):
         super().__init__(label="❌ Not me", style=discord.ButtonStyle.red)
@@ -75,6 +71,14 @@ async def link_steam_account(ctx : commands.Context):
 # async def display_lobby_link(ctx : commands.Context, html):
 #     ...
 
+
+
+#============ SUB-F =============
+
+#Retourne la code HTML de l'url en paramètre
+def get_html(url : str):
+    response = requests.get(url)
+    return (response.text)
 #Teste la validité du lien
 def check_correct_url(url) -> bool:
     html = get_html(url)
@@ -95,12 +99,6 @@ def check_correct_url(url) -> bool:
         print(f"  ERROR : Unable to get the HTML code of this url :\n    {url}")
         return (0)
 
-#============ SUB-F =============
-
-#Retourne la code HTML de l'url en paramètre
-def get_html(url : str):
-    response = requests.get(url)
-    return (response.text)
 #Retourne le nom du profil de l'url
 def get_steam_name_from_html(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -117,7 +115,6 @@ def get_avatar_url_from_html(html):
         avatar = soup.find('div', class_='playerAvatarAutoSizeInner').find('img')
         avatar_url = avatar['src']
     return (avatar_url)
-
 
 #Enregistre le compte dans la base de donnée
 def store_account_in_database(user : discord.User, url : str):
