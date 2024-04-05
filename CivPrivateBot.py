@@ -17,6 +17,7 @@ from mapvote import *
 from ranked import *
 from civilopedia import *
 from feedback import *
+from lobby_linker import *
 from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
 from tokens import TOKEN
 
@@ -612,6 +613,12 @@ async def make_suggestion(ctx : commands.Context):
 async def feedback(ctx : commands.Context):
     channel_feedback = bot.get_channel(feedback_channel_id)
     await make_feedback(ctx, channel_feedback)
+
+#================================================= STEAM ====================================================
+
+@bot.command()
+async def link_steam(ctx):
+    await link_steam_account(ctx)
 
 #================================================== RUN =====================================================
 #Run le bot
