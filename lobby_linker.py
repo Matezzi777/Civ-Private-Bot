@@ -23,7 +23,7 @@ class LinkSteamModal(discord.ui.Modal):
             embed_response.set_thumbnail(url=avatar_url)
             embed_response.add_field(name=f"**Name :** {name}", value="")
             view_response = discord.ui.View()
-            view_response.add_item(ConfirmAccountButton())
+            view_response.add_item(ConfirmAccountButton(user, url))
             view_response.add_item(CancelAccountButton())
             await interaction.response.edit_message(embed=embed_response, view=view_response)
         else:
@@ -45,12 +45,14 @@ class StartLinkButton(discord.ui.Button):
         return interaction.response.send_modal(LinkSteamModal())
 
 class ConfirmAccountButton(discord.ui.Button):
-    def __init__(self) -> None:
+    def __init__(self, user, account_url) -> None:
         super().__init__(label="✅ Confirm", style=discord.ButtonStyle.green)
+        self.user_to_remember = user
+        self.account_url = account_url
 
     def callback(self, interaction: discord.Interaction):
         embed = SuccessEmbed(description="Your account is now linked, use the command again to display a link to your lobby")
-        # store_account_in_database(user, url)
+        store_account_in_database(self.user_to_remember, self.account_url)
         return interaction.response.edit_message(embed=embed, view=None)
 
 class CancelAccountButton(discord.ui.Button):
@@ -119,4 +121,28 @@ def get_avatar_url_from_html(html):
 
 #Enregistre le compte dans la base de donnée
 def store_account_in_database(user : discord.User, url : str):
-    ...
+    html = get_html(url)
+    profile_name = get_steam_name_from_html(html)
+    avatar_url = get_avatar_url_from_html(html)
+
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    if (is_user_in_db(user)):
+        request : str = f"UPDATE Steam SET Profile_name='{profile_name}', Profile_url='{url}', Avatar_url='{avatar_url}' WHERE User_ID='{user.id}'"
+    else:
+        request : str = f"INSERT INTO Steam VALUES ('{user.id}', '{profile_name}','{url}','{avatar_url}')"
+    cursor.execute(request)
+    connexion.commit()
+    connexion.close()
+#Vérifie la présence d'un utilisateur dans la base de données
+def is_user_in_db(user : discord.User) -> bool:
+    connexion = sqlite3.connect('db.sqlite')
+    cursor = connexion.cursor()
+    request : str = f"SELECT * FROM Steam WHERE User_ID='{user.id}'"
+    cursor.execute(request)
+    connexion.commit()
+    result = cursor.fetchone()
+    connexion.close()
+    if (result):
+        return True
+    return False
