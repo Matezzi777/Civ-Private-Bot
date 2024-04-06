@@ -4,7 +4,7 @@ import discord
 from discord.ext import commands
 
 #=============================================== CONSTANTS ==================================================
-VERSION = "2.3"
+VERSION = "2.4"
 BOT_EMBED_RGB = discord.Colour.from_rgb(118, 22, 148)
 SUCCESS_RGB = discord.Colour.from_rgb(14, 209, 96)
 ERROR_RGB = discord.Colour.from_rgb(204, 30, 15)

@@ -583,19 +583,27 @@ async def civilopedia(ctx : commands.Context, article : str = None, lang : str =
 
 @bot.command()
 async def make_suggestion(ctx : commands.Context):
+    print(f"\n$make_suggestion used by {ctx.message.author} in {ctx.message.channel}")
     channel_suggestion = bot.get_channel(suggestion_channel_id)
     await create_suggestion(ctx, channel_suggestion)
 
 @bot.command()
 async def feedback(ctx : commands.Context):
+    print(f"\n$feedback used by {ctx.message.author} in {ctx.message.channel}")
     channel_feedback = bot.get_channel(feedback_channel_id)
     await make_feedback(ctx, channel_feedback)
 
 #================================================= STEAM ====================================================
 
 @bot.command()
-async def link_steam(ctx):
+async def set_steam(ctx : commands.Context):
+    print(f"\n$set_steam used by {ctx.message.author} in {ctx.message.channel}")
     await link_steam_account(ctx)
+
+@bot.command()
+async def lobby(ctx : commands.Context):
+    print(f"\n$lobby used by {ctx.message.author} in {ctx.message.channel}")
+    await display_lobby_link(ctx)
 
 #================================================== RUN =====================================================
 #Run le bot
