@@ -38,6 +38,7 @@ async def create_suggestion(ctx : commands.Context, channel):
 async def process_suggestion(channel : discord.TextChannel, name, description):
     embed = SuggestionEmbed()
     embed.add_field(name=f"**{name}**", value=description, inline=False)
+    print(f"  Suggestion sent !")
     await channel.send(embed=embed)
 
 #================================================================= FEEDBACK ==================================================================
@@ -77,4 +78,5 @@ async def process_feedback(channel : discord.TextChannel, rate, details):
     embed.add_field(name=f"**Rate :**", value=f"{rate}/5", inline=False)
     if (details):
             embed.add_field(name="**Feedback content :**", value=details, inline=False)
+    print(f"  Feedback sent !")
     await channel.send(embed=embed)

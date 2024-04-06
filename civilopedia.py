@@ -52,24 +52,16 @@ async def display_article(ctx : commands.Context, article : str, url : str):
         #1. Récupérer le titre à partir de l'url
         print(f"  Extracting {article}'s title...")
         article_title : str = extract_title_from_html(html)
-        print(f"    {article}'s title found : {article_title}")
 
         #2. Récupérer l'image à partir de l'url
         print(f"  Extracting {article}'s icon...")
         url_image : str = extract_image_from_html(html, type_article)
-        print(f"    {article}'s icon url found : {url_image}")
 
-        #3. Récupérer les titres des fields à partir de l'url
-        # print(f"  Extracting embed's fields titles...")
-        # sections_titles : list[str] = extract_sections_titles_from_html(html, type_article)
-        # print(f"    Fields titles found : {len(sections_titles)}")
-
-        #4. Récupérer les contenus des fields à partir de l'url
+        #3. Récupérer les contenus des fields à partir de l'url
         print(f"  Extracting data...")
         scraped_data : list[str] = extract_data_from_html(html, type_article)
-        print(f"    Fields contents found : {len(scraped_data)}")
 
-        # 5. Construction de l'embed
+        #4. Construction de l'embed
         embed = BotEmbed(title=article_title.upper(), description=f"[Link to civilopedia.net]({url})")
         nb_sections : int = len(scraped_data[0])
         i : int = 0
@@ -78,13 +70,13 @@ async def display_article(ctx : commands.Context, article : str, url : str):
             i = i + 1
         embed.set_thumbnail(url=f"{url_image}")
 
-        #6. Envoi de l'embed
+        #5. Envoi de l'embed
         i : int = 0
         async for message in ctx.channel.history(limit=1):
             await message.edit(embed=embed)
             i = i + 1
 
-    print(f"Article {article_title} displayed in {ctx.message.channel}")
+    print(f"  Article {article_title} displayed in {ctx.message.channel}")
 
 #============================================= SUB-FONCTIONS ================================================
 #Retrouve l'url d'un article à partir de son nom
@@ -101,7 +93,6 @@ def find_url(article : str, lang : str = "en") -> str:
         print(f"    {article}'s url not found.")
         return (None)
     else:
-        print(f"    {article}'s url found : {result}")
         return (result)
 #Retrouve le type de l'article à partir de son nom
 def find_type(article : str) -> str:
@@ -117,7 +108,6 @@ def find_type(article : str) -> str:
         print(f"    {article}'s type not found.")
         return (None)
     else:
-        print(f"    {article}'s type found : {result}")
         return (result)
 
 #Vérifie si la langue entrée est prise en charge
@@ -139,7 +129,6 @@ def check_article_in_db(article : str) -> bool:
         print(f"    {article} not stored in the database.")
         return (False)
     else:
-        print(f"    {article} stored in database.")
         return (True)
 
 
@@ -247,7 +236,6 @@ def extract_data_from_html(html, type_article) -> list[str]:
             else:
                 sections_contents.append(temp_contents[i-1])
             i = i + 1
-    
     elif (type_article == "LEA"):
         sections_titles = extract_sections_titles_from_html(html, type_article)
         nb_civs : int = 0
@@ -270,7 +258,6 @@ def extract_data_from_html(html, type_article) -> list[str]:
         labels = soup.find_all('div', class_='StatBox_statBoxLabel__y5ZB2')
         agenda = f"**{labels[0].text}**\n{parse_field_content(labels[1].text)}"
         sections_contents.append(agenda)
-
     elif (type_article == "DIS"):
         sections_titles : list[str] = []
         description_content = soup.find('div', class_='App_leftColumnItem__GHlpJ').find('div', class_='Component_paragraphs__tSvTZ').text
@@ -330,8 +317,6 @@ def extract_data_from_html(html, type_article) -> list[str]:
         i : int = 0
         for line in temp_contents_2:
             i = i + 1
-
-
     elif (type_article == "CS"):
         sections_titles = extract_sections_titles_from_html(html, type_article)
         details_content = soup.find_all('p', class_='Component_headerBodyHeaderBody__MkvCp')
@@ -343,11 +328,9 @@ def extract_data_from_html(html, type_article) -> list[str]:
     else:
         print(f"    Unable to find sections content of {type_article} type.")
         return None
-
     scrapped_infos = []
     scrapped_infos.append(sections_titles)
     scrapped_infos.append(sections_contents)
-
     return (scrapped_infos)
 
 #Met en forme le contenu des fields (remplace les '.' par '.\n')

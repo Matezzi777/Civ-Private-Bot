@@ -42,7 +42,7 @@ async def valid_report(bot : commands.Bot, liste_players : list) -> None:
             update_lost(user)
 
         update_date(user)
-        print(f"@{user.name} stats updated ({i+1}/{nb_players})")
+        print(f"  @{user.name} stats updated ({i+1}/{nb_players})")
         i = i + 1
     
     i = 0
@@ -299,7 +299,7 @@ def get_games_reported() -> int:
 #Ajoute l'utilisateur à la base de donnée
 def add_u(user : discord.User) -> int:
     if (is_player_in_database(user)):
-        print(f"{user.name} already stored in the database.")
+        print(f"  {user.name} already stored in the database.")
         return (0)
     else:
         connexion = sqlite3.connect('db.sqlite')
@@ -309,10 +309,10 @@ def add_u(user : discord.User) -> int:
         connexion.commit()
         connexion.close()
         if (is_player_in_database(user)):
-            print(f"{user.name} added to the database.")
+            print(f"  {user.name} added to the database.")
             return (1)
         else:
-            print(f"Error in the INSERT request.")
+            print(f"  Error in the INSERT request.")
             return (0)
 #Supprime l'utilisateur de la base de donnée
 def rm_u(user : discord.User) -> int:
@@ -324,13 +324,13 @@ def rm_u(user : discord.User) -> int:
         connexion.commit()
         connexion.close()
         if (not is_player_in_database(user)):
-            print(f"{user.name} removed from the database.")
+            print(f"  {user.name} removed from the database.")
             return (1)
         else:
-            print(f"Error in the DELETE request.")
+            print(f"  Error in the DELETE request.")
             return (0)
     else:
-        print(f"Impossible to delete the user.\n{user.name} not found in the database.")
+        print(f"  Impossible to delete the user.\n{user.name} not found in the database.")
         return (0)
 #Reset la base de donnée Ranked
 def rm_all_users() -> int:
@@ -342,10 +342,10 @@ def rm_all_users() -> int:
     connexion.close()
     result = is_database_empty()
     if (result):
-        print(f"Database cleared.")
+        print(f"  Database cleared.")
         return (1)
     else:
-        print(f"Error during the database clearing process.")
+        print(f"  Error during the database clearing process.")
         return (0)
 
 #Met à jour l'elo de l'utilisateur
