@@ -11,7 +11,6 @@ import discord
 import discord.ext
 import datetime
 from discord.ui import Button, View
-from birthdays import *
 from draft import *
 from mapvote import *
 from ranked import *
@@ -253,16 +252,6 @@ async def clear(ctx : commands.Context, n : int) -> None:
             print(f"  Message deleted from #{ctx.channel.name} ({i}/{n})")
         i = i + 1
     print(f"  #{ctx.channel.name} cleaned.")
-#$datenow
-@bot.command(aliases=['date', 'd'],
-        help="Returns the actual date (UTC+1).",
-        description="DATENOW",
-        brief="- Returns the date",
-        enabled=True,
-        hidden=False)
-async def datenow(ctx : commands.Context) -> None:
-    print(f"\n$datenow used by @{ctx.message.author.name} in #{ctx.channel.name}")
-    await display_date(ctx)
 
 #========================================== COMMANDES PRE - GAME ============================================
 #$lfg
@@ -340,89 +329,6 @@ async def generic_draft(ctx : commands.Context, nb_players : int, nb_civs : int)
 async def mapvote(ctx : commands.Context) -> None:
     print(f"\n$mapvote used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_mapvote(ctx)
-
-#========================================== COMMANDES BIRTHDAYS =============================================
-#$set_birthday DDMM
-@bot.command(help="Set your birthday in the database.\n\nTake 1 parameter :\n- Date (str) : The birthday date to set (Use the following format : DDMM)\nExample : 6th of May -> 0605\nExample : 24th of September -> 2409",
-        description="SET_BIRTHDAY",
-        brief="- Set your birthday",
-        enabled=True,
-        hidden=False)
-async def set_birthday(ctx : commands.Context, date : str) -> None:
-    print(f"\n$set_birthday {date} used by @{ctx.message.author.name} in #{ctx.channel.name}")
-    yesno = View()
-    yesno.add_item(button_yes)
-    yesno.add_item(button_no)
-    user = ctx.message.author
-    date_parsed = parse_date(date)
-    if (date_parsed == "00/00"):
-        embed= ErrorEmbed(description="Wrong date format.\nUse the following format : DD/MM.")
-        return await ctx.send(embed=embed, delete_after=7)
-    if (check_birthday(user)):
-        actual_birthday = get_birthday(user)
-        if (actual_birthday == date_parsed):
-            embed= ErrorEmbed(description=f"Your birthday is already stored in the database at **{actual_birthday}** (DD/MM).")
-            return await ctx.send(embed=embed)
-        else:
-            async def button_yes_callback(interaction : discord.Interaction):
-                change_birthday(user, date)
-                embed= SuccessEmbed(description=f"Date modified.")
-                return await interaction.response.send_message(embed=embed)
-            async def button_no_callback(interaction : discord.Interaction):
-                embed= ErrorEmbed(title="PROCESS CANCELED", description=f"Date not modified.")
-                return await interaction.response.send_message(embed=embed)
-            button_yes.callback = button_yes_callback
-            button_no.callback = button_no_callback
-            embed= BotEmbed(title="Modify birthday ?", description=f"Your birthday is already stored in the database at **{actual_birthday}** (DD/MM).\n\nDo you want to change it for *{date_parsed}* ?")
-            return await ctx.send(embed=embed, view=yesno, delete_after=7)
-    else:
-        async def button_yes_callback(interaction : discord.Interaction):
-            add_birthday(user, date)
-            embed= SuccessEmbed(description="Birthday added.")
-            return await interaction.response.send_message(embed=embed)
-        async def button_no_callback(interaction : discord.Interaction):
-            embed= ErrorEmbed(title="PROCESS CANCELED", description="Birthday not added.")
-            return await interaction.response.send_message(embed=embed)
-        button_yes.callback = button_yes_callback
-        button_no.callback = button_no_callback
-        embed=BotEmbed(title="Add birthday ?", description=f"You birthday is not on the database.\n\nDo you want to set it to *{date_parsed}* ?")
-        await ctx.send(embed=embed, view=yesno, delete_after=7)
-#$rm_birthday
-@bot.command(help="Remove your birthday in the database.",
-        description="RM_BIRTHDAY",
-        brief="- Remove your birthday",
-        enabled=True,
-        hidden=False)
-async def rm_birthday(ctx : commands.Context) -> None:
-    print(f"\n$rm_birthday used by @{ctx.message.author.name} in #{ctx.channel.name}")
-    yesno = View()
-    yesno.add_item(button_yes)
-    yesno.add_item(button_no)
-    user = ctx.message.author
-    if (check_birthday(user)):
-        async def button_yes_callback(interaction : discord.Interaction):
-            rem_birthday(user)
-            embed= SuccessEmbed(description=f"Birthday deleted from database.")
-            return await interaction.response.send_message(embed=embed)
-        async def button_no_callback(interaction : discord.Interaction):
-            embed= ErrorEmbed(title="PROCESS CANCELED", description=f"Birthday still stored in the database.")
-            return await interaction.response.send_message(embed=embed)
-        button_yes.callback = button_yes_callback
-        button_no.callback = button_no_callback
-        embed= BotEmbed(title="Remove birthday ?", description="Do you really want to remove your birthday from the database ?")
-        return await ctx.send(embed=embed, view=yesno, delete_after=10)
-    else:
-        embed= ErrorEmbed(description="No birthday found in the database for you.")
-        return await ctx.send(embed=embed)
-#$birthdays
-@bot.command(help="Display the birthdays in the database.",
-        description="BIRTHDAYS",
-        brief="- Display the birthdays",
-        enabled=True,
-        hidden=False)
-async def birthdays(ctx : commands.Context) -> None:
-    print(f"\n$birthdays used by @{ctx.message.author.name} in #{ctx.channel.name}")
-    await display_birthdays(ctx)
 
 #=========================================== COMMANDES RANKED ===============================================
 #$report @First @Second @Third ...
@@ -574,20 +480,32 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
 
 #============================================== CIVILOPEDIA =================================================
 
-@bot.command()
+@bot.command(help="Open the civilopedia.",
+        description="CIVILOPEDIA",
+        brief="- open the Civilopedia",
+        enabled=True,
+        hidden=False)
 async def civilopedia(ctx : commands.Context, article : str = None, lang : str = "en"):
     print(f"\n$civilopedia used by {ctx.message.author} in {ctx.message.channel}")
     await make_civilopedia(ctx, article, lang)
 
 #=========================================== FEEDBACKS & IDEAS ==============================================
 
-@bot.command()
+@bot.command(help="Send a suggestion to make this server better.",
+        description="MAKE_SUGGESTION",
+        brief="- make a suggestion",
+        enabled=True,
+        hidden=False)
 async def make_suggestion(ctx : commands.Context):
     print(f"\n$make_suggestion used by {ctx.message.author} in {ctx.message.channel}")
     channel_suggestion = bot.get_channel(suggestion_channel_id)
     await create_suggestion(ctx, channel_suggestion)
 
-@bot.command()
+@bot.command(help="Send a feedback about your experience on this community.",
+        description="FEEDBACK",
+        brief="- Send a feedback",
+        enabled=True,
+        hidden=False)
 async def feedback(ctx : commands.Context):
     print(f"\n$feedback used by {ctx.message.author} in {ctx.message.channel}")
     channel_feedback = bot.get_channel(feedback_channel_id)
@@ -595,12 +513,20 @@ async def feedback(ctx : commands.Context):
 
 #================================================= STEAM ====================================================
 
-@bot.command()
+@bot.command(help="Link/Modify/Delete a Steam profile to enable the $lobby command.",
+        description="SET_STEAM",
+        brief="- Link your steam profile",
+        enabled=True,
+        hidden=False)
 async def set_steam(ctx : commands.Context):
     print(f"\n$set_steam used by {ctx.message.author} in {ctx.message.channel}")
     await link_steam_account(ctx)
 
-@bot.command()
+@bot.command(help="Display a link to your lobby.\nOnly works for Steam users.\n\nYou have to link your Steam Profile first by using $set_steam.",
+        description="LOBBY",
+        brief="- Display a link to your active lobby (Steam)",
+        enabled=True,
+        hidden=True)
 async def lobby(ctx : commands.Context):
     print(f"\n$lobby used by {ctx.message.author} in {ctx.message.channel}")
     await display_lobby_link(ctx)
