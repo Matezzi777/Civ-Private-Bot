@@ -65,23 +65,19 @@ class ReportButton(discord.ui.Button):
         print(message)
 
     async def callback(self, interaction : discord.Interaction) -> None:
+        #Réagis au clic
         if (interaction.user.id == 866997795993944084): #Si admin
             print(f"  @{interaction.user.name} confirmed.")
+            await valid_report(bot, self.users) #valid()
             #Remplace par ValidButton
             valid_button : discord.Button = ValidButton()
             valid_button.label = "✅ Game reported"
             valid_view = discord.ui.View()
             valid_view.add_item(valid_button)
             await interaction.response.edit_message(view=valid_view)
-
             #Message retour
             embed=SuccessEmbed(description="Result confirmed, result stored in the database and player's stats updated.")
-            await interaction.followup.send(embed=embed)
-
-            #valid()
-            await valid_report(bot, self.users)
-            return
-        
+            return await interaction.followup.send(embed=embed)
         else: #Si non-admin
             if (is_in_list(interaction.user, self.users)): #Si l'utilisateur était dans la partie
                 if (is_in_list(interaction.user, self.users_who_clicked)): #Si l'utilisateur a déjà cliqué
@@ -100,7 +96,7 @@ class ReportButton(discord.ui.Button):
                 embed = ErrorEmbed(description="You tried to confirm a report which does not concern you.") #Créé le message d'erreur
                 await interaction.response.send_message(embed=embed, ephemeral=True) #Envoie un MP d'erreur à l'utilisateur
                 print(f"    @{interaction.user.name} tried to confirm.")
-        
+        #Vérifie si le nombre de clics est atteint
         if (self.count == self.needed_confirm): #Si le nombre de clics est atteint
             #valid()
             await valid_report(bot, self.users)
@@ -109,14 +105,11 @@ class ReportButton(discord.ui.Button):
             valid_button.label = "✅ Game reported"
             valid_view = discord.ui.View()
             valid_view.add_item(valid_button)
-            await interaction.response.edit_message(view=valid_view)
-            return
-        
+            return await interaction.followup.edit_message(view=valid_view)
         else: #Si le nombre de clics n'est pas atteint
             #Met à jour le bouton
             self.label=f"{self.needed_confirm-self.count} more ✅ needed"
-            await interaction.response.edit_message(view=self.view)
-            return
+            return await interaction.followup.edit_message(view=self.view)
 
 class LFGButtonYes(discord.ui.Button):
     def __init__(self):
