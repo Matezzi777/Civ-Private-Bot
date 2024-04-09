@@ -221,7 +221,7 @@ async def on_invite_create(invite : discord.Invite):
     channel = bot.get_channel(logs_channel_id)
     return await channel.send(embed=embed)
 
-@bot.event
+@bot.event #Se déclenche lorsqu'un message est supprimé
 async def on_message_delete(message : discord.Message):
     if (not message.channel.id in WHITE_LIST_CHANNELS_ID):
         print(f"A message from @{message.author.name} was deleted in #{message.channel.name}.")
@@ -231,7 +231,7 @@ async def on_message_delete(message : discord.Message):
         await channel.send(embed=embed)
     return
 
-@bot.event
+@bot.event #Se déclenche lorsqu'un message est édité
 async def on_message_edit(before : discord.Message, after : discord.Message):
     if ((not before.channel.id in WHITE_LIST_CHANNELS_ID) and (before.author.id != bot.user.id)):
         print(f"A message from @{before.author.name} was edited in #{before.channel.name}.")
