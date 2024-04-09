@@ -32,7 +32,7 @@ welcome_channel_id = 1211150113477627955
 feedback_channel_id = 1225240183516172329
 suggestion_channel_id = 1225272619192811633
 logs_channel_id = 1227074585585913867
-WHITE_LIST_CHANNELS_ID = [logs_channel_id, 1211174226346774549, 1211382004260667412, 1225240183516172329, 1225272619192811633, 1211385961330778142, 1211174279220039731]
+WHITE_LIST_CHANNELS_ID = [logs_channel_id, 1211174226346774549, 1211382004260667412, 1225240183516172329, 1225272619192811633, 1211385961330778142, 1211174279220039731, 1211156479269404692, ]
 VOICE_CHANNELS_ID = [1211153896857276476, 1211154032366854235, 1211154119000064010, 1211307232952721458]
 
 #============================================= CLASSES REPORT ===============================================
@@ -72,13 +72,11 @@ class ReportButton(discord.ui.Button):
         #Réagis au clic
         if (interaction.user.id == 866997795993944084): #Si admin
             print(f"    +1 : Admin Access")
-            await valid_report(bot, self.users) #valid()
             #Remplace par ValidButton
-            valid_button : discord.Button = ValidButton()
-            valid_button.label = "✅ Game reported"
             valid_view = discord.ui.View()
-            valid_view.add_item(valid_button)
+            valid_view.add_item(ValidButton(label="Game reported"))
             await interaction.response.edit_message(view=valid_view)
+            await valid_report(bot, self.users) #valid()
             #Message retour
             embed=SuccessEmbed(description="Result confirmed, result stored in the database and player's stats updated.")
             return await interaction.followup.send(embed=embed)
