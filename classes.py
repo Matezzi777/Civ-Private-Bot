@@ -13,7 +13,7 @@ SUGGESTION_RGB = discord.Colour.from_rgb(168, 67, 0)
 STEAM_RGB = discord.Colour.from_rgb(18, 48, 100)
 JOIN_RGB = discord.Colour.from_rgb(184, 233, 134)
 LEFT_RGB = discord.Colour.from_rgb(255, 246, 175)
-INVITE_RGB = discord.Colour.from_rgb(14, 102, 201)
+INVITE_RGB = discord.Colour.from_rgb(77, 183, 237)
 EDIT_RGB = discord.Colour.from_rgb(14, 102, 201)
 
 #================================================= TASKS ====================================================
@@ -151,10 +151,10 @@ class EditedEmbed(discord.Embed):
 # BUTTONS
 #Bouton choix validé générique
 class ValidButton(discord.ui.Button):
-    def __init__(self) -> None:
+    def __init__(self, *, label=" - ", style=discord.ButtonStyle.green) -> None:
         super().__init__(
-            label=" - ",
-            style=discord.ButtonStyle.green
+            label=label,
+            style=style
         )
     
     async def callback(self, interaction : discord.Interaction):
