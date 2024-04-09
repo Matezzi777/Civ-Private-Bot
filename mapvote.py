@@ -2,6 +2,7 @@
 #Import des modules
 import discord
 from discord.ext import commands
+from discord.ui.item import Item
 from classes import BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton 
 
 bbg_stable_version : str = "5.7"
@@ -691,6 +692,75 @@ class Button_Teamer(discord.ui.Button):
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 
+#Bouton Large Opening 🐴
+class Button_Ridge_Large(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int) -> None:
+        super().__init__(
+            label="🐴 Large Opening",
+            style=discord.ButtonStyle.grey
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"🐴 Large Opening ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = "🐴 Large Opening"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+#Bouton Impenetrable 🏰
+class Button_Ridge_Impenetrable(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int) -> None:
+        super().__init__(
+            label="🏰 Impenetrable",
+            style=discord.ButtonStyle.grey
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"🏰 Impenetrable ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = "🏰 Impenetrable"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+
 #================================================= VIEWS ====================================================
 #View DRAFT
 class DraftView(discord.ui.View):
@@ -738,6 +808,8 @@ class RidgeView(discord.ui.View):
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_standard_ridge(users, self.needed_confirm))
         self.add_item(Button_classic(users, self.needed_confirm))
+        self.add_item(Button_Ridge_Large(users, self.needed_confirm))
+        self.add_item(Button_Ridge_Impenetrable(users, self.needed_confirm))
 #View Religion
 class ReligionView(discord.ui.View):
     def __init__(self, users) -> None:
@@ -771,6 +843,14 @@ class FormatView(discord.ui.View):
         self.needed_confirm : int = (self.nb_users // 2) + 1
         self.add_item(Button_FFA(users, self.needed_confirm))
         self.add_item(Button_Teamer(users, self.needed_confirm))
+#View Forest Balancing
+class ForestBalancingView(discord.ui.View):
+    def __init__(self, users) -> None:
+        super().__init__(timeout=None)
+        self.nb_users : int = len(users)
+        self.needed_confirm : int = (self.nb_users // 2) + 1
+        self.add_item(Button_on(users, self.needed_confirm))
+        self.add_item(Button_off(users, self.needed_confirm))
 
 #=============================================== FONCTIONS ==================================================
 #Lance un mapvote
@@ -801,10 +881,12 @@ async def make_mapvote(ctx : commands.Context) -> None:
     await ctx.send("**FORMAT**", view=FormatView(users))
     #Envoie le message pour les drafts
     await ctx.send("**DRAFT**", view=DraftView(users))
-    #Envoie le message pour la map
-    await ctx.send("**MAP**", view=MapView(users))
     #Envoie le message pour le BCY
     await ctx.send("**BCY**", view=BCYView(users))
+    #Envoie le message pour la map
+    await ctx.send("**MAP**", view=MapView(users))
+    #Envoie le message pour le Forest Balancing
+    await ctx.send("**FOREST BALANCING**", view=ForestBalancingView(users))
     #Envoie le message pour l'age du monde
     await ctx.send("**AGE OF THE WORLD**", view=AgeView(users))
     #Envoie le message pour le ridge
