@@ -65,9 +65,10 @@ class ReportButton(discord.ui.Button):
         print(message)
 
     async def callback(self, interaction : discord.Interaction) -> None:
+        print(f"  @{interaction.user.name} clicked on the confirm button.")
         #Réagis au clic
         if (interaction.user.id == 866997795993944084): #Si admin
-            print(f"  @{interaction.user.name} confirmed.")
+            print(f"    +1 : Admin Access")
             await valid_report(bot, self.users) #valid()
             #Remplace par ValidButton
             valid_button : discord.Button = ValidButton()
@@ -81,35 +82,30 @@ class ReportButton(discord.ui.Button):
         else: #Si non-admin
             if (is_in_list(interaction.user, self.users)): #Si l'utilisateur était dans la partie
                 if (is_in_list(interaction.user, self.users_who_clicked)): #Si l'utilisateur a déjà cliqué
-                    print(f"    @{interaction.user.name} already confirmed.") #Console : L'utilisateur a déjà cliqué
+                    print(f"         Already confirmed.") #Console : L'utilisateur a déjà cliqué
                     embed = ErrorEmbed(description="You already confirmed this report.")
                     await interaction.response.send_message(embed=embed, ephemeral=True)
-
                 else: #Si l'utilisateur n'a pas encore cliqué
                     self.count = self.count + 1 #+1 clic
                     self.users_who_clicked.append(interaction.user)
-                    print(f"  @{interaction.user.name} confirmed.") #Console : Clic enregistré
-                    embed = SuccessEmbed(title="YOU CONFIRMED THIS REPORT")
-                    await interaction.response.send_message(embed=embed, ephemeral=True)
-            
+                    print(f"    +1 : Confirmed.") #Console : Clic enregistré
+                    if (self.count == self.needed_confirm): #Si le nombre de clics est atteint
+                        #valid()
+                        await valid_report(bot, self.users)
+                        #Remplace par ValidButton
+                        valid_button : discord.Button = ValidButton()
+                        valid_button.label = "✅ Game reported"
+                        valid_view = discord.ui.View()
+                        valid_view.add_item(valid_button)
+                        return await interaction.response.edit_message(view=valid_view)
+                    else: #Si le nombre de clics n'est pas atteint
+                        #Met à jour le bouton
+                        self.label=f"{self.needed_confirm-self.count} more ✅ needed"
+                        return await interaction.response.edit_message(view=self.view)
             else: #Si l'utilisateur n'était pas dans la partie
+                print(f"         Not in the game.")
                 embed = ErrorEmbed(description="You tried to confirm a report which does not concern you.") #Créé le message d'erreur
-                await interaction.response.send_message(embed=embed, ephemeral=True) #Envoie un MP d'erreur à l'utilisateur
-                print(f"    @{interaction.user.name} tried to confirm.")
-        #Vérifie si le nombre de clics est atteint
-        if (self.count == self.needed_confirm): #Si le nombre de clics est atteint
-            #valid()
-            await valid_report(bot, self.users)
-            #Remplace par ValidButton
-            valid_button : discord.Button = ValidButton()
-            valid_button.label = "✅ Game reported"
-            valid_view = discord.ui.View()
-            valid_view.add_item(valid_button)
-            return await interaction.followup.edit_message(view=valid_view)
-        else: #Si le nombre de clics n'est pas atteint
-            #Met à jour le bouton
-            self.label=f"{self.needed_confirm-self.count} more ✅ needed"
-            return await interaction.followup.edit_message(view=self.view)
+                await interaction.response.send_message(embed=embed, ephemeral=True) #Envoie un ephemeral d'erreur à l'utilisateur
 
 class LFGButtonYes(discord.ui.Button):
     def __init__(self):
