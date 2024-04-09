@@ -12,6 +12,7 @@ FEEDBACK_RGB = discord.Colour.from_rgb(84, 5, 241)
 SUGGESTION_RGB = discord.Colour.from_rgb(168, 67, 0)
 STEAM_RGB = discord.Colour.from_rgb(18, 48, 100)
 JOIN_RGB = discord.Colour.from_rgb(184, 233, 134)
+LEFT_RGB = discord.Colour.from_rgb(255, 246, 175)
 INVITE_RGB = discord.Colour.from_rgb(14, 102, 201)
 
 #================================================= TASKS ====================================================
@@ -109,8 +110,32 @@ class MemberJoinEmbed(discord.Embed):
             timestamp=timestamp
         )
         self.set_footer(text=f"Civ Private Bot {VERSION}")
+class MemberLeftEmbed(discord.Embed):
+    def __init__(self, *, colour=LEFT_RGB, color=LEFT_RGB, title="MEMBER LEFT", type='rich', url=None, description=None, timestamp=None) -> None:
+        super().__init__(
+            colour=colour,
+            color=color,
+            title=title,
+            type=type,
+            url=url,
+            description=description,
+            timestamp=timestamp
+        )
+        self.set_footer(text=f"Civ Private Bot {VERSION}")
 class InviteEmbed(discord.Embed):
     def __init__(self, *, colour=INVITE_RGB, color=INVITE_RGB, title="NEW INVITE CREATED", type='rich', url=None, description=None, timestamp=None) -> None:
+        super().__init__(
+            colour=colour,
+            color=color,
+            title=title,
+            type=type,
+            url=url,
+            description=description,
+            timestamp=timestamp
+        )
+        self.set_footer(text=f"Civ Private Bot {VERSION}")
+class EditedEmbed(discord.Embed):
+    def __init__(self, *, colour=INVITE_RGB, color=INVITE_RGB, title="MESSAGE EDITED", type='rich', url=None, description=None, timestamp=None) -> None:
         super().__init__(
             colour=colour,
             color=color,

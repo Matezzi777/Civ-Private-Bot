@@ -17,7 +17,7 @@ from ranked import *
 from civilopedia import *
 from feedback import *
 from lobby_linker import *
-from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton, MemberJoinEmbed, InviteEmbed
+from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton, MemberJoinEmbed, InviteEmbed, MemberLeftEmbed, EditedEmbed
 from tokens import TOKEN
 
 #Définition du bot
@@ -32,6 +32,7 @@ welcome_channel_id = 1211150113477627955
 feedback_channel_id = 1225240183516172329
 suggestion_channel_id = 1225272619192811633
 logs_channel_id = 1227074585585913867
+WHITE_LIST_CHANNELS_ID = [logs_channel_id, 1211174226346774549, 1211382004260667412, 1225240183516172329, 1225272619192811633, 1211385961330778142, 1211174279220039731]
 
 #============================================= CLASSES REPORT ===============================================
 #View $report
@@ -197,6 +198,15 @@ async def on_member_join(member : discord.Member):
     log_embed.add_field(name=f"Account created :", value=f"{member.created_at.date()}", inline=False)
     return await log_channel.send(embed=log_embed)
 
+@bot.event #Se déclenche quand un membre quitte le serveur
+async def on_member_remove(member : discord.Member):
+    print(f"Member left... @{member.name}")
+    log_channel = bot.get_channel(logs_channel_id)
+    log_embed = MemberLeftEmbed(description=f"{member.mention} just left...")
+    log_embed.set_thumbnail(url=member.avatar)
+    log_embed.add_field(name=f"Left :", value=f"{datetime.datetime.now().date()} at {datetime.datetime.now().time()}", inline=False)
+    return await log_channel.send(embed=log_embed)
+
 @bot.event #Se déclenche lorsqu'un membre crée une nouvelle invitation
 async def on_invite_create(invite : discord.Invite):
     print(f"\nNew Invite created by {invite.inviter} : {invite.code}")
@@ -204,6 +214,27 @@ async def on_invite_create(invite : discord.Invite):
     embed = InviteEmbed(description=description)
     channel = bot.get_channel(logs_channel_id)
     return await channel.send(embed=embed)
+
+@bot.event
+async def on_message_delete(message : discord.Message):
+    print(f"A message from @{message.author.name} was deleted in #{message.channel.name}.")
+    if (not message.channel.id in WHITE_LIST_CHANNELS_ID):
+        embed = ErrorEmbed(title="MESSAGE DELETED", description=f"A message from **@{message.author.name}** was deleted in **#{message.channel.name}**.")
+        embed.add_field(name="Content :", value=f"*{message.content}*", inline=False)
+        channel = bot.get_channel(logs_channel_id)
+        await channel.send(embed=embed)
+    return
+
+@bot.event
+async def on_message_edit(before : discord.Message, after : discord.Message):
+    print(f"A message from @{before.author.name} was edited in #{before.channel.name}.")
+    if (not before.channel.id in WHITE_LIST_CHANNELS_ID):
+        embed = EditedEmbed(description=f"A message from {before.author.mention} was edited in **#{before.channel.name}**.")
+        embed.add_field(name="**Before :**", value=f"*{before.content}*", inline=False)
+        embed.add_field(name="**After :**", value=f"*{after.content}*", inline=False)
+        channel = bot.get_channel(logs_channel_id)
+        await channel.send(embed=embed)
+    return
 
 #============================================ COMMANDES INFOS ===============================================
 #$ping
