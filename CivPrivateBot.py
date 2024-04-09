@@ -250,7 +250,7 @@ async def on_message_edit(before : discord.Message, after : discord.Message):
         enabled=True,
         hidden=False)
 async def ping(ctx : commands.Context) -> None:
-    print(f"\n$ping used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$ping used by @{ctx.message.author.name} in #{ctx.channel.name}")
     embed = SuccessEmbed(title="PONG")
     embed.remove_footer()
     await ctx.send(embed=embed)
@@ -262,7 +262,7 @@ async def ping(ctx : commands.Context) -> None:
         enabled=True,
         hidden=False)
 async def hello(ctx : commands.Context) -> None:
-    print(f"\n$hello used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$hello used by @{ctx.message.author.name} in #{ctx.channel.name}")
     server = ctx.guild
     embed = BotEmbed(title="Hello *Civ enjoyer !*", description=f"Let me introduce myself...\nMy name is **Civ Private Bot** (but you can call me CPB), I try my best to add some useful tools on the **{server.name}**, like $mapvote, $draft.\n\nWe actualy are working on an elo ranking system 😉\n\nPlease message <@866997795993944084> if you have any suggestions or feedback !")
     await ctx.send(embed=embed)
@@ -273,7 +273,7 @@ async def hello(ctx : commands.Context) -> None:
         enabled=True,
         hidden=False)
 async def serverinfo(ctx : commands.Context) -> None:
-    print(f"\n$serverinfo used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$serverinfo used by @{ctx.message.author.name} in #{ctx.channel.name}")
     server = ctx.guild
     embed = BotEmbed(title=f"{server.name}", description=f"Are you tired about leavers in Civ 6 Multiplayer ?\nAre you tired about the 3k gametime player bullying you ?\n\nWelcome to the {server.name} !\n\nNo worries, you are at the good place. This discord exists to gather a community of nice peoples who want to play civ, learn civ and discuss about civ !\n\nIf you are new here, don't worry, I'm sure you'll find what you are looking for.")
     embed.add_field(name="Some stats about us :", value =f"Members : **{server.member_count}**\nText Channels : {len(server.text_channels)}\nVoice Channels : {len(server.voice_channels)}", inline=False)
@@ -304,7 +304,7 @@ async def clear(ctx : commands.Context, n : int) -> None:
         enabled=True,
         hidden=False)
 async def lfg(ctx : commands.Context, format : str = None) -> None:
-    print(f"\n$lfg used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$lfg used by @{ctx.message.author.name} in #{ctx.channel.name}")
     if (format == None):
         format=""
     if (format.lower()=="ranked"):
@@ -342,7 +342,7 @@ async def lfg(ctx : commands.Context, format : str = None) -> None:
         enabled=True,
         hidden=False)
 async def draft(ctx : commands.Context, nb_civs : int) -> None:
-    print(f"\n$draft {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$draft {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_draft(ctx, nb_civs)  
 #$blind_draft
 @bot.command(help="Create randoms list of leaders and assign them to the players IN PRIVATE MESSAGE.\n\nTake 1 parameter :\n- nb_civs (int) : The number of civs given to each player.\n\nMUST BE USED IN VOICE CHANNEL !",
@@ -351,7 +351,7 @@ async def draft(ctx : commands.Context, nb_civs : int) -> None:
         enabled=True,
         hidden=False)
 async def blind_draft(ctx : commands.Context, nb_civs : int) -> None:
-    print(f"\n$blind_draft {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$blind_draft {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_blind_draft(ctx, nb_civs)
 #$draft X Y
 @bot.command(help="Create randoms list of leaders and assign them to the players.\n\nTake 2 parameter :\n- nb_players (int) : The number of players in the game.\n- nb_civs (int) : The number of civs given to each player.",
@@ -360,7 +360,7 @@ async def blind_draft(ctx : commands.Context, nb_civs : int) -> None:
         enabled=True,
         hidden=False)
 async def generic_draft(ctx : commands.Context, nb_players : int, nb_civs : int) -> None:
-    print(f"\n$generic_draft {nb_players} {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$generic_draft {nb_players} {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_generic_draft(ctx, nb_players, nb_civs)
 
 #$mapvote
@@ -412,7 +412,7 @@ async def longer_mapvote(ctx : commands.Context) -> None:
         enabled=True,
         hidden=False)
 async def report(ctx : commands.Context, *args : discord.User) -> None:
-    print(f"\n$report used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$report used by @{ctx.message.author.name} in #{ctx.channel.name}")
     users = args
     if (len(users) < 2):
         embed=ErrorEmbed(description="Not enough players in the game reported (minimum 2).")
@@ -434,7 +434,7 @@ async def report(ctx : commands.Context, *args : discord.User) -> None:
         enabled=True,
         hidden=False)
 async def stats(ctx : commands.Context) -> None:
-    print(f"\n$stats used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$stats used by @{ctx.message.author.name} in #{ctx.channel.name}")
     user : discord.User = ctx.message.author
     if (not is_player_in_database(user)):
         embed=ErrorEmbed(description=f"{user.mention} not found in the database.\nPlay a game and report the result to create an entry.")
@@ -457,7 +457,7 @@ async def stats(ctx : commands.Context) -> None:
         enabled=True,
         hidden=False)
 async def leaderboard(ctx : commands.Context) -> None:
-    print(f"\n$leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await display_scoreboard(ctx)
     return
 #$update_leaderboard
@@ -469,12 +469,12 @@ async def leaderboard(ctx : commands.Context) -> None:
 async def update_leaderboard(ctx : commands.Context) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
-        print(f"\n@{ctx.message.author.name} tried to use $update_leaderboard in #{ctx.channel.name}")
+        print(f"@{ctx.message.author.name} tried to use $update_leaderboard in #{ctx.channel.name}")
         embed = ErrorEmbed(title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
         await caller.send(embed=embed)
         return
     else:
-        print(f"\n$update_leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
+        print(f"$update_leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
         embed = SuccessEmbed(description="Leaderboard successfuly updated.")
         await ctx.send(embed=embed)
         await update_scoreboard(bot)
@@ -488,12 +488,12 @@ async def update_leaderboard(ctx : commands.Context) -> None:
 async def reset_leaderboard(ctx : commands.Context) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
-        print(f"\n@{ctx.message.author.name} tried to use $clear_leaderboard in #{ctx.channel.name}")
+        print(f"@{ctx.message.author.name} tried to use $clear_leaderboard in #{ctx.channel.name}")
         embed = ErrorEmbed(title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
         await caller.send(embed=embed)
         return
     else:
-        print(f"\n$clear_leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
+        print(f"$clear_leaderboard used by @{ctx.message.author.name} in #{ctx.channel.name}")
         if (not is_database_empty()):
             result = rm_all_users()
             if (result):
@@ -515,12 +515,12 @@ async def reset_leaderboard(ctx : commands.Context) -> None:
 async def add_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
-        print(f"\n@{ctx.message.author.name} tried to use $add_user in #{ctx.channel.name}")
+        print(f"@{ctx.message.author.name} tried to use $add_user in #{ctx.channel.name}")
         embed = ErrorEmbed(title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
         await caller.send(embed=embed)
         return
     else:
-        print(f"\n$add_user used by @{ctx.message.author.name} in #{ctx.channel.name}")
+        print(f"$add_user used by @{ctx.message.author.name} in #{ctx.channel.name}")
         result : int = add_u(user)
         if (result):
             embed = SuccessEmbed(colour=discord.Colour.green(), title="USER ADDED", description=f"{user.mention} successfully added.")
@@ -537,12 +537,12 @@ async def add_user(ctx : commands.Context, user : discord.User) -> None:
 async def rm_user(ctx : commands.Context, user : discord.User) -> None:
     caller : discord.User = ctx.message.author
     if (caller.id != 866997795993944084):
-        print(f"\n@{ctx.message.author.name} tried to use $rm_user in #{ctx.channel.name}")
+        print(f"@{ctx.message.author.name} tried to use $rm_user in #{ctx.channel.name}")
         embed = ErrorEmbed(title="PERMISSIONS ISSUE", description="You're not allowed to use this command.")
         await caller.send(embed=embed)
         return
     else:
-        print(f"\n$rm_user used by @{ctx.message.author.name} in #{ctx.channel.name}")
+        print(f"$rm_user used by @{ctx.message.author.name} in #{ctx.channel.name}")
         result : int = rm_u(user)
         if (result):
             embed = SuccessEmbed(description=f"{user.mention} successfully deleted.")
@@ -560,7 +560,7 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
         enabled=True,
         hidden=False)
 async def civilopedia(ctx : commands.Context, article : str = None, lang : str = "en"):
-    print(f"\n$civilopedia used by {ctx.message.author} in {ctx.message.channel}")
+    print(f"$civilopedia used by {ctx.message.author} in {ctx.message.channel}")
     await make_civilopedia(ctx, article, lang)
 
 #=========================================== FEEDBACKS & IDEAS ==============================================
@@ -571,7 +571,7 @@ async def civilopedia(ctx : commands.Context, article : str = None, lang : str =
         enabled=True,
         hidden=False)
 async def make_suggestion(ctx : commands.Context):
-    print(f"\n$make_suggestion used by {ctx.message.author} in {ctx.message.channel}")
+    print(f"$make_suggestion used by {ctx.message.author} in {ctx.message.channel}")
     channel_suggestion = bot.get_channel(suggestion_channel_id)
     await create_suggestion(ctx, channel_suggestion)
 
@@ -581,7 +581,7 @@ async def make_suggestion(ctx : commands.Context):
         enabled=True,
         hidden=False)
 async def feedback(ctx : commands.Context):
-    print(f"\n$feedback used by {ctx.message.author} in {ctx.message.channel}")
+    print(f"$feedback used by {ctx.message.author} in {ctx.message.channel}")
     channel_feedback = bot.get_channel(feedback_channel_id)
     await make_feedback(ctx, channel_feedback)
 
@@ -593,7 +593,7 @@ async def feedback(ctx : commands.Context):
         enabled=True,
         hidden=False)
 async def set_steam(ctx : commands.Context):
-    print(f"\n$set_steam used by {ctx.message.author} in {ctx.message.channel}")
+    print(f"$set_steam used by {ctx.message.author} in {ctx.message.channel}")
     await link_steam_account(ctx)
 
 @bot.command(help="Display a link to your lobby.\nOnly works for Steam users.\n\nYou have to link your Steam Profile first by using $set_steam.",
@@ -602,7 +602,7 @@ async def set_steam(ctx : commands.Context):
         enabled=True,
         hidden=True)
 async def lobby(ctx : commands.Context):
-    print(f"\n$lobby used by {ctx.message.author} in {ctx.message.channel}")
+    print(f"$lobby used by {ctx.message.author} in {ctx.message.channel}")
     await display_lobby_link(ctx)
 
 #================================================== RUN =====================================================
