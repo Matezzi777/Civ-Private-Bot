@@ -21,9 +21,6 @@ class Bot(commands.Bot):
 
     async def setup_hook(self):
         await self.tree.sync()
-    
-    async def on_ready(self):
-        print(f"{self.user.id} successfully logged in as {self.user.name}.\nRock n'Roll !")
 
 #================================================= EMBEDS ===================================================
 class BotEmbed(discord.Embed):

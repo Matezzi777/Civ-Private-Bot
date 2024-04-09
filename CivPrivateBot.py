@@ -179,6 +179,10 @@ class LFGView(discord.ui.View):
 #================================================ EVENTS ====================================================
 
 @bot.event
+async def on_ready():
+    print(f"\n{bot.user.name} (id: {bot.user.id}) successfully logged in.\nRock n'Roll !")
+
+@bot.event
 async def on_message(message : discord.Message):
     await bot.process_commands(message)
     channel = message.channel
