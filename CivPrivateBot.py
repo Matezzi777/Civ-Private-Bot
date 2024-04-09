@@ -17,7 +17,7 @@ from ranked import *
 from civilopedia import *
 from feedback import *
 from lobby_linker import *
-from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton
+from classes import Bot, BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton, MemberJoinEmbed, InviteEmbed
 from tokens import TOKEN
 
 #Définition du bot
@@ -31,6 +31,7 @@ button_change = Button(label="Yes", style=discord.ButtonStyle.green)
 welcome_channel_id = 1211150113477627955
 feedback_channel_id = 1225240183516172329
 suggestion_channel_id = 1225272619192811633
+logs_channel_id = 1227074585585913867
 
 #============================================= CLASSES REPORT ===============================================
 #View $report
@@ -106,7 +107,6 @@ class ReportButton(discord.ui.Button):
                 print(f"         Not in the game.")
                 embed = ErrorEmbed(description="You tried to confirm a report which does not concern you.") #Créé le message d'erreur
                 await interaction.response.send_message(embed=embed, ephemeral=True) #Envoie un ephemeral d'erreur à l'utilisateur
-
 class LFGButtonYes(discord.ui.Button):
     def __init__(self):
         super().__init__(
@@ -136,7 +136,6 @@ class LFGButtonYes(discord.ui.Button):
         embed.add_field(name="❔ Maybe :", value=maybe, inline=False)
         await interaction.response.edit_message(embed=embed, view=self.view)
         return
-
 class LFGButtonMaybe(discord.ui.Button):
     def __init__(self):
         super().__init__(
@@ -166,7 +165,6 @@ class LFGButtonMaybe(discord.ui.Button):
         embed.add_field(name="❔ Maybe :", value=maybe, inline=False)
         await interaction.response.edit_message(embed=embed, view=self.view)
         return
-
 class LFGView(discord.ui.View):
     def __init__(self, caller : discord.User) -> None:
         super().__init__(timeout=None)
@@ -180,16 +178,40 @@ class LFGView(discord.ui.View):
 
 @bot.event
 async def on_ready():
-    print(f"\n{bot.user.name} (id: {bot.user.id}) successfully logged in.\nRock n'Roll !")
+    return print(f"\n{bot.user.name} (id: {bot.user.id}) successfully logged in.\nRock n'Roll !")
+
+# @bot.event
+# async def on_message(message : discord.Message):
+#     await bot.process_commands(message)
+#     channel = message.channel
+#     if (channel.id == welcome_channel_id):
+#         await message.add_reaction("👋")
+#     return
 
 @bot.event
-async def on_message(message : discord.Message):
-    await bot.process_commands(message)
-    channel = message.channel
-    if (channel.id == welcome_channel_id):
-        await message.add_reaction("👋")
-        print(f"New member joined\n  {datetime.datetime.now()}\n")
-    return
+async def on_member_join(member : discord.Member):
+    print(f"New member joined : @{member.name}")
+    welcome_channel = bot.get_channel(welcome_channel_id)
+    welcome_embed = BotEmbed(title="WELCOME", description=f"Hey guys, {member.mention} just joined the server !")
+    welcome_embed.set_thumbnail(url=member.avatar)
+    welcome_message = await welcome_channel.send(embed=welcome_embed)
+    await welcome_message.add_reaction("👋")
+    log_channel = bot.get_channel(logs_channel_id)
+    log_embed = MemberJoinEmbed(description=f"{member.mention} joined the server !")
+    log_embed.set_thumbnail(url=member.avatar)
+    log_embed.add_field(name=f"Name :", value=f"**{member.name}**", inline=False)
+    log_embed.add_field(name=f"ID :", value=f"{member.id}", inline=False)
+    log_embed.add_field(name=f"Joined :", value=f"{datetime.datetime.now().date()} at {datetime.datetime.now().time()}", inline=False)
+    log_embed.add_field(name=f"Account created :", value=f"{member.created_at.date()}", inline=False)
+    return await log_channel.send(embed=log_embed)
+
+@bot.event
+async def on_invite_create(invite : discord.Invite):
+    print(f"\nNew Invite created by {invite.inviter} : {invite.code}")
+    description : str = f"New Invite created by : **{invite.inviter.mention}** at {datetime.datetime.now()}."
+    embed = InviteEmbed(description=description)
+    channel = bot.get_channel(logs_channel_id)
+    return await channel.send(embed=embed)
 
 #============================================ COMMANDES INFOS ===============================================
 #$ping
@@ -237,7 +259,7 @@ async def serverinfo(ctx : commands.Context) -> None:
         enabled=True,
         hidden=True)
 async def clear(ctx : commands.Context, n : int) -> None:
-    print(f"\n$clear {n} used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    print(f"$clear {n} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     i : int = 0
     async for message in ctx.channel.history(limit=n+1):
         await message.delete()
