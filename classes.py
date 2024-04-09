@@ -11,7 +11,7 @@ ERROR_RGB = discord.Colour.from_rgb(204, 30, 15)
 FEEDBACK_RGB = discord.Colour.from_rgb(84, 5, 241)
 SUGGESTION_RGB = discord.Colour.from_rgb(168, 67, 0)
 STEAM_RGB = discord.Colour.from_rgb(18, 48, 100)
-JOIN_RGB = discord.Colour.from_rgb(100, 138, 77)
+JOIN_RGB = discord.Colour.from_rgb(184, 233, 134)
 INVITE_RGB = discord.Colour.from_rgb(14, 102, 201)
 
 #================================================= TASKS ====================================================
