@@ -176,19 +176,11 @@ class LFGView(discord.ui.View):
 
 #================================================ EVENTS ====================================================
 
-@bot.event
+@bot.event #Se déclenche quand le bot est prêt au démarrage
 async def on_ready():
     return print(f"\n{bot.user.name} (id: {bot.user.id}) successfully logged in.\nRock n'Roll !")
 
-# @bot.event
-# async def on_message(message : discord.Message):
-#     await bot.process_commands(message)
-#     channel = message.channel
-#     if (channel.id == welcome_channel_id):
-#         await message.add_reaction("👋")
-#     return
-
-@bot.event
+@bot.event #Se déclenche quand un nouveau member rejoint le serveur
 async def on_member_join(member : discord.Member):
     print(f"New member joined : @{member.name}")
     welcome_channel = bot.get_channel(welcome_channel_id)
@@ -205,7 +197,7 @@ async def on_member_join(member : discord.Member):
     log_embed.add_field(name=f"Account created :", value=f"{member.created_at.date()}", inline=False)
     return await log_channel.send(embed=log_embed)
 
-@bot.event
+@bot.event #Se déclenche lorsqu'un membre crée une nouvelle invitation
 async def on_invite_create(invite : discord.Invite):
     print(f"\nNew Invite created by {invite.inviter} : {invite.code}")
     description : str = f"New Invite created by : **{invite.inviter.mention}** at {datetime.datetime.now()}."
