@@ -606,7 +606,7 @@ async def set_steam(ctx : commands.Context):
         description="LOBBY",
         brief="- Display a link to your active lobby (Steam)",
         enabled=True,
-        hidden=True)
+        hidden=False)
 async def lobby(ctx : commands.Context):
     print(f"$lobby used by {ctx.message.author} in {ctx.message.channel}")
     await display_lobby_link(ctx)
