@@ -227,7 +227,7 @@ async def on_message_delete(message : discord.Message):
     if (not message.channel.id in WHITE_LIST_CHANNELS_ID):
         print(f"A message from @{message.author.name} was deleted in #{message.channel.name}.")
         embed = ErrorEmbed(title="MESSAGE DELETED", description=f"A message from **@{message.author.name}** was deleted in **#{message.channel.name}**.")
-        embed.add_field(name="Content :", value=f"*{message.content}*", inline=False)
+        embed.add_field(name="Content :", value=f"{message.content}", inline=False)
         channel = bot.get_channel(logs_channel_id)
         await channel.send(embed=embed)
     return
@@ -237,8 +237,8 @@ async def on_message_edit(before : discord.Message, after : discord.Message):
     if ((not before.channel.id in WHITE_LIST_CHANNELS_ID) and (before.author.id != bot.user.id)):
         print(f"A message from @{before.author.name} was edited in #{before.channel.name}.")
         embed = EditedEmbed(description=f"A message from {before.author.mention} was edited in **#{before.channel.name}**.")
-        embed.add_field(name="**Before :**", value=f"*{before.content}*", inline=False)
-        embed.add_field(name="**After :**", value=f"*{after.content}*", inline=False)
+        embed.add_field(name="**Before :**", value=f"{before.content}", inline=False)
+        embed.add_field(name="**After :**", value=f"{after.content}", inline=False)
         channel = bot.get_channel(logs_channel_id)
         await channel.send(embed=embed)
     return
