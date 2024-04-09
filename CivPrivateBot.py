@@ -241,6 +241,12 @@ async def on_message_edit(before : discord.Message, after : discord.Message):
         await channel.send(embed=embed)
     return
 
+@bot.event
+async def on_command_error(ctx : commands.Context, error):
+    if isinstance(error, commands.CommandNotFound):
+        embed = ErrorEmbed(title="UNKNOWN COMMAND", description="This commands is not recognized by the bot. Check https://discord.com/channels/1089289924693459024/1211159694115348530/1211161705128665169 or use ***$help*** to see the list of the commands supported.")
+        await ctx.send(embed=embed)
+
 #============================================ COMMANDES INFOS ===============================================
 #$ping
 @bot.command(aliases=['p', 'pong'],
