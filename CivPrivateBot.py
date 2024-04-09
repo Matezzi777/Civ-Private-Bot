@@ -179,7 +179,13 @@ class LFGView(discord.ui.View):
 
 @bot.event #Se déclenche quand le bot est prêt au démarrage
 async def on_ready():
-    return print(f"\n{bot.user.name} (id: {bot.user.id}) successfully logged in.\nRock n'Roll !")
+    print("         ______  __  __   __       _______  ______    __  __   __  ____   _______  ______       _______   _______  _______")
+    print("        / ____/ / / / /  / /      / ___  / / ___  |  / / / /  / / / _  | |__  __/ / ____/      / ___  /  / ___  / /__  __/")
+    print("       / /     / / / /  / /      / /__/ / / /__/ /  / / / /  / / / /_| |   / /   / /___       / /__/ /  / /  / /    / /")
+    print("      / /     / / | |  / /      / _____/ / ___  /  / / | |  / / / ___  |  / /   / ____/      / ____  | / /  / /    / /")
+    print("     / /___  / /  | |_/ /      / /      / /   | | / /  | |_/ / / /  / /  / /   / /___       / /___/ / / /__/ /    / /")
+    print("    /_____/ /_/   |____/      /_/      /_/   /_/ /_/   |____/ /_/  /_/  /_/   /_____/      /_______/ /______/    /_/")
+    return print(f"\nRock n'Roll !")
 
 @bot.event #Se déclenche quand un nouveau member rejoint le serveur
 async def on_member_join(member : discord.Member):
