@@ -33,6 +33,7 @@ feedback_channel_id = 1225240183516172329
 suggestion_channel_id = 1225272619192811633
 logs_channel_id = 1227074585585913867
 WHITE_LIST_CHANNELS_ID = [logs_channel_id, 1211174226346774549, 1211382004260667412, 1225240183516172329, 1225272619192811633, 1211385961330778142, 1211174279220039731]
+VOICE_CHANNELS_ID = [1211153896857276476, 1211154032366854235, 1211154119000064010, 1211307232952721458]
 
 #============================================= CLASSES REPORT ===============================================
 #View $report
@@ -365,14 +366,45 @@ async def generic_draft(ctx : commands.Context, nb_players : int, nb_civs : int)
     await make_generic_draft(ctx, nb_players, nb_civs)
 
 #$mapvote
-@bot.command(help="Launch a mapvote.\n\nBehaves differently if used with or without VoiceChannel.",
+@bot.command(help="Launch a mapvote.",
         description="MAPVOTE",
         brief="- Launch the mapvote",
         enabled=True,
         hidden=False)
 async def mapvote(ctx : commands.Context) -> None:
-    print(f"\n$mapvote used by @{ctx.message.author.name} in #{ctx.channel.name}")
-    await make_mapvote(ctx)
+    print(f"$mapvote used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    voice_channel = None
+    for channel_id in VOICE_CHANNELS_ID:
+        channel : discord.VoiceChannel = bot.get_channel(channel_id)
+        nb_users = len(channel.members)
+        if ((nb_users == 0) and (channel.user_limit > 2) and (voice_channel == None)):
+            voice_channel = channel
+    if (voice_channel == None):
+        category = discord.utils.utils.get(ctx.guild().categories, id=1211152499772227697)
+        nb_voice_channel = len(category.voice_channels)
+        voice_channel = await category.create_voice_channel(name=f"War Room #{nb_voice_channel-1}", position=nb_voice_channel-1, user_limit=10)
+
+    await make_mapvote(ctx, voice_channel)
+
+#$longer_mapvote
+@bot.command(help="Launch a longer mapvote than $mapvote.",
+        description="LONGER_MAPVOTE",
+        brief="- Launch a longer mapvote",
+        enabled=True,
+        hidden=False)
+async def longer_mapvote(ctx : commands.Context) -> None:
+    print(f"$longer_mapvote used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    voice_channel = None
+    for channel_id in VOICE_CHANNELS_ID:
+        channel : discord.VoiceChannel = bot.get_channel(channel_id)
+        nb_users = len(channel.members)
+        if ((nb_users == 0) and (channel.user_limit > 2) and (voice_channel == None)):
+            voice_channel = channel
+    if (voice_channel == None):
+        category = discord.utils.utils.get(ctx.guild().categories, id=1211152499772227697)
+        nb_voice_channel = len(category.voice_channels)
+        voice_channel = await category.create_voice_channel(name=f"War Room #{nb_voice_channel-1}", position=nb_voice_channel-1, user_limit=10)
+    await make_longer_mapvote(ctx, voice_channel)
 
 #=========================================== COMMANDES RANKED ===============================================
 #$report @First @Second @Third ...
