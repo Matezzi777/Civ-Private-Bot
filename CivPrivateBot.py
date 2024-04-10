@@ -217,6 +217,7 @@ async def on_invite_create(invite : discord.Invite):
     print(f"\nNew Invite created by {invite.inviter} : {invite.code}")
     description : str = f"New Invite created by : **{invite.inviter.mention}** at {datetime.datetime.now()}."
     embed = InviteEmbed(description=description)
+    embed.set_thumbnail(url=invite.inviter.avatar)
     channel = bot.get_channel(logs_channel_id)
     return await channel.send(embed=embed)
 
@@ -224,7 +225,8 @@ async def on_invite_create(invite : discord.Invite):
 async def on_message_delete(message : discord.Message):
     if (not message.channel.id in WHITE_LIST_CHANNELS_ID):
         print(f"A message from @{message.author.name} was deleted in #{message.channel.name}.")
-        embed = ErrorEmbed(title="MESSAGE DELETED", description=f"A message from **@{message.author.name}** was deleted in **#{message.channel.name}**.")
+        embed = ErrorEmbed(title="MESSAGE DELETED", description=f"A message from **{message.author.mention}** was deleted in **#{message.channel.name}**.")
+        embed.set_thumbnail(url=message.author.avatar)
         embed.add_field(name="Content :", value=f"{message.content}", inline=False)
         channel = bot.get_channel(logs_channel_id)
         await channel.send(embed=embed)
@@ -235,6 +237,7 @@ async def on_message_edit(before : discord.Message, after : discord.Message):
     if ((not before.channel.id in WHITE_LIST_CHANNELS_ID) and (before.author.id != bot.user.id)):
         print(f"A message from @{before.author.name} was edited in #{before.channel.name}.")
         embed = EditedEmbed(description=f"A message from {before.author.mention} was edited in **#{before.channel.name}**.")
+        embed.set_thumbnail(url=before.author.avatar)
         embed.add_field(name="**Before :**", value=f"{before.content}", inline=False)
         embed.add_field(name="**After :**", value=f"{after.content}", inline=False)
         channel = bot.get_channel(logs_channel_id)
