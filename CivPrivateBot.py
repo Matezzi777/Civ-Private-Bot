@@ -49,7 +49,6 @@ class ReportView(discord.ui.View):
             self.add_item(ReportButton(users, self.needed_confirm))
         else:
             print(f"Erreur nombre d'arguments. ({self.nb_users}/2+)")
-#Bouton validation $report
 class ReportButton(discord.ui.Button):
     def __init__(self, users : list, needed_confirm) -> None:
         super().__init__(
@@ -107,11 +106,13 @@ class ReportButton(discord.ui.Button):
                 print(f"         Not in the game.")
                 embed = ErrorEmbed(description="You tried to confirm a report which does not concern you.") #Créé le message d'erreur
                 await interaction.response.send_message(embed=embed, ephemeral=True) #Envoie un ephemeral d'erreur à l'utilisateur
+#View $lfg
 class LFGButtonYes(discord.ui.Button):
-    def __init__(self):
+    def __init__(self, row):
         super().__init__(
             label="✅ Count me in",
-            style=discord.ButtonStyle.green
+            style=discord.ButtonStyle.green,
+            row=row
         )
 
     async def callback(self, interaction : discord.Interaction) -> None:
@@ -137,10 +138,11 @@ class LFGButtonYes(discord.ui.Button):
         await interaction.response.edit_message(embed=embed, view=self.view)
         return
 class LFGButtonMaybe(discord.ui.Button):
-    def __init__(self):
+    def __init__(self, row):
         super().__init__(
             label="❔ Maybe",
-            style=discord.ButtonStyle.grey
+            style=discord.ButtonStyle.grey,
+            row=row
         )
 
     async def callback(self, interaction : discord.Interaction) -> None:
@@ -165,14 +167,45 @@ class LFGButtonMaybe(discord.ui.Button):
         embed.add_field(name="❔ Maybe :", value=maybe, inline=False)
         await interaction.response.edit_message(embed=embed, view=self.view)
         return
+class LFGButtonStop(discord.ui.Button):
+    def __init__(self, author : discord.Member, row : int):
+        super().__init__(
+            label=f"Delete this post (author only)",
+            style=discord.ButtonStyle.red,
+            row=row
+        )
+        self.author : discord.Member = author
+
+    async def callback(self, interaction : discord.Interaction):
+        user : discord.Member = interaction.user
+        if (user == self.author):
+            return await interaction.message.delete()
+        else:
+            await interaction.response.edit_message(view=self.view)
+            embed = ErrorEmbed(title="YOU CAN'T DELETE THIS", description="Only the author of the command can delete this message.")
+            return await interaction.followup.send(embed=embed, ephemeral=True)
+
+class LFGButtonJoinChannel(discord.ui.Button):
+    def __init__(self, row) -> None:
+        super().__init__(
+            label="🎤#[LFG] - Looking for Game",
+            style=discord.ButtonStyle.blurple,
+            row=row,
+        )
+
+    async def callback(self, interaction : discord.Interaction):
+        return await interaction.response.send_message("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !", ephemeral=True)
+
 class LFGView(discord.ui.View):
-    def __init__(self, caller : discord.User) -> None:
+    def __init__(self, caller : discord.Member) -> None:
         super().__init__(timeout=None)
         self.users : list[discord.User] = []
         self.maybe : list[discord.User] = []
         self.users.append(caller)
-        self.add_item(LFGButtonYes())
-        self.add_item(LFGButtonMaybe())
+        self.add_item(LFGButtonYes(row=0))
+        self.add_item(LFGButtonMaybe(row=0))
+        self.add_item(LFGButtonJoinChannel(row=1))
+        self.add_item(LFGButtonStop(caller, row=2))
 
 #================================================ EVENTS ====================================================
 
@@ -317,32 +350,26 @@ async def lfg(ctx : commands.Context, format : str = None) -> None:
     if (format == None):
         format=""
     if (format.lower()=="ranked"):
-        await ctx.send("<@&1211165398003884093>")
         message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
         embed=BotEmbed(title="LOOKING FOR GAME", description=message)
         embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
         embed.add_field(name="❔ Maybe :", value="", inline=False)
         view=LFGView(ctx.message.author)
-        await ctx.send(embed=embed, view=view)
-        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
+        await ctx.send("<@&1211165398003884093>", embed=embed, view=view)
     elif (format.lower()=="casual"or format.lower()=="chill"):
-        await ctx.send("<@&1211165189274337340>")
         message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
         embed=BotEmbed(title="LOOKING FOR GAME", description=message)
         embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
         embed.add_field(name="❔ Maybe :", value="", inline=False)
         view=LFGView(ctx.message.author)
-        await ctx.send(embed=embed, view=view)
-        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
+        await ctx.send("<@&1211165189274337340>", embed=embed, view=view)
     else:
-        await ctx.send("<@&1112525992267890780>")
         message=f"Game starting soon !\nClick ✅ if you participate.\nClick ❔ if you're not sure."
         embed=BotEmbed(title="LOOKING FOR GAME", description=message)
         embed.add_field(name="✅ Will play :", value=f"{ctx.message.author.mention}", inline=False)
         embed.add_field(name="❔ Maybe :", value="", inline=False)
         view=LFGView(ctx.message.author)
-        await ctx.send(embed=embed, view=view)
-        await ctx.send("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !")
+        await ctx.send("<@&1112525992267890780>", embed=embed, view=view)
     return
 #$draft 2.0
 @bot.command(help="Create randoms list of leaders and assign them to the players.\n\nTake 1 parameter :\n- nb_civs (int) : The number of civs given to each player.\n\nMUST BE USED IN VOICE CHANNEL !\n\nTo use without VoiceChannel, prefer $generic_draft <nb_players> <nb_civs>",
