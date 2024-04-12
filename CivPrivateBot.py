@@ -167,23 +167,6 @@ class LFGButtonMaybe(discord.ui.Button):
         embed.add_field(name="❔ Maybe :", value=maybe, inline=False)
         await interaction.response.edit_message(embed=embed, view=self.view)
         return
-class LFGButtonStop(discord.ui.Button):
-    def __init__(self, author : discord.Member, row : int):
-        super().__init__(
-            label=f"Delete this post (author only)",
-            style=discord.ButtonStyle.red,
-            row=row
-        )
-        self.author : discord.Member = author
-
-    async def callback(self, interaction : discord.Interaction):
-        user : discord.Member = interaction.user
-        if (user == self.author):
-            return await interaction.message.delete()
-        else:
-            await interaction.response.edit_message(view=self.view)
-            embed = ErrorEmbed(title="YOU CAN'T DELETE THIS", description="Only the author of the command can delete this message.")
-            return await interaction.followup.send(embed=embed, ephemeral=True)
 class LFGButtonJoinChannel(discord.ui.Button):
     def __init__(self, row) -> None:
         super().__init__(
@@ -203,7 +186,6 @@ class LFGView(discord.ui.View):
         self.add_item(LFGButtonYes(row=0))
         self.add_item(LFGButtonMaybe(row=0))
         self.add_item(LFGButtonJoinChannel(row=1))
-        self.add_item(LFGButtonStop(caller, row=2))
 
 #================================================ EVENTS ====================================================
 
