@@ -238,6 +238,7 @@ async def on_member_remove(member : discord.Member):
     log_channel = bot.get_channel(logs_channel_id)
     log_embed = MemberLeftEmbed(description=f"{member.mention} just left...")
     log_embed.set_thumbnail(url=member.avatar)
+    log_embed.add_field(name=f"Joined :", value=f"{member.joined_at}", inline=False)
     log_embed.add_field(name=f"Left :", value=f"{datetime.datetime.now().date()} at {datetime.datetime.now().time()}", inline=False)
     return await log_channel.send(embed=log_embed)
 @bot.event #Se déclenche lorsqu'un membre crée une nouvelle invitation
