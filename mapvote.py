@@ -11,10 +11,11 @@ BBG_BETA_VERSION : str = "5.8"
 #================================================ BOUTONS ===================================================
 #Bouton Pangaea 🌋
 class Button_pangaea(discord.ui.Button):
-    def __init__(self, list_users : list, needed_confirm : int) -> None:
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
         super().__init__(
             label="🌋 Pangaea",
-            style=discord.ButtonStyle.grey
+            style=discord.ButtonStyle.grey,
+            row=row
         )
         self.list_users : list = list_users
         self.needed_confirm : int = needed_confirm
@@ -45,10 +46,11 @@ class Button_pangaea(discord.ui.Button):
             await interaction.response.edit_message(view=self.view)
 #Bouton Seven Seas 🌊
 class Button_seven_seas(discord.ui.Button):
-    def __init__(self, list_users : list, needed_confirm : int) -> None:
+    def __init__(self, list_users : list, needed_confirm : int, row) -> None:
         super().__init__(
             label="🌊 Seven Seas",
-            style=discord.ButtonStyle.grey
+            style=discord.ButtonStyle.grey,
+            row=row
         )
         self.list_users : list = list_users
         self.needed_confirm : int = needed_confirm
@@ -79,10 +81,11 @@ class Button_seven_seas(discord.ui.Button):
             await interaction.response.edit_message(view=self.view)
 #Bouton Highlands ⛰️
 class Button_highlands(discord.ui.Button):
-    def __init__(self, list_users : list, needed_confirm : int) -> None:
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
         super().__init__(
             label="⛰️ Highlands",
-            style=discord.ButtonStyle.grey
+            style=discord.ButtonStyle.grey,
+            row=row
         )
         self.list_users : list = list_users
         self.needed_confirm : int = needed_confirm
@@ -113,10 +116,11 @@ class Button_highlands(discord.ui.Button):
             await interaction.response.edit_message(view=self.view)
 #Bouton Continents 🌍
 class Button_continents(discord.ui.Button):
-    def __init__(self, list_users : list, needed_confirm : int) -> None:
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
         super().__init__(
             label="🌍 Continents",
-            style=discord.ButtonStyle.grey
+            style=discord.ButtonStyle.grey,
+            row=row
         )
         self.list_users : list = list_users
         self.needed_confirm : int = needed_confirm
@@ -145,12 +149,13 @@ class Button_continents(discord.ui.Button):
             embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
-#Bouton Continents and Islands 🏝️
+#Bouton TSL 🗺️
 class Button_tsl(discord.ui.Button):
-    def __init__(self, list_users : list, needed_confirm : int) -> None:
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
         super().__init__(
-            label="🗺 True Start Locations",
-            style=discord.ButtonStyle.grey
+            label="🗺️ True Start Locations",
+            style=discord.ButtonStyle.grey,
+            row=row
         )
         self.list_users : list = list_users
         self.needed_confirm : int = needed_confirm
@@ -167,11 +172,11 @@ class Button_tsl(discord.ui.Button):
                 self.count = self.count - 1
                 self.users_who_clicked.remove(user)
             if (self.count < self.needed_confirm):
-                self.label = f"🗺 True Start Locations ({self.count})"
+                self.label = f"🗺️ True Start Locations ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
                 valid_button = ValidButton()
-                valid_button.label = "🗺 True Start Locations"
+                valid_button.label = "🗺️ True Start Locations"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
@@ -179,6 +184,184 @@ class Button_tsl(discord.ui.Button):
             embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
+#Bouton Lakes ⛵
+class Button_lakes(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
+        super().__init__(
+            label="⛵ Lakes",
+            style=discord.ButtonStyle.grey,
+            row=row
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"⛵ Lakes ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = "⛵ Lakes"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+#Bouton Continents & Islands 🏝️
+class Button_continents_and_islands(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
+        super().__init__(
+            label="🏝️ Continents & Islands",
+            style=discord.ButtonStyle.grey,
+            row=row
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"🏝️ Continents & Islands ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = "🏝️ Continents & Islands"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+#Bouton Rich Highlands 🌄
+class Button_rich_highlands(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
+        super().__init__(
+            label="🌄 Rich Highlands",
+            style=discord.ButtonStyle.grey,
+            row=row
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"🌄 Rich Highlands ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = "🌄 Rich Highlands"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+#Bouton Snowflake ❄️
+class Button_snowflake(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
+        super().__init__(
+            label="❄️ Snowflake",
+            style=discord.ButtonStyle.grey,
+            row=row
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"❄️ Snowflake ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = "❄️ Snowflake"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+#Bouton Inland Sea 🧜‍♀️
+class Button_inland_sea(discord.ui.Button):
+    def __init__(self, list_users : list, needed_confirm : int, row : int) -> None:
+        super().__init__(
+            label="🧜‍♀️ Inland Sea",
+            style=discord.ButtonStyle.grey,
+            row=row
+        )
+        self.list_users : list = list_users
+        self.needed_confirm : int = needed_confirm
+        self.count = 0
+        self.users_who_clicked : list = []
+
+    async def callback(self, interaction : discord.Interaction) -> None:
+        user = interaction.user
+        if (user in self.list_users):
+            if (not user in self.users_who_clicked):
+                self.count = self.count + 1
+                self.users_who_clicked.append(user)
+            else:
+                self.count = self.count - 1
+                self.users_who_clicked.remove(user)
+            if (self.count < self.needed_confirm):
+                self.label = f"🧜‍♀️ Inland Sea ({self.count})"
+                await interaction.response.edit_message(view=self.view)
+            else:
+                valid_button = ValidButton()
+                valid_button.label = "🧜‍♀️ Inland Sea"
+                valid_view = discord.ui.View()
+                valid_view.add_item(valid_button)
+                await interaction.response.edit_message(view=valid_view)
+        else:
+            embed = ErrorEmbed(description="You tried to vote for a mapvote, but you are not in this game.\nIf you want to join the game, hop in the Voice Channel and ask for a new mapvote.")
+            await user.send(embed=embed)
+            await interaction.response.edit_message(view=self.view)
+
+
+
 #Bouton ON ✅
 class Button_on(discord.ui.Button):
     def __init__(self, list_users : list, needed_confirm : int) -> None:
@@ -1035,7 +1218,6 @@ class Button_Spawn_Garanteed(discord.ui.Button):
             await user.send(embed=embed)
             await interaction.response.edit_message(view=self.view)
 
-
 #================================================= VIEWS ====================================================
 #View DRAFT
 class DraftView(discord.ui.View):
@@ -1052,11 +1234,16 @@ class MapView(discord.ui.View):
         super().__init__(timeout=None)
         self.nb_users : int = len(users)
         self.needed_confirm : int = (self.nb_users // 2) + 1
-        self.add_item(Button_pangaea(users, self.needed_confirm))
-        self.add_item(Button_seven_seas(users, self.needed_confirm))
-        self.add_item(Button_highlands(users, self.needed_confirm))
-        self.add_item(Button_continents(users, self.needed_confirm))
-        self.add_item(Button_tsl(users, self.needed_confirm))
+        self.add_item(Button_pangaea(users, self.needed_confirm, row=0))
+        self.add_item(Button_seven_seas(users, self.needed_confirm, row=0))
+        self.add_item(Button_highlands(users, self.needed_confirm, row=0))
+        self.add_item(Button_continents(users, self.needed_confirm, row=0))
+        self.add_item(Button_tsl(users, self.needed_confirm, row=0))
+        self.add_item(Button_lakes(users, self.needed_confirm, row=1))
+        self.add_item(Button_rich_highlands(users, self.needed_confirm, row=1))
+        self.add_item(Button_continents_and_islands(users, self.needed_confirm, row=1))
+        self.add_item(Button_inland_sea(users, self.needed_confirm, row=1))
+        self.add_item(Button_snowflake(users, self.needed_confirm, row=1))
 #View BCY
 class BCYView(discord.ui.View):
    def __init__(self, users) -> None:
@@ -1156,6 +1343,7 @@ class StratDensityView(discord.ui.View):
         self.add_item(Button_Abundant(users, self.needed_confirm))
         self.add_item(Button_Epic(users, self.needed_confirm))
         self.add_item(Button_Spawn_Garanteed(users, self.needed_confirm))
+
 
 #=============================================== FONCTIONS ==================================================
 #Lance un mapvote
