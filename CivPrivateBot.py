@@ -440,6 +440,26 @@ async def longer_mapvote(ctx : commands.Context) -> None:
         voice_channel = await category.create_voice_channel(name=f"War Room #{nb_voice_channel-1}", position=nb_voice_channel-1, user_limit=10)
     await make_longer_mapvote(ctx, voice_channel)
 
+#$shorter_mapvote
+@bot.command(help="Launch a shorter mapvote than $mapvote.",
+        description="SHORTER_MAPVOTE",
+        brief="- Launch a shorter mapvote",
+        enabled=True,
+        hidden=False)
+async def shorter_mapvote(ctx : commands.Context) -> None:
+    print(f"$shorter_mapvote used by @{ctx.message.author.name} in #{ctx.channel.name}")
+    voice_channel = None
+    for channel_id in VOICE_CHANNELS_ID:
+        channel : discord.VoiceChannel = bot.get_channel(channel_id)
+        nb_users = len(channel.members)
+        if ((nb_users == 0) and (channel.user_limit > 2) and (voice_channel == None)):
+            voice_channel = channel
+    if (voice_channel == None):
+        category = discord.utils.utils.get(ctx.guild().categories, id=1211152499772227697)
+        nb_voice_channel = len(category.voice_channels)
+        voice_channel = await category.create_voice_channel(name=f"War Room #{nb_voice_channel-1}", position=nb_voice_channel-1, user_limit=10)
+    await make_shorter_mapvote(ctx, voice_channel)
+
 #=========================================== COMMANDES RANKED ===============================================
 #$report @First @Second @Third ...
 @bot.command(help="Report a game in the ranking system.\n\nTake n parameter :\n- User1 (discord.User) : The player won.\n- User2 (discord.User) : The player who finished second.\n...\n- UserN (discord.User) : The player who finished Nth.",

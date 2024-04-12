@@ -1390,7 +1390,6 @@ async def make_mapvote(ctx : commands.Context, voice_channel : discord.VoiceChan
     await ctx.send("**RELIGIOUS VICTORY**", view=ReligionView(users))
     #Envoie le message pour les barbares
     await ctx.send("**BARBARIANS**", view=BarbariansView(users))
-
 #Lance un mapvote plus long
 async def make_longer_mapvote(ctx : commands.Context, voice_channel : discord.VoiceChannel) -> None:
     author = ctx.message.author
@@ -1439,6 +1438,38 @@ async def make_longer_mapvote(ctx : commands.Context, voice_channel : discord.Vo
     await ctx.send("**AGE OF THE WORLD**", view=AgeView(users))
     #Envoie le message pour le ridge
     await ctx.send("**RIDGE DEFINITION**", view=RidgeView(users))
+    #Envoie le message pour la victoire religieuse
+    await ctx.send("**RELIGIOUS VICTORY**", view=ReligionView(users))
+    #Envoie le message pour les barbares
+    await ctx.send("**BARBARIANS**", view=BarbariansView(users))
+#Lance un mapvote plus court
+async def make_shorter_mapvote(ctx : commands.Context, voice_channel : discord.VoiceChannel) -> None:
+    author = ctx.message.author
+    
+    #Vérifie que l'utilisateur est bien dans un salon vocal
+    if (not author.voice):
+        embed = BotEmbed(title=f"🎤 JOIN A VOICE CHANNEL 🎤", description=f"Please, join a voice channel with the other players to use this command.")
+        return await ctx.send(embed=embed)
+    else:
+        channel = author.voice.channel
+        users = channel.members
+        nb_users : int = len(users)
+        for user in users:
+            await user.move_to(voice_channel)
+
+    #Mentionne tous les membres du salon vocal
+    message = ""
+    i : int = 0
+    while (i < nb_users):
+        message = message + f"{users[i].mention} "
+        i = i + 1
+    message = f"Let's vote !\n\n*{nb_users}* players in the game :\n" + message
+    await ctx.send(message)
+    
+    #Envoie le message pour les drafts
+    await ctx.send("**DRAFT**", view=DraftView(users))
+    #Envoie le message pour la map
+    await ctx.send("**MAP**", view=MapView(users))
     #Envoie le message pour la victoire religieuse
     await ctx.send("**RELIGIOUS VICTORY**", view=ReligionView(users))
     #Envoie le message pour les barbares
