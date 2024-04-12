@@ -247,6 +247,8 @@ async def on_invite_create(invite : discord.Invite):
     description : str = f"New Invite created by : **{invite.inviter.mention}** at {datetime.datetime.now()}."
     embed = InviteEmbed(description=description)
     embed.set_thumbnail(url=invite.inviter.avatar)
+    embed.add_field(name=f"Code :", value=f"{invite.code} {invite.expires_at}")
+    embed.add_field(name=f"Expired at :", value=f"{invite.expires_at}")
     channel = bot.get_channel(logs_channel_id)
     return await channel.send(embed=embed)
 @bot.event #Se déclenche lorsqu'un message est supprimé
