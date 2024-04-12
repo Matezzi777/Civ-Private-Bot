@@ -336,7 +336,7 @@ async def clear(ctx : commands.Context, n : int) -> None:
         if (i != 0):
             print(f"  Message deleted from #{ctx.channel.name} ({i}/{n})")
         i = i + 1
-    print(f"  #{ctx.channel.name} cleaned.")
+    print(f"#{ctx.channel.name} cleaned.")
 
 #========================================== COMMANDES PRE - GAME ============================================
 #$lfg
