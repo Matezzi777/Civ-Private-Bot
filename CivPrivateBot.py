@@ -10,7 +10,7 @@
 import discord
 import discord.ext
 import datetime
-from discord.ui import Button, View
+from discord.ui import Button
 from draft import *
 from mapvote import *
 from ranked import *
@@ -184,7 +184,6 @@ class LFGButtonStop(discord.ui.Button):
             await interaction.response.edit_message(view=self.view)
             embed = ErrorEmbed(title="YOU CAN'T DELETE THIS", description="Only the author of the command can delete this message.")
             return await interaction.followup.send(embed=embed, ephemeral=True)
-
 class LFGButtonJoinChannel(discord.ui.Button):
     def __init__(self, row) -> None:
         super().__init__(
@@ -195,7 +194,6 @@ class LFGButtonJoinChannel(discord.ui.Button):
 
     async def callback(self, interaction : discord.Interaction):
         return await interaction.response.send_message("Hop in https://discord.com/channels/1089289924693459024/1211153791919853579 !", ephemeral=True)
-
 class LFGView(discord.ui.View):
     def __init__(self, caller : discord.Member) -> None:
         super().__init__(timeout=None)
@@ -218,7 +216,6 @@ async def on_ready():
     print("     / /___  / /  | |_/ /      / /      / /   | | / /  | |_/ / / /  / /  / /   / /___       / /___/ / / /__/ /    / /")
     print("    /_____/ /_/   |____/      /_/      /_/   /_/ /_/   |____/ /_/  /_/  /_/   /_____/      /_______/ /______/    /_/")
     return print(f"\nRock n'Roll !")
-
 @bot.event #Se déclenche quand un nouveau member rejoint le serveur
 async def on_member_join(member : discord.Member):
     print(f"New member joined : @{member.name}")
@@ -235,7 +232,6 @@ async def on_member_join(member : discord.Member):
     log_embed.add_field(name=f"Joined :", value=f"{datetime.datetime.now().date()} at {datetime.datetime.now().time()}", inline=False)
     log_embed.add_field(name=f"Account created :", value=f"{member.created_at.date()}", inline=False)
     return await log_channel.send(embed=log_embed)
-
 @bot.event #Se déclenche quand un membre quitte le serveur
 async def on_member_remove(member : discord.Member):
     print(f"Member left... @{member.name}")
@@ -244,7 +240,6 @@ async def on_member_remove(member : discord.Member):
     log_embed.set_thumbnail(url=member.avatar)
     log_embed.add_field(name=f"Left :", value=f"{datetime.datetime.now().date()} at {datetime.datetime.now().time()}", inline=False)
     return await log_channel.send(embed=log_embed)
-
 @bot.event #Se déclenche lorsqu'un membre crée une nouvelle invitation
 async def on_invite_create(invite : discord.Invite):
     print(f"\nNew Invite created by {invite.inviter} : {invite.code}")
@@ -253,7 +248,6 @@ async def on_invite_create(invite : discord.Invite):
     embed.set_thumbnail(url=invite.inviter.avatar)
     channel = bot.get_channel(logs_channel_id)
     return await channel.send(embed=embed)
-
 @bot.event #Se déclenche lorsqu'un message est supprimé
 async def on_message_delete(message : discord.Message):
     if (not message.channel.id in WHITE_LIST_CHANNELS_ID):
@@ -264,7 +258,6 @@ async def on_message_delete(message : discord.Message):
         channel = bot.get_channel(logs_channel_id)
         await channel.send(embed=embed)
     return
-
 @bot.event #Se déclenche lorsqu'un message est édité
 async def on_message_edit(before : discord.Message, after : discord.Message):
     if ((not before.channel.id in WHITE_LIST_CHANNELS_ID) and (before.author.id != bot.user.id)):
@@ -276,7 +269,6 @@ async def on_message_edit(before : discord.Message, after : discord.Message):
         channel = bot.get_channel(logs_channel_id)
         await channel.send(embed=embed)
     return
-
 @bot.event
 async def on_command_error(ctx : commands.Context, error):
     if isinstance(error, commands.CommandNotFound):
@@ -398,7 +390,6 @@ async def blind_draft(ctx : commands.Context, nb_civs : int) -> None:
 async def generic_draft(ctx : commands.Context, nb_players : int, nb_civs : int) -> None:
     print(f"$generic_draft {nb_players} {nb_civs} used by @{ctx.message.author.name} in #{ctx.channel.name}")
     await make_generic_draft(ctx, nb_players, nb_civs)
-
 #$mapvote
 @bot.command(help="Launch a mapvote.",
         description="MAPVOTE",
@@ -419,7 +410,6 @@ async def mapvote(ctx : commands.Context) -> None:
         voice_channel = await category.create_voice_channel(name=f"War Room #{nb_voice_channel-1}", position=nb_voice_channel-1, user_limit=10)
 
     await make_mapvote(ctx, voice_channel)
-
 #$longer_mapvote
 @bot.command(help="Launch a longer mapvote than $mapvote.",
         description="LONGER_MAPVOTE",
@@ -439,7 +429,6 @@ async def longer_mapvote(ctx : commands.Context) -> None:
         nb_voice_channel = len(category.voice_channels)
         voice_channel = await category.create_voice_channel(name=f"War Room #{nb_voice_channel-1}", position=nb_voice_channel-1, user_limit=10)
     await make_longer_mapvote(ctx, voice_channel)
-
 #$shorter_mapvote
 @bot.command(help="Launch a shorter mapvote than $mapvote.",
         description="SHORTER_MAPVOTE",
@@ -609,7 +598,7 @@ async def rm_user(ctx : commands.Context, user : discord.User) -> None:
 
 
 #============================================== CIVILOPEDIA =================================================
-
+#$civilopedia
 @bot.command(help="Open the civilopedia.",
         description="CIVILOPEDIA",
         brief="- open the Civilopedia",
@@ -620,7 +609,7 @@ async def civilopedia(ctx : commands.Context, article : str = None, lang : str =
     await make_civilopedia(ctx, article, lang)
 
 #=========================================== FEEDBACKS & IDEAS ==============================================
-
+#$make_suggestion
 @bot.command(help="Send a suggestion to make this server better.",
         description="MAKE_SUGGESTION",
         brief="- make a suggestion",
@@ -630,7 +619,7 @@ async def make_suggestion(ctx : commands.Context):
     print(f"$make_suggestion used by {ctx.message.author} in {ctx.message.channel}")
     channel_suggestion = bot.get_channel(suggestion_channel_id)
     await create_suggestion(ctx, channel_suggestion)
-
+#$feedback
 @bot.command(help="Send a feedback about your experience on this community.",
         description="FEEDBACK",
         brief="- Send a feedback",
@@ -642,7 +631,7 @@ async def feedback(ctx : commands.Context):
     await make_feedback(ctx, channel_feedback)
 
 #================================================= STEAM ====================================================
-
+#$set_steam
 @bot.command(help="Link/Modify/Delete a Steam profile to enable the $lobby command.",
         description="SET_STEAM",
         brief="- Link your steam profile",
@@ -651,7 +640,7 @@ async def feedback(ctx : commands.Context):
 async def set_steam(ctx : commands.Context):
     print(f"$set_steam used by {ctx.message.author} in {ctx.message.channel}")
     await link_steam_account(ctx)
-
+#$lobby
 @bot.command(help="Display a link to your lobby.\nOnly works for Steam users.\n\nYou have to link your Steam Profile first by using $set_steam.",
         description="LOBBY",
         brief="- Display a link to your active lobby (Steam)",
