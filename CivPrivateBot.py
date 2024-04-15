@@ -203,12 +203,14 @@ async def on_member_join(member : discord.Member):
     print(f"New member joined : @{member.name}")
     welcome_channel = bot.get_channel(welcome_channel_id)
     welcome_embed = BotEmbed(title="WELCOME", description=f"Hey guys, {member.mention} just joined the server !")
-    welcome_embed.set_thumbnail(url=member.avatar)
+    if (member.avatar):
+        welcome_embed.set_thumbnail(url=member.avatar)
     welcome_message = await welcome_channel.send(embed=welcome_embed)
     await welcome_message.add_reaction("👋")
     log_channel = bot.get_channel(logs_channel_id)
     log_embed = MemberJoinEmbed(description=f"{member.mention} joined the server !")
-    log_embed.set_thumbnail(url=member.avatar)
+    if (member.avatar):
+        log_embed.set_thumbnail(url=member.avatar)
     log_embed.add_field(name=f"Name :", value=f"**{member.name}**", inline=False)
     log_embed.add_field(name=f"ID :", value=f"{member.id}", inline=False)
     log_embed.add_field(name=f"Joined :", value=f"{datetime.datetime.now().date()} at {datetime.datetime.now().time()}", inline=False)
