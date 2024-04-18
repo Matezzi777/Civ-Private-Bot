@@ -6,7 +6,7 @@ from discord.ui.item import Item
 from classes import BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton 
 
 BBG_STABLE_VERSION : str = "5.8"
-BBG_BETA_VERSION : str = "5.8 BETA"
+BBG_BETA_VERSION : str = "BETA"
 
 #================================================ BOUTONS ===================================================
 #Bouton Pangaea 🌋
