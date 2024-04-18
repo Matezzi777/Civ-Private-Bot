@@ -5,8 +5,8 @@ from discord.ext import commands
 from discord.ui.item import Item
 from classes import BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton 
 
-BBG_STABLE_VERSION : str = "5.7"
-BBG_BETA_VERSION : str = "5.8"
+BBG_STABLE_VERSION : str = "5.8"
+BBG_BETA_VERSION : str = "5.8 BETA"
 
 #================================================ BOUTONS ===================================================
 #Bouton Pangaea 🌋
@@ -741,7 +741,7 @@ class Button_civilized(discord.ui.Button):
 class Button_BBG(discord.ui.Button):
     def __init__(self, list_users : list, needed_confirm : int) -> None:
         super().__init__(
-            label=f"💪 BBG ({BBG_STABLE_VERSION})",
+            label=f"💪 {BBG_STABLE_VERSION}",
             style=discord.ButtonStyle.grey
         )
         self.list_users : list = list_users
@@ -759,11 +759,11 @@ class Button_BBG(discord.ui.Button):
                 self.count = self.count - 1
                 self.users_who_clicked.remove(user)
             if (self.count < self.needed_confirm):
-                self.label = f"💪 BBG ({BBG_STABLE_VERSION}) ({self.count})"
+                self.label = f"💪 {BBG_STABLE_VERSION} ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
                 valid_button = ValidButton()
-                valid_button.label = f"💪 BBG ({BBG_STABLE_VERSION})"
+                valid_button.label = f"💪 {BBG_STABLE_VERSION}"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
@@ -775,7 +775,7 @@ class Button_BBG(discord.ui.Button):
 class Button_BBGBeta(discord.ui.Button):
     def __init__(self, list_users : list, needed_confirm : int) -> None:
         super().__init__(
-            label=f"🔎 BBG Beta ({BBG_BETA_VERSION})",
+            label=f"🔎 {BBG_BETA_VERSION}",
             style=discord.ButtonStyle.grey
         )
         self.list_users : list = list_users
@@ -793,11 +793,11 @@ class Button_BBGBeta(discord.ui.Button):
                 self.count = self.count - 1
                 self.users_who_clicked.remove(user)
             if (self.count < self.needed_confirm):
-                self.label = f"🔎 BBG Beta ({BBG_BETA_VERSION}) ({self.count})"
+                self.label = f"🔎 {BBG_BETA_VERSION} ({self.count})"
                 await interaction.response.edit_message(view=self.view)
             else:
                 valid_button = ValidButton()
-                valid_button.label = f"🔎 BBG Beta ({BBG_BETA_VERSION})"
+                valid_button.label = f"🔎 {BBG_BETA_VERSION}"
                 valid_view = discord.ui.View()
                 valid_view.add_item(valid_button)
                 await interaction.response.edit_message(view=valid_view)
