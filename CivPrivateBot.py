@@ -256,7 +256,7 @@ async def on_message_edit(before : discord.Message, after : discord.Message):
         channel = bot.get_channel(logs_channel_id)
         await channel.send(embed=embed)
     return
-@bot.event
+@bot.event #Se déclenche lorsqu'un utilisateur entre une commande non-reconnue
 async def on_command_error(ctx : commands.Context, error):
     if isinstance(error, commands.CommandNotFound):
         embed = ErrorEmbed(title="UNKNOWN COMMAND", description="This commands is not recognized by the bot. Check https://discord.com/channels/1089289924693459024/1211159694115348530/1211161705128665169 or use ***$help*** to see the list of the commands supported.")
