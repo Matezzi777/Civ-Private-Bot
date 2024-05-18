@@ -202,19 +202,19 @@ async def on_ready():
 async def on_member_join(member : discord.Member):
     print(f"New member joined : @{member.name}")
     welcome_channel = bot.get_channel(welcome_channel_id)
-    welcome_embed = BotEmbed(title="WELCOME", description=f"Hey guys, {member.mention} just joined the server !")
+    welcome_embed = BotEmbed(title="WELCOME", description=f"Hey guys, **@{member.name}** just joined the server !")
     if (member.avatar):
         welcome_embed.set_thumbnail(url=member.avatar)
     welcome_message = await welcome_channel.send(embed=welcome_embed)
     await welcome_message.add_reaction("👋")
     log_channel = bot.get_channel(logs_channel_id)
-    log_embed = MemberJoinEmbed(description=f"{member.mention} joined the server !")
+    log_embed = MemberJoinEmbed(description=f"**@{member.name}** joined the server !")
     if (member.avatar):
         log_embed.set_thumbnail(url=member.avatar)
     log_embed.add_field(name=f"Name :", value=f"**{member.name}**", inline=False)
     log_embed.add_field(name=f"ID :", value=f"{member.id}", inline=False)
-    log_embed.add_field(name=f"Joined :", value=f"{datetime.datetime.now().date()} at {datetime.datetime.now().time()}", inline=False)
-    log_embed.add_field(name=f"Account created :", value=f"{member.created_at.date()}", inline=False)
+    log_embed.add_field(name=f"Join Time :", value=f"{datetime.datetime.now().date()} at {datetime.datetime.now().time()}", inline=False)
+    log_embed.add_field(name=f"Account Creation :", value=f"{member.created_at.date()}", inline=False)
     return await log_channel.send(embed=log_embed)
 @bot.event #Se déclenche quand un membre quitte le serveur
 async def on_member_remove(member : discord.Member):
@@ -231,8 +231,8 @@ async def on_invite_create(invite : discord.Invite):
     description : str = f"New Invite created by : **{invite.inviter.mention}** at {datetime.datetime.now()}."
     embed = InviteEmbed(description=description)
     embed.set_thumbnail(url=invite.inviter.avatar)
-    embed.add_field(name=f"Code :", value=f"{invite.code} {invite.expires_at}")
-    embed.add_field(name=f"Expired at :", value=f"{invite.expires_at}")
+    embed.add_field(name=f"Code :", value=f"{invite.code}")
+    embed.add_field(name=f"Expires at :", value=f"{invite.expires_at}")
     channel = bot.get_channel(logs_channel_id)
     return await channel.send(embed=embed)
 @bot.event #Se déclenche lorsqu'un message est supprimé
