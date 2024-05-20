@@ -5,7 +5,7 @@ from discord.ext import commands
 from discord.ui.item import Item
 from classes import BotEmbed, SuccessEmbed, ErrorEmbed, ValidButton 
 
-BBG_STABLE_VERSION : str = "5.8"
+BBG_STABLE_VERSION : str = "5.8.1"
 BBG_BETA_VERSION : str = "BETA"
 
 #================================================ BOUTONS ===================================================
